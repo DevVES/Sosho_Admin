@@ -1,0 +1,691 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="Home.aspx.cs" Inherits="Home" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../plugins/datepicker/datepicker3.css">
+    <script src="../../plugins/datepicker/bootstrap-datepicker.js"></script>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>Dashboard
+               <small>
+                   <asp:Label runat="server" ID="lblDateTime"></asp:Label></small>
+            </h1>
+            <ol class="breadcrumb">
+                <%--<li><a href="../Home1.aspx"><i class="fa fa-dashboard"></i>Old Dashboard</a></li>--%>
+            </ol>
+        </section>
+        <section class="content">
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+                <table style="width: 100%;" class="table table-hover dataTable table-responsive table-bordered table-striped">
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label>Start Date:</label>
+                                <input type="button" value="<<" id="prvalldate" />
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" class="form-control pull-right" runat="server" name="startdate" id="startdate">
+                                </div>
+                                <input type="button" value="<" id="prvfromdate" />&nbsp;
+                            <input type="button" value=">" id="nextfromdate" />
+                                <!-- /.input group -->
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+
+                                <label>End Date:</label>
+                                <input type="button" value=">>" id="nextalldate" />
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" class="form-control pull-right" runat="server" name="enddate" id="enddate"/>
+                                </div>
+                                <input type="button" value="<" id="prvtodate" />&nbsp;
+                            <input type="button" value=">" id="nexttodate" />
+                                <!-- /.input group -->
+                            </div>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <div style="margin-top: 10px;">
+                                <asp:Button ID="Button2" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block btn-info" OnClick="Button1_Click" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <script>
+                    $('#ContentPlaceHolder1_enddate').datepicker({
+                        format: 'dd/M/yyyy',
+                        autoclose: true
+                    });
+                    $('#ContentPlaceHolder1_startdate').datepicker({
+                        format: 'dd/M/yyyy',
+                        autoclose: true
+                    });
+                </script>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="fa fa-fw fa-arrow-down"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Car In</b>
+                                <br />
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltrIn" runat="server"></asp:Literal>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-aqua"><i class="fa fa-fw fa-gears"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Jobcard</b>
+                                <br />
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltrJobcard" runat="server"></asp:Literal>
+                            </span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-red"><i class="fa fa-fw fa-arrow-up"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Car Out</b>
+                                <br />
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltlCarOutToday" runat="server"></asp:Literal></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <!-- fix for small devices only -->
+                <div class="clearfix visible-sm-block"></div>
+
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-yellow"><i class="fa fa-fw fa-rupee"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Collection</b><br />
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltrCollection" runat="server"></asp:Literal></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+
+            </div>
+
+
+            <!-- /.row -->
+            <!-- Main row -->
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-aqua"><i class="fa fa-fw fa-truck"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Grn</b> </span>
+                            <span class="info-box-number" style="font-size: 12px;">
+                                <asp:Literal ID="ltrGrn" runat="server"></asp:Literal></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- Left col -->
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="fa fa-fw fa-thumbs-up"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Customer
+                                <br />
+                                Satisfied</b>
+                                <br />
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltrCS" runat="server"></asp:Literal></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-yellow"><i class="fa fa-fw fa-meh-o"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Cust partially<br />
+                                satisfied</b><br />
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltrps" runat="server"></asp:Literal></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-red"><i class="fa fa-fw fa-thumbs-down"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Customer<br />
+                                Unsatisfied</b>
+                                <br />
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltrCUS" runat="server"></asp:Literal></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+
+                <!-- right col -->
+            </div>
+            <!-- /.row (main row) -->
+            <!-- Main row -->
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-red"><i class="fa fa-fw fa-eye"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Payment<br />
+                                Pending Cust</b></span>
+                            <span class="info-box-number" style="font-size: 12px;">
+                                <asp:Literal ID="ltrPayment" runat="server"></asp:Literal></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-red"><i class="fa fa-fw fa-eye"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Payment<br />
+                                Pending Ins</b></span>
+                            <span class="info-box-number" style="font-size: 12px;">
+                                <asp:Literal ID="ltrInsu" runat="server"></asp:Literal></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="fa fa-fw fa-arrow-down"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Total Car In</b>
+                                <br />
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltrTotalCarIn" runat="server"></asp:Literal>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="fa fa-fw fa-exchange"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Allocated / Grn Items</b>
+                                <br />
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltrItemsAllocatedGrn" runat="server"></asp:Literal>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- right col -->
+            </div>
+            <!-- /.row (main row) -->
+
+            <!-- Main row -->
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-red"><i class="fa fa-fw fa-pie-chart"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Grn Items / Requisition</b>
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltrReqVsGrn" runat="server"></asp:Literal></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-red"><i class="fa fa-fw fa-pie-chart"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text"><b>Purchase Images</b>
+                            </span>
+                            <span class="info-box-number">
+                                <asp:Literal ID="ltrPurchase" runat="server"></asp:Literal></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- right col -->
+            </div>
+
+
+            <div class="row">
+
+                <!-- right col -->
+            </div>
+
+            <!-- /.row (main row) -->
+        </section>
+        <!-- Main content -->
+
+
+        <!-- /.content -->
+    </div>
+
+   <script>
+
+       $(document).ready(function () {
+          <%-- $("#nextalldate").click(function () {
+               var txtdt1 = document.getElementById("<%=startdate.ClientID%>").value;
+                            var txtdt2 = document.getElementById("<%=enddate.ClientID%>").value;
+                            //alert(txtdt1 + " " + txtdt2);
+
+                            var cvdate = txtdt1.split('/');
+                            var cvdate1 = txtdt2.split('/');
+
+
+                            var myDate = new Date(cvdate[2] + "/" + cvdate[1] + "/" + cvdate[0]);
+                            var myDate1 = new Date(cvdate1[2] + "/" + cvdate1[1] + "/" + cvdate1[0]);
+
+                            myDate.setDate(myDate.getDate() + 1);
+                            myDate1.setDate(myDate1.getDate() + 1);
+
+                            var date = myDate.getDate();
+                            if (date.toString().length == 1) {
+                                date = "0" + date;
+                            }
+                            var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                            if (month.toString().length == 1) {
+                                month = "0" + month;
+                            }
+                            var year = myDate.getFullYear();
+                            var nextdate = date + "/" + month + "/" + year;
+                            //$("#startdate").val(nextdate);
+                            document.getElementById("<%=startdate.ClientID%>").value = nextdate;
+
+                    var date1 = myDate1.getDate();
+                    if (date1.toString().length == 1) {
+                        date1 = "0" + date1;
+                    }
+                    var month1 = myDate1.getMonth() + 1; // january is month 0 in javascript
+                    if (month1.toString().length == 1) {
+                        month1 = "0" + month1;
+                    }
+                    var year1 = myDate1.getFullYear();
+                    var nextdate1 = date1 + "/" + month1 + "/" + year1;
+                            //$("#startdate").val(nextdate);
+                    document.getElementById("<%=enddate.ClientID%>").value = nextdate1;
+                        });
+
+                        $("#prvalldate").click(function () {
+                            var txtdt1 = document.getElementById("<%=startdate.ClientID%>").value;
+                    var txtdt2 = document.getElementById("<%=enddate.ClientID%>").value;
+                    //alert(txtdt1 + " " + txtdt2);
+                    var cvdate = txtdt1.split('/');
+                    var cvdate1 = txtdt2.split('/');
+
+                    var myDate = new Date(cvdate[2] + "/" + cvdate[1] + "/" + cvdate[0]);
+                    var myDate1 = new Date(cvdate1[2] + "/" + cvdate1[1] + "/" + cvdate1[0]);
+
+                    myDate.setDate(myDate.getDate() - 1);
+                    myDate1.setDate(myDate1.getDate() - 1);
+                    var date = myDate.getDate();
+                    if (date.toString().length == 1) {
+                        date = "0" + date;
+                    }
+                    var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                    if (month.toString().length == 1) {
+                        month = "0" + month;
+                    }
+                    var year = myDate.getFullYear();
+                    var nextdate = date + "/" + month + "/" + year;
+                    //$("#startdate").val(nextdate);
+                    document.getElementById("<%=startdate.ClientID%>").value = nextdate;
+
+                     var date1 = myDate1.getDate();
+                     if (date1.toString().length == 1) {
+                         date1 = "0" + date1;
+                     }
+                     var month1 = myDate1.getMonth() + 1; // january is month 0 in javascript
+                     if (month1.toString().length == 1) {
+                         month1 = "0" + month1;
+                     }
+                     var year1 = myDate1.getFullYear();
+                     var nextdate1 = date1 + "/" + month1 + "/" + year1;
+                    //$("#startdate").val(nextdate);
+                     document.getElementById("<%=enddate.ClientID%>").value = nextdate1;
+
+
+                });
+
+                        $("#nextfromdate").click(function () {
+                            var txtdt1 = document.getElementById("<%=startdate.ClientID%>").value;
+                    //alert(txtdt1 + " " + txtdt2);
+                    var cvdate = txtdt1.split('/');
+                    var myDate = new Date(cvdate[2] + "/" + cvdate[1] + "/" + cvdate[0]);
+                    myDate.setDate(myDate.getDate() + 1);
+                    var date = myDate.getDate();
+                    if (date.toString().length == 1) {
+                        date = "0" + date;
+                    }
+                    var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                    if (month.toString().length == 1) {
+                        month = "0" + month;
+                    }
+                    var year = myDate.getFullYear();
+                    var nextdate = date + "/" + month + "/" + year;
+                    //$("#startdate").val(nextdate);
+                    document.getElementById("<%=startdate.ClientID%>").value = nextdate;
+                });
+                        $("#nexttodate").click(function () {
+                            var txtdt1 = document.getElementById("<%=enddate.ClientID%>").value;
+                    //alert(txtdt1 + " " + txtdt2);
+                    var cvdate = txtdt1.split('/');
+                    var myDate = new Date(cvdate[2] + "/" + cvdate[1] + "/" + cvdate[0]);
+                    myDate.setDate(myDate.getDate() + 1);
+                    var date = myDate.getDate();
+                    if (date.toString().length == 1) {
+                        date = "0" + date;
+                    }
+                    var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                    if (month.toString().length == 1) {
+                        month = "0" + month;
+                    }
+                    var year = myDate.getFullYear();
+                    var nextdate = date + "/" + month + "/" + year;
+                    //$("#startdate").val(nextdate);
+                    document.getElementById("<%=enddate.ClientID%>").value = nextdate;
+                });
+                        $("#prvfromdate").click(function () {
+
+                            var txtdt1 = document.getElementById("<%=startdate.ClientID%>").value;
+                    //alert(txtdt1 + " " + txtdt2);
+                    var cvdate = txtdt1.split('-');
+                    var myDate = new Date(cvdate[2] + "/" + cvdate[1] + "/" + cvdate[0]);
+                    myDate.setDate(myDate.getDate() - 1);
+                    var date = myDate.getDate();
+                    if (date.toString().length == 1) {
+                        date = "0" + date;
+                    }
+                    var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                    if (month.toString().length == 1) {
+                        month = "0" + month;
+                    }
+                    var year = myDate.getFullYear();
+                    var nextdate = date + "/" + month + "/" + year;
+                    //$("#startdate").val(nextdate);
+                    document.getElementById("<%=startdate.ClientID%>").value = nextdate;
+                });
+                        $("#prvtodate").click(function () {
+
+                            var txtdt1 = document.getElementById("<%=enddate.ClientID%>").value;
+                    //alert(txtdt1 + " " + txtdt2);
+                    var cvdate = txtdt1.split('-');
+                    var myDate = new Date(cvdate[2] + "/" + cvdate[1] + "/" + cvdate[0]);
+                    myDate.setDate(myDate.getDate() - 1);
+                    var date = myDate.getDate();
+                    if (date.toString().length == 1) {
+                        date = "0" + date;
+                    }
+                    var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                    if (month.toString().length == 1) {
+                        month = "0" + month;
+                    }
+                    var year = myDate.getFullYear();
+                    var nextdate = date + "/" + month + "/" + year;
+                    //$("#startdate").val(nextdate);
+                    document.getElementById("<%=enddate.ClientID%>").value = nextdate;
+                });--%>
+
+                    });
+        </script>
+    <script>
+
+        $(document).ready(function () {
+            $("#nextalldate").click(function () {
+                var txtdt1 = document.getElementById("<%=startdate.ClientID%>").value;
+                            var txtdt2 = document.getElementById("<%=enddate.ClientID%>").value;
+                            //alert(txtdt1 + " " + txtdt2);
+
+                            var cvdate = txtdt1.split('-');
+                            var cvdate1 = txtdt2.split('-');
+
+
+                            var myDate = new Date(cvdate[2] + "-" + cvdate[1] + "-" + cvdate[0]);
+                            var myDate1 = new Date(cvdate1[2] + "-" + cvdate1[1] + "-" + cvdate1[0]);
+
+                            myDate.setDate(myDate.getDate() + 1);
+                            myDate1.setDate(myDate1.getDate() + 1);
+
+                            var date = myDate.getDate();
+                            if (date.toString().length == 1) {
+                                date = "0" + date;
+                            }
+                            var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                            if (month.toString().length == 1) {
+                                month = "0" + month;
+                            }
+                            var year = myDate.getFullYear();
+                            var nextdate = date + "-" + getmonthname(month) + "-" + year;
+                            //$("#txtfDate").val(nextdate);
+                            document.getElementById("<%=startdate.ClientID%>").value = nextdate;
+
+                    var date1 = myDate1.getDate();
+                    if (date1.toString().length == 1) {
+                        date1 = "0" + date1;
+                    }
+                    var month1 = myDate1.getMonth() + 1; // january is month 0 in javascript
+                    if (month1.toString().length == 1) {
+                        month1 = "0" + month1;
+                    }
+                    var year1 = myDate1.getFullYear();
+                    var nextdate1 = date1 + "-" + month1 + "-" + year1;
+                            //$("#txtfDate").val(nextdate);
+                    document.getElementById("<%=enddate.ClientID%>").value = nextdate1;
+                        });
+            ////////////////////////////////////////////////////////////////////////////////
+                        $("#prvalldate").click(function () {
+                            var txtdt1 = document.getElementById("<%=startdate.ClientID%>").value;
+                    var txtdt2 = document.getElementById("<%=enddate.ClientID%>").value;
+                    //alert(txtdt1 + " " + txtdt2);
+                    var cvdate = txtdt1.split('-');
+                    var cvdate1 = txtdt2.split('-');
+
+                    var myDate = new Date(cvdate[2] + "-" + cvdate[1] + "-" + cvdate[0]);
+                    var myDate1 = new Date(cvdate1[2] + "-" + cvdate1[1] + "-" + cvdate1[0]);
+
+                    myDate.setDate(myDate.getDate() - 1);
+                    myDate1.setDate(myDate1.getDate() - 1);
+                    var date = myDate.getDate();
+                    if (date.toString().length == 1) {
+                        date = "0" + date;
+                    }
+                    var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                    if (month.toString().length == 1) {
+                        month = "0" + month;
+                    }
+                    var year = myDate.getFullYear();
+                    var nextdate = date + "-" + getmonthname(month) + "-" + year;
+                    //$("#txtfDate").val(nextdate);
+                    document.getElementById("<%=startdate.ClientID%>").value = nextdate;
+
+                     var date1 = myDate1.getDate();
+                     if (date1.toString().length == 1) {
+                         date1 = "0" + date1;
+                     }
+                     var month1 = myDate1.getMonth() + 1; // january is month 0 in javascript
+                     if (month1.toString().length == 1) {
+                         month1 = "0" + month1;
+                     }
+                     var year1 = myDate1.getFullYear();
+                     var nextdate1 = date1 + "-" + getmonthname(month1) + "-" + year1;
+                    //$("#txtfDate").val(nextdate);
+                     document.getElementById("<%=enddate.ClientID%>").value = nextdate1;
+
+
+                });
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        $("#nextfromdate").click(function () {
+                            var txtdt1 = document.getElementById("<%=startdate.ClientID%>").value;
+                    //alert(txtdt1 + " " + txtdt2);
+                    var cvdate = txtdt1.split('-');
+                    var myDate = new Date(cvdate[2] + "-" + cvdate[1] + "-" + cvdate[0]);
+                    myDate.setDate(myDate.getDate() + 1);
+                    var date = myDate.getDate();
+                    if (date.toString().length == 1) {
+                        date = "0" + date;
+                    }
+                    var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                    if (month.toString().length == 1) {
+                        month = "0" + month;
+                    }
+                    var year = myDate.getFullYear();
+                    var nextdate = date + "-" + getmonthname(month) + "-" + year;
+                    //$("#txtfDate").val(nextdate);
+                    document.getElementById("<%=startdate.ClientID%>").value = nextdate;
+                        });
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        $("#nexttodate").click(function () {
+                            var txtdt1 = document.getElementById("<%=enddate.ClientID%>").value;
+                    //alert(txtdt1 + " " + txtdt2);
+                    var cvdate = txtdt1.split('-');
+                    var myDate = new Date(cvdate[2] + "-" + cvdate[1] + "-" + cvdate[0]);
+                    myDate.setDate(myDate.getDate() + 1);
+                    var date = myDate.getDate();
+                    if (date.toString().length == 1) {
+                        date = "0" + date;
+                    }
+                    var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                    if (month.toString().length == 1) {
+                        month = "0" + month;
+                    }
+                    var year = myDate.getFullYear();
+                    var nextdate = date + "-" + getmonthname(month) + "-" + year;
+                    //$("#txtfDate").val(nextdate);
+                    document.getElementById("<%=enddate.ClientID%>").value = nextdate;
+                        });
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+                        $("#prvfromdate").click(function () {
+
+                            var txtdt1 = document.getElementById("<%=startdate.ClientID%>").value;
+                    //alert(txtdt1 + " " + txtdt2);
+                    var cvdate = txtdt1.split('-');
+                    var myDate = new Date(cvdate[2] + "-" + cvdate[1] + "-" + cvdate[0]);
+                    myDate.setDate(myDate.getDate() - 1);
+                    var date = myDate.getDate();
+                    if (date.toString().length == 1) {
+                        date = "0" + date;
+                    }
+                    var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                    if (month.toString().length == 1) {
+                        month = "0" + month;
+                    }
+                    var year = myDate.getFullYear();
+                    var nextdate = date + "-" + getmonthname(month) + "-" + year;
+                    //$("#txtfDate").val(nextdate);
+                    document.getElementById("<%=startdate.ClientID%>").value = nextdate;
+                        });
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+                        $("#prvtodate").click(function () {
+
+                            var txtdt1 = document.getElementById("<%=enddate.ClientID%>").value;
+                    //alert(txtdt1 + " " + txtdt2);
+                    var cvdate = txtdt1.split('-');
+                    var myDate = new Date(cvdate[2] + "-" + cvdate[1] + "-" + cvdate[0]);
+                    myDate.setDate(myDate.getDate() - 1);
+                    var date = myDate.getDate();
+                    if (date.toString().length == 1) {
+                        date = "0" + date;
+                    }
+                    var month = myDate.getMonth() + 1; // january is month 0 in javascript
+                    if (month.toString().length == 1) {
+                        month = "0" + month;
+                    }
+                    var year = myDate.getFullYear();
+                    var nextdate = date + "-" + getmonthname(month) + "-" + year;
+                    //$("#txtfDate").val(nextdate);
+                    document.getElementById("<%=enddate.ClientID%>").value = nextdate;
+                });
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+        });
+
+        function getmonthname(id)
+        {
+            if (Number(id) == 1)
+            {
+                return "Jan";
+            }
+            if (Number(id) == 2) {
+                return "Feb";
+            }
+            if (Number(id) == 3) {
+                return "Mar";
+            }
+            if (Number(id) == 4) {
+                return "Apr";
+            }
+            if (Number(id) == 5) {
+                return "May";
+            }
+            if (Number(id) == 6) {
+                return "Jun";
+            }
+            if (Number(id) == 7) {
+                return "Jul";
+            }
+            if (Number(id) == 8) {
+                return "Aug";
+            }
+            if (Number(id) == 9) {
+                return "Sep";
+            }
+            if (Number(id) == 10) {
+                return "Oct";
+            }
+            if (Number(id) == 11) {
+                return "Nov";
+            }
+            if (Number(id) == 12) {
+                return "Dec";
+            }
+        }
+        </script>
+
+</asp:Content>
+

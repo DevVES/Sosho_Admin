@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>http://testweb.motorz.co.in/login.aspx</loc>
+  <lastmod>2018-02-17T11:53:44+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/index2.html</loc>
+  <lastmod>2017-09-14T11:26:55+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/layout/top-nav.html</loc>
+  <lastmod>2017-09-14T11:33:04+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/layout/boxed.html</loc>
+  <lastmod>2017-09-14T11:33:03+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/layout/fixed.html</loc>
+  <lastmod>2017-09-14T11:33:04+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/layout/collapsed-sidebar.html</loc>
+  <lastmod>2017-09-14T11:33:03+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/widgets.html</loc>
+  <lastmod>2017-09-14T11:28:57+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/charts/chartjs.html</loc>
+  <lastmod>2017-09-14T11:32:43+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/charts/morris.html</loc>
+  <lastmod>2017-09-14T11:32:48+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/charts/flot.html</loc>
+  <lastmod>2017-09-14T11:32:46+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/charts/inline.html</loc>
+  <lastmod>2017-09-14T11:32:47+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/UI/general.html</loc>
+  <lastmod>2017-09-14T11:33:16+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/UI/icons.html</loc>
+  <lastmod>2017-09-14T11:33:19+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/UI/buttons.html</loc>
+  <lastmod>2017-09-14T11:33:17+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/UI/sliders.html</loc>
+  <lastmod>2017-09-14T11:33:20+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/UI/timeline.html</loc>
+  <lastmod>2017-09-14T11:33:20+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/UI/modals.html</loc>
+  <lastmod>2017-09-14T11:33:18+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/forms/general.html</loc>
+  <lastmod>2017-09-14T11:33:01+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/forms/advanced.html</loc>
+  <lastmod>2017-09-14T11:33:00+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/forms/editors.html</loc>
+  <lastmod>2017-09-14T11:32:59+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/tables/simple.html</loc>
+  <lastmod>2017-09-14T11:33:12+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/tables/data.html</loc>
+  <lastmod>2017-09-14T11:33:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/calendar.html</loc>
+  <lastmod>2017-09-14T11:28:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/mailbox/mailbox.html</loc>
+  <lastmod>2017-09-14T11:33:08+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/examples/invoice.html</loc>
+  <lastmod>2017-09-14T11:32:53+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/examples/profile.html</loc>
+  <lastmod>2017-09-14T11:32:55+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/examples/login.html</loc>
+  <lastmod>2017-09-14T11:32:54+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/examples/register.html</loc>
+  <lastmod>2017-09-14T11:32:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/examples/lockscreen.html</loc>
+  <lastmod>2017-09-14T11:32:53+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/examples/404.html</loc>
+  <lastmod>2017-09-14T11:32:51+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/examples/500.html</loc>
+  <lastmod>2017-09-14T11:32:51+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/examples/blank.html</loc>
+  <lastmod>2017-09-14T11:32:52+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/examples/pace.html</loc>
+  <lastmod>2017-09-14T11:32:55+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/documentation/index.html</loc>
+  <lastmod>2017-09-14T11:28:25+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/mailbox/compose.html</loc>
+  <lastmod>2017-09-14T11:33:08+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/mailbox/read-mail.html</loc>
+  <lastmod>2017-09-14T11:33:09+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/pages/examples/invoice-print.html</loc>
+  <lastmod>2017-09-14T11:32:52+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>http://testweb.motorz.co.in/starter.html</loc>
+  <lastmod>2017-09-14T11:27:01+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+
+
+</urlset>

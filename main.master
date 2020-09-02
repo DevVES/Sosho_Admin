@@ -1,0 +1,595 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="main.master.cs" Inherits="main" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.bootstrap.min.css">
+    <link href="dist/css/Common.css" rel="stylesheet" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sosho | Dashboard</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="plugins/select2/select2.min.css">
+    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
+
+    <%--<link rel="shortcut icon" type="image/png" href="favicon.png" />--%>
+    <link rel="shortcut icon" type="image/png" href="http://eg.com/favicon.png" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css?v=1">
+    <script src="../plugins/jQuery/jQuery-2.2.0.min.js"></script>
+    <!-- iCheck -->
+    <!-- DataTables -->
+
+    <script src="https://unpkg.com/sweetalert2@7.12.3/dist/sweetalert2.all.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+    <%--<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>--%>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <%--<script async src="https://www.googletagmanager.com/gtag/js?id=UA-116071365-1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>--%>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-116071365-1');
+    </script>
+</head>
+<body class="sidebar-collapse skin-yellow-light sidebar-mini">
+    <script>
+        function showswalsuccess(msg, tm) {
+            swal({
+                position: 'top-end',
+                type: 'success',
+                title: msg,
+                showConfirmButton: false,
+                timer: tm
+            })
+        }
+        function mysweetAlert(msg, tm, type) {
+            swal({
+                position: 'top-end',
+                type: type,
+                title: msg,
+                showConfirmButton: false,
+                timer: tm
+            })
+        }
+    </script>
+    <form id="form1" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+        <div class="wrapper">
+            <header class="main-header" id="mst-main-header">
+                <!-- Logo -->
+                <a href="../Home.aspx" class="logo" style="background-color: #373435" id="pageredirection">
+                    <!-- mini logo for sidebar mini 50x50 pixels -->
+                    <span class="logo-mini">
+                        <img src="../dist/img/sosho-logo.png" style="width: 50px;" />
+                    </span>
+                    <!-- logo for regular state and mobile devices -->
+                    <span class="logo-lg">
+                        <img src="../dist/img/sosho-logo.png" style="width: 100px;" />
+                    </span>
+                </a>
+                <!-- Header Navbar: style can be found in header.less -->
+                <nav class="navbar navbar-static-top">
+                    <!-- Sidebar toggle button-->
+                    <a href="#" id="mainmenutoggle" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span class="sr-only">Toggle navigation</span>
+                    </a>
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <!-- User Account: style can be found in dropdown.less -->
+                            <li class="dropdown user user-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="hidden-xs" style="color: #fef112; font-weight: bold;">
+                                        <asp:Label ID="Label2" runat="server" Text="Label"></asp:Label></span>
+                                </a>
+                                <%-- <a href="~/Changepassword.aspx">Change password</a>--%>
+                                <ul class="dropdown-menu" style="display: none;">
+                                    <!-- User image -->
+                                    <li class="user-header">
+                                        <p style="color: #fef112; font-weight: bold;">
+                                            <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+                                            <input type="hidden" id="hdnmainIsAdmin" runat="server" />
+                                        </p>
+                                    </li>
+
+                                    <!-- Menu Body -->
+                                    <!-- Menu Footer-->
+                                    <li class="user-footer">
+                                        <div class="pull-right">
+                                            <a href="../Appmanagement/CustomerProfile.aspx" class="btn btn-default btn-flat">My Profile</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <!-- Left side column. contains the logo and sidebar -->
+            <div id="mst-main-sidebar">
+                <aside class="main-sidebar">
+                    <!-- sidebar: style can be found in sidebar.less -->
+                    <section class="sidebar">
+                        <!-- search form -->
+                        <div class=" sidebar-form">
+                            <div class="input-group">
+                                <input type="text" id="search" name="q" class="form-control" placeholder="Search..." autocomplete="off" />
+                                <span class="input-group-btn">
+                                    <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- /.search form -->
+                        <!-- sidebar menu: : style can be found in sidebar.less -->
+                        <ul runat="server" id="ulMain" class="sidebar-menu">
+                            <li class="header">MAIN NAVIGATION</li>
+
+                            <li runat="server" id="li112" class="treeview">
+                                <a href="/Home.aspx">
+                                    <i class="fa fa-dashboard  text-yellow" aria-hidden="true"></i><span>Dashbord</span> <i class="fa fa-angle-left pull-right"></i></a></li>
+                            <li runat="server" id="li1" class="treeview">
+
+                                <a href="#">
+                                    <i class="fa fa-flag  text-yellow" aria-hidden="true"></i><span>Banner</span> <i class="fa fa-angle-left pull-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li id="liAddhouse"><a class="myABC" href="/Banner/HomePageBannerList.aspx"><i class="fa fa-circle-o"></i>Banner List</a></li>
+                                    <li id="litimeslot"><a class="myABC" href="/Banner/UploadHomepageBanner.aspx"><i class="fa fa-circle-o"></i>Upload Banner</a></li>
+                                </ul>
+
+                            </li>
+                              <li id="liJurisdiction" runat="server" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-building-o text-yellow" aria-hidden="true"></i><span>Master</span> <i class="fa fa-angle-left pull-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li id="liAddJurisdiction"><a class="myABC" href="/Jurisdiction/Jurisdiction.aspx"><i class="fa fa-circle-o"></i>Jurisdiction</a></li>
+                                    <li id="liAddCategory">
+                                        <a href="/Category/Category.aspx"><i class="fa fa-circle-o"></i>Category</a>
+                                    </li>
+                                </ul>
+                                
+                            </li>
+
+                            <li runat="server" id="li2" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-product-hunt  text-yellow" aria-hidden="true"></i><span>Product</span> <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li id="liAddhouse1"><a class="myABC" href="/Product/ManageProducts.aspx"><i class="fa fa-circle-o"></i>Manage Products</a></li>
+                                    <li id="litimeslot1"><a class="myABC" href="/Product/ProductList.aspx"><i class="fa fa-circle-o"></i>Product List</a></li>
+                                    <li id="liwhatsappmsg"><a class="myABC" href="/Product/WhatsappMsg.aspx"><i class="fa fa-circle-o"></i>Share WhatsApp Message</a></li>
+                                    <li id="liApprovedProduct"><a class="myABC" href="/Product/ApprovedProductList.aspx"><i class="fa fa-circle-o"></i>Approved Product List</a></li>
+                                </ul>
+                            </li>
+
+                            <li runat="server" id="li3" class="treeview">
+                                <a href="/Shipping/Shipping.aspx">
+                                    <i class="fa fa-shopping-basket  text-yellow" aria-hidden="true"></i><span>Shipping</span> <i class="fa fa-angle-left pull-right"></i></a></li>
+
+
+                            <%--  <li runat="server" id="liAddressMgmt" class="treeview" style="display:none">
+                                <a href="#">
+                                    <i class="fa fa-gear  text-yellow" aria-hidden="true"></i><span>Masters</span> <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <%--<li runat="server" id="lisocietylist"><a href="../Masters/ConsumableBrand.aspx"><i class="fa fa-circle-o"></i>Consumable Brand</a></li>
+                                 <li id="li5" runat="server"><a href="../Masters/Consumable.aspx"><i class="fa fa-circle-o"></i>Consumable</a></li>
+
+                                    <li  id="li101"><a class="myABC" href="../Store/AddPart.aspx"><i class="fa fa-circle-o"></i>Add Barand,Model<br />Variant</a></li>
+                                    <%--<li  id="li1"><a class="myABC" href="../Masters/VehicleBrand.aspx"><i class="fa fa-circle-o"></i>Vehicle Brand</a></li>
+                                    <li  id="liAddRoute"><a  class="myABC"  href="../Masters/Segment.aspx"><i class="fa fa-circle-o"></i>Vehicle Segment</a></li>
+                                    <li id="liAddSociety" ><a  class="myABC"  href="../Masters/VehicleModel.aspx"><i class="fa fa-circle-o"></i>Vehicle Model</a></li>
+                                    <li id="liSocietyorder" ><a  class="myABC"  href="../Masters/VehicleVariant.aspx"><i class="fa fa-circle-o"></i>Vehicle Variant</a></li>
+                                   
+                                    <li id="liAddhouse" ><a  class="myABC"  href="../Masters/Category.aspx"><i class="fa fa-circle-o"></i>Category</a></li>
+                                    <li id="litimeslot" ><a  class="myABC"  href="../Masters/TaxCategory.aspx"><i class="fa fa-circle-o"></i>Tax Category</a></li>
+                                    <li id="lirouteslotmapping" ><a  class="myABC"  href="../Masters/Service.aspx"><i class="fa fa-circle-o"></i>Service</a></li>
+                                    <li id="li2" ><a  class="myABC"  href="../Masters/InsuranceProvider.aspx"><i class="fa fa-circle-o"></i>Insurance Provider</a></li>
+                                    <li id="li3" ><a  class="myABC"  href="../Masters/Vendor.aspx"><i class="fa fa-circle-o"></i>Vendor</a></li>
+                                </ul>
+                            </li>--%>
+                            <%-- Store Start --%>
+                            <li id="li15" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-bell text-yellow" aria-hidden="true"></i><span>Notification</span> <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li id="li11"><a class="myABC" href="../Notification/SendImgNotificationScheduler.aspx"><i class="fa fa-circle-o"></i>Send Notification</a></li>
+                                     <li id="li111"><a class="myABC" href="../Notification/NotificationList.aspx"><i class="fa fa-circle-o"></i>Notification List</a></li>
+                                   
+
+                                </ul>
+                            </li>
+
+
+
+                            <li id="li16" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-user text-yellow" aria-hidden="true"></i><span>Customer</span> <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li id="li1211"><a class="myABC" href="../SoshoCustomer1.aspx"><i class="fa fa-circle-o"></i>Customer List</a></li>
+                                                                        
+
+                                </ul>
+                            </li>
+
+
+                            <%-- Store End --%>
+
+                            <%-- Report Start --%>
+                            <li id="li5" class="treeview" style="display: none">
+                                <a href="#">
+                                    <i class="fa fa-bar-chart text-blue" aria-hidden="true"></i><span>Report(s)</span> <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li id="li36"><a class="myABC" href="../Report/CarInReport.aspx"><i class="fa fa-fw fa-arrow-down"></i>Car(s) In Report</a></li>
+                                    <li id="li37"><a class="myABC" href="../Report/carwiseReport.aspx"><i class="fa fa-circle-o"></i>Car Wise Report</a></li>
+                                    <li id="li27" style="display: none;"><a class="myABC" href="../Report/JobcardWithGrn.aspx"><i class="fa fa-circle-o"></i>Jobcard With Grn</a></li>
+                                    <li id="li22" style="display: none;"><a class="myABC" href="../Report/PaymentReport.aspx"><i class="fa fa-circle-o"></i>Payment Report</a></li>
+                                    <li id="li13" style="display: none;"><a class="myABC" href="../Report/JobCardDetails.aspx"><i class="fa fa-circle-o"></i>JobCard Report</a></li>
+                                    <li id="li14"><a class="myABC" href="../Report/GRNReport.aspx"><i class="fa fa-circle-o"></i>GRN Report</a></li>
+                                    <li id="li18" style="display: none;"><a class="myABC" href="../Store/VendorDetails.aspx"><i class="fa fa-circle-o"></i>Vendor Wise GRN </a></li>
+                                    <li id="li23" style="display: none;"><a class="myABC" href="../Report/StockByDate.aspx"><i class="fa fa-circle-o"></i>Stock By Date</a></li>
+                                    <li id="li29"><a class="myABC" href="../Report/CollectionReport.aspx"><i class="fa fa-circle-o"></i>Collection Report</a></li>
+                                    <li id="li38"><a class="myABC" href="../Report/GSTFilingReport.aspx"><i class="fa fa-circle-o"></i>GST Filing Report</a></li>
+                                    <li id="li39"><a class="myABC" href="../Report/UserActivityReport.aspx"><i class="fa fa-circle-o"></i>Activity Report</a></li>
+                                    <li id="li388"><a class="myABC" href="../Report/inventoryBug.aspx"><i class="fa fa-circle-o"></i>Inventory Bug</a></li>
+                                    <li id="li389"><a class="myABC" href="../Report/CashCollection.aspx"><i class="fa fa-circle-o"></i>Cash Report</a></li>
+                                    <li id="li385"><a class="myABC" href="../Report/GrnNotMappedWithInvoice.aspx"><i class="fa fa-circle-o"></i>Grn Not Mapped With Invoice</a></li>
+                                    <li id="li38532"><a class="myABC" href="../Report/HSNReport.aspx"><i class="fa fa-circle-o"></i>HSN Report</a></li>
+                                    <li id="li24wesd"><a class="myABC" href="../Report/ProfitReport.aspx"><i class="fa fa-circle-o"></i>Profitability Report</a></li>
+                                    <li id="li24wewsd"><a class="myABC" href="../Report/InvoiceVsPayment.aspx"><i class="fa fa-circle-o"></i>Inv Vs Payment</a></li>
+                                    <li id="li2443sd"><a class="myABC" href="../Report/EndOfDayReport.aspx"><i class="fa fa-circle-o"></i>EOD</a></li>
+                                    <li id="sli2443sd"><a class="myABC" href="../Report/SalesReport.aspx"><i class="fa fa-circle-o"></i>Sales Report</a></li>
+                                </ul>
+                            </li>
+
+                            <%-- Report End --%>
+
+                            <%-- Advisor Start --%>
+                            <li id="li6" class="treeview" style="display: none">
+                                <a href="#">
+                                    <i class="fa fa-user text-black" aria-hidden="true"></i><span>Advisor</span> <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li id="li35"><a class="myABC" href="../Advisor/CarInListWithJobType.aspx"><i class="fa fa-fw fa-arrow-down"></i>Car In</a></li>
+                                    <li id="li17"><a class="myABC" href="../Advisor/Service.aspx"><i class="fa fa-circle-o"></i>Service</a></li>
+                                    <li id="li283"><a class="myABC" href="../Advisor/Accident.aspx"><i class="fa fa-circle-o"></i>Accident</a></li>
+                                </ul>
+                            </li>
+
+                            <%-- Advisor End --%>
+
+                            <%-- Advisor Start --%>
+                            <li id="li6" class="treeview" style="display: none">
+                                <a href="#">
+                                    <i class="fa fa-edit text-blue"></i><span>Workshop Manager</span> <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li id="li43"><a class="myABC" href="../ServiceManager/ServiceJobcards.aspx"><i class="fa fa-circle-o"></i>Recommendation</a></li>
+                                    <li id="li44"><a class="myABC" href="../ServiceManager/InvoiceApprovalPendingList.aspx"><i class="fa fa-circle-o"></i>Unapproved Invoic List</a></li>
+                                </ul>
+                            </li>
+
+                            <%-- Advisor End --%>
+
+                            <%-- Accounts Start --%>
+                            <li id="li9" class="treeview" style="display: none">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-rupee text-yellow"></i><span>Accounts</span> <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li id="li10"><a class="myABC" href="../Accounts/PaymentHistoryNew.aspx"><i class="fa fa-circle-o"></i>Payment History</a></li>
+                                    <li id="li30"><a class="myABC" href="../Accounts/VendorInvoice.aspx"><i class="fa fa-circle-o"></i>Vendor Invoice</a></li>
+                                    <li id="li20"><a class="myABC" href="../Accounts/PaymentHistory.aspx"><i class="fa fa-circle-o"></i>Payment History Single</a></li>
+                                    <li id="li40"><a class="myABC" href="../Accounts/VendorLedger.aspx"><i class="fa fa-circle-o"></i>Vendor Ledger</a></li>
+                                    <li id="li41"><a class="myABC" href="../Accounts/VendorLedgerWithInvoice.aspx"><i class="fa fa-circle-o"></i>Vendor Ledger With Inv</a></li>
+                                    <li id="li412"><a class="myABC" href="../Accounts/VendorPayment.aspx"><i class="fa fa-circle-o"></i>Vendor Payment</a></li>
+                                    <li id="li411"><a class="myABC" href="../Accounts/VendorPaymentList.aspx"><i class="fa fa-circle-o"></i>Vendor Payment List</a></li>
+                                    <li id="li4711"><a class="myABC" href="../Accounts/PurchaseVSGrn.aspx"><i class="fa fa-circle-o"></i>Purchase VS Grn Report</a></li>
+                                    <li id="li4811"><a class="myABC" href="../Accounts/JobCard_Expense_List.aspx"><i class="fa fa-circle-o"></i>JobCard Expense List</a></li>
+
+                                </ul>
+                            </li>
+                            <li id="li31" class="treeview" style="display: none">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-users text-black"></i><span>Customer Relationship</span> <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li id="li33"><a class="myABC" href="../CustomerRelationship/Customerreview.aspx"><i class="fa fa-fw fa-smile-o"></i>Review<i class="fa fa-fw fa-frown-o"></i></a></li>
+                                    <li id="li34"><a class="myABC" href="../CustomerRelationship/CarInList.aspx"><i class="fa fa-fw fa-arrow-down"></i>Car In</a></li>
+                                </ul>
+                            </li>
+                            <%-- Accounts End --%>
+
+                            <%-- User Role --%>
+                            <li class="treeview" id="lisettings" style="display: none">
+                                <a href="#">
+                                    <i class="fa fa-wrench text-green"></i><span>Settings</span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <%--  <li  id="liadduser"><a href="../AppManagement/User.aspx"><i class="fa fa-circle-o"></i>Add Users</a></li>--%>
+                                    <li>
+                                        <a class="myABC" href="../RoleManagement/User.aspx"><i class="fa fa-circle-o" id="limainadduser"></i>Add Users
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </span>
+                                        </a>
+                                        <ul class="treeview-menu" style="display: block;">
+                                            <li id="liadduser"><a class="myABC" href="../RoleManagement/User.aspx"><i class="fa fa-circle-o"></i>Admin User</a></li>
+                                        </ul>
+                                    </li>
+                                    <li id="liaddrole"><a class="myABC" href="../RoleManagement/role.aspx"><i class="fa fa-circle-o"></i>Add Role</a></li>
+                                    <li id="liaddpages"><a class="myABC" href="../RoleManagement/AddPages.aspx"><i class="fa fa-circle-o"></i>Add Pages</a></li>
+                                    <li id="liUserRole"><a class="myABC" href="../RoleManagement/User_Role.aspx"><i class="fa fa-circle-o"></i>User Role Mapping</a></li>
+                                    <li id="liUserPage"><a class="myABC" href="../RoleManagement/User_Page.aspx"><i class="fa fa-circle-o"></i>User Page Mapping</a></li>
+                                    <li id="liRolePage"><a class="myABC" href="../RoleManagement/Role_Page.aspx"><i class="fa fa-circle-o"></i>Role Page Mapping</a></li>
+                                    <li id="liRunQuery"><a class="myABC" href="../RunQuery.aspx"><i class="fa fa-circle-o"></i>Run Sql</a></li>
+                                </ul>
+                            </li>
+
+
+                            <li><a href="../Login.aspx?ID=1"><i class="fa fa-sign-out text-red"></i><span>Sign Out</span></a></li>
+                        </ul>
+                    </section>
+                    <!-- /.sidebar -->
+                </aside>
+            </div>
+            <div class="modal modal-success fade in" id="modal-success-all" style="padding-right: 17px;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" onclick="window.location.reload()" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title">Success</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4 class="modal-title">
+                                <p id="modal-success-all-body"></p>
+                            </h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline" onclick="window.location.reload()" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+
+            <div class="modal modal-danger fade in" id="modal-danger-all" style="padding-right: 17px;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title">Error</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4 class="modal-title">
+                                <p id="modal-danger-all-body"></p>
+                            </h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- Content Wrapper. Contains page content -->
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+
+            <!-- /.content-wrapper -->
+            <footer class="main-footer" id="mst-main-footer">
+                <div class="pull-right hidden-xs">
+                    <b>Version</b> 2.3.3
+                </div>
+                <strong>Copyright &copy;
+                    <asp:Label runat="server" ID="lblCopyrightYear"></asp:Label>
+                    <a href="#">Salebhai</a>.</strong> All rights
+    reserved.
+ 
+            </footer>
+
+            <!-- /.control-sidebar -->
+            <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+            <div class="control-sidebar-bg"></div>
+        </div>
+        <!-- ./wrapper -->
+
+        <!-- jQuery 2.2.0 -->
+        <%--<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>--%>
+        <!-- jQuery UI 1.11.4 -->
+        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+            $.widget.bridge('uibutton', $.ui.button);
+        </script>
+        <!-- Bootstrap 3.3.6 -->
+        <script src="../bootstrap/js/bootstrap.min.js"></script>
+        <!-- Select2 -->
+        <script src="../plugins/select2/select2.full.min.js"></script>
+
+
+        <script src="../plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="../plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+        <script src="../../plugins/datepicker/bootstrap-datepicker.js"></script>
+
+        <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css" />
+        <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.1.0/js/dataTables.buttons.min.js"></script>
+        <%--<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>--%>
+        <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+
+
+
+        <!-- AdminLTE App -->
+        <script src="../dist/js/app.js"></script>
+
+
+        <!-- daterangepicker -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+        <script src="../plugins/daterangepicker/daterangepicker.js"></script>
+        <!-- datepicker -->
+        <!-- AdminLTE for demo purposes -->
+
+        <script>
+            $(function () {
+                $('#example1').DataTable({
+                    "paging": true,
+                    "lengthChange": false,
+                    "searching": false,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false
+                });
+            });
+
+        </script>
+
+    </form>
+    <%--<script type="text/javascript">
+        var scrolltotop = { setting: { startline: 100, scrollto: 0, scrollduration: 1e3, fadeduration: [500, 100] }, controlHTML: '<img src="../dist/img/arrow11.png" />', controlattrs: { offsetx: 5, offsety: 5 }, anchorkeyword: "#top", state: { isvisible: !1, shouldvisible: !1 }, scrollup: function () { this.cssfixedsupport || this.$control.css({ opacity: 0 }); var t = isNaN(this.setting.scrollto) ? this.setting.scrollto : parseInt(this.setting.scrollto); t = "string" == typeof t && 1 == jQuery("#" + t).length ? jQuery("#" + t).offset().top : 0, this.$body.animate({ scrollTop: t }, this.setting.scrollduration) }, keepfixed: function () { var t = jQuery(window), o = t.scrollLeft() + t.width() - this.$control.width() - this.controlattrs.offsetx, s = t.scrollTop() + t.height() - this.$control.height() - this.controlattrs.offsety; this.$control.css({ left: o + "px", top: s + "px" }) }, togglecontrol: function () { var t = jQuery(window).scrollTop(); this.cssfixedsupport || this.keepfixed(), this.state.shouldvisible = t >= this.setting.startline ? !0 : !1, this.state.shouldvisible && !this.state.isvisible ? (this.$control.stop().animate({ opacity: 0.5 }, this.setting.fadeduration[0]), this.state.isvisible = !0) : 0 == this.state.shouldvisible && this.state.isvisible && (this.$control.stop().animate({ opacity: 0 }, this.setting.fadeduration[1]), this.state.isvisible = !1) }, init: function () { jQuery(document).ready(function (t) { var o = scrolltotop, s = document.all; o.cssfixedsupport = !s || s && "CSS1Compat" == document.compatMode && window.XMLHttpRequest, o.$body = t(window.opera ? "CSS1Compat" == document.compatMode ? "html" : "body" : "html,body"), o.$control = t('<div id="topcontrol">' + o.controlHTML + "</div>").css({ position: o.cssfixedsupport ? "fixed" : "absolute", bottom: o.controlattrs.offsety, right: o.controlattrs.offsetx, opacity: 0, cursor: "pointer" }).attr({ title: "Scroll to Top" }).click(function () { return o.scrollup(), !1 }).appendTo("body"), document.all && !window.XMLHttpRequest && "" != o.$control.text() && o.$control.css({ width: o.$control.width() }), o.togglecontrol(), t('a[href="' + o.anchorkeyword + '"]').click(function () { return o.scrollup(), !1 }), t(window).bind("scroll resize", function (t) { o.togglecontrol() }) }) } }; scrolltotop.init();
+        jQuery(document).ready(function ($) {
+            if (localStorage.getItem('advertOnce') !== 'true') {
+                $('body').append('<div id="advert-once" style="position:fixed; bottom: 10px; left: 10px;"><a href="#top" target="_blank" rel="nofollow"><img src="../dist/img/arrow11.png" width="24" height="24" border="0" alt="make a website" /></a><div class="advert-button"></div></div>')
+                localStorage.setItem('advertOnce', 'true');
+            }
+            $('#advert-once .advert-button').on('click', function () {
+                $('#advert-once').hide();
+            });
+        });
+    </script>--%>
+    <script>
+    <%--    var AllowedPages = '<%=(Application[Request.Cookies["TUser"]["WorkshopId"]+"-pages-"+Request.Cookies["TUser"]["Id"]]!=null?Application[Request.Cookies["TUser"]["WorkshopId"]+"-pages-"+Request.Cookies["TUser"]["Id"]].ToString():"said null")%>';
+        $('.myABC').each(function () {
+            var href = $(this).attr('href');
+            if (!AllowedPages.toLowerCase().includes(href.toLowerCase().replace("..", ""))) {
+                if (href == "../Store/AllocatedButDeletedByAdvisor.aspx") {
+                    var xyz = "";
+                }
+                $(this).hide();
+            }
+        })--%>
+
+        $(function () {
+            var url = window.location.pathname;
+            url = ".." + url;
+            $(".sidebar-menu li, .sidebar-menu ul").removeClass("active");
+            $(".sidebar-menu a[href='" + url + "']").parent().addClass("active");
+            $(".sidebar-menu a[href='" + url + "']").parents().addClass("active");
+        });
+        function getQueryStrings() {
+            var assoc = {};
+            var decode = function (s) { return decodeURIComponent(s.replace(/\+/g, " ")); };
+            var queryString = location.search.substring(1);
+            var keyValues = queryString.split('&');
+
+            for (var i in keyValues) {
+                var key = keyValues[i].split('=');
+                if (key.length > 1) {
+                    assoc[decode(key[0])] = decode(key[1]);
+                }
+            }
+
+            return assoc;
+        }
+    </script>
+    <script type="text/javascript">
+        var url = window.location.href;
+        var substring = "test";
+        if (url.indexOf(substring) !== -1) {
+            document.getElementsByClassName("navbar navbar-static-top")[0].style.background = '#af3333';
+        }
+    </script>
+    <script>
+        //var i =<%=(Request.QueryString["ifrm"]!=null?Request.QueryString["ifrm"]:"0")%>;
+        $(".content-wrapper").css('margin-left', '0!important');
+        //if (i == "1") {
+        //    $("#mst-main-header").hide();
+        //    // $('#ContentPlaceHolder1_GridView1').hide();
+        //    $("#mst-main-footer").hide();
+        //    $("#mst-main-sidebar").hide();
+        //    //$("#div-content-wrapper-Spare").removeClass("content-wrapper");
+        //    $(".content-wrapper").css('margin-left', '0!important');
+        //}
+        //else {
+        //    $("#mst-main-header").show();
+        //    $("#mst-main-sidebar").show();
+        //    $("#mst-main-footer").show();
+        //    $("#aside_sidebar").show();
+        //}
+        $(".select2").select2();
+    </script>
+    <script>
+        document.body.classList.add("sidebar-collapse");
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#search").on("keyup", function () {
+                if (this.value.length > 0) {
+                    $("li").hide().filter(function () {
+                        return $(this).text().toLowerCase().indexOf($("#search").val().toLowerCase()) != -1;
+                    }).show();
+                }
+                else {
+                    $("li").show();
+                }
+            });
+
+            var hiddenvalue = $("#hdnmainIsAdmin").val();
+            if (hiddenvalue == "False") {
+                $("#li1").hide();
+                $("#li3").hide();
+                $("#li15").hide();
+                $("#li16").hide();
+                $("#liAddJurisdiction").hide();
+                $("#liwhatsappmsg").hide();
+                $("#liApprovedProduct").hide();
+            }
+
+        });
+
+    </script>
+    <div>
+        <asp:ContentPlaceHolder ID="cphScripts" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+</body>
+</html>

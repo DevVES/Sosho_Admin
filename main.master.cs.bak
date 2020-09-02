@@ -1,0 +1,648 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using WebApplication1;
+public partial class main : System.Web.UI.MasterPage
+{
+    dbConnection dbc = new dbConnection();
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        lblCopyrightYear.Text = (DateTime.Now.Year - 1).ToString() + " - " + DateTime.Now.Year.ToString();
+
+
+        if (!Request.Cookies.AllKeys.Contains("TUser"))
+        {
+            Response.Redirect("~/login.aspx");
+        }
+        else
+        {
+            int Vendorid = 0;
+            int.TryParse(Request.Cookies["TUser"]["VendorId"], out Vendorid);
+            if (Vendorid == 0)
+            {
+                pageredirection.HRef = "Home.aspx";
+            }
+            else
+            {
+                pageredirection.HRef = "Home1.aspx";
+            }
+            int userId = 0;
+            int.TryParse(Request.Cookies["TUser"]["Id"], out userId);
+            if (userId != 1)
+            {
+                //visible false
+                liAddressMgmt.Visible = false;
+                lisocietylist.Visible = false;
+                liAddcity.Visible = false;
+                liAddRoute.Visible = false;
+                liAddSociety.Visible = false;
+                liSocietyorder.Visible = false;
+                liAddhouse.Visible = false;
+                lihouseorder.Visible = false;
+                litimeslot.Visible = false;
+                lirouteslotmapping.Visible = false;
+
+                liPurchaseMgmt.Visible = false;
+                lipurchaserpt2.Visible = false;
+                lipurchasrerpthisrpt.Visible = false;
+                lipurchaseentry.Visible = false;
+                livendorpurchase.Visible = false;
+                liCheckPurchaseReport.Visible = false;
+
+                liPriceMgmt.Visible = false;
+                // lipriceentry.Visible = false;
+                lipriceentryvar.Visible = false;
+                liPricingReport.Visible = false;
+
+                liOrderMgmt.Visible = false;
+                liallocateorders.Visible = false;
+                liallocateboys.Visible = false;
+                liorderpacking.Visible = false;
+                lipackingnew.Visible = false;
+                liordersummary.Visible = false;
+                lipackingdone.Visible = false;
+                licancelorder.Visible = false;
+
+                liDeliveryMgmt.Visible = false;
+                lideliveryrpt.Visible = false;
+                lideliveryrptnew.Visible = false;
+                lideliveryboymapping.Visible = false;
+
+                liCollectionMgmt.Visible = false;
+                licollectionpending.Visible = false;
+                licollecitonpendSociety.Visible = false;
+                licollectionPendHotel.Visible = false;
+                litotalcollectionleft.Visible = false;
+                lipaymentrecieved.Visible = false;
+                lirefund.Visible = false;
+                lirefundrpt.Visible = false;
+                licollectionrequest.Visible = false;
+                lionlinetransaction.Visible = false;
+                lionlinescheduler.Visible = false;
+                licollectionentry.Visible = false;
+
+                liCustomerMgmt.Visible = false;
+                licustomerdtl.Visible = false;
+                licustomermovement.Visible = false;
+                liorderfeedback.Visible = false;
+                licustomerrpt.Visible = false;
+                lipurchasetrends.Visible = false;
+                lifeedbackprogressrpt.Visible = false;
+                licustomerwisepurchase.Visible = false;
+                lideliverychart.Visible = false;
+                lifeedbackReport.Visible = false;
+
+                liProductMgmt.Visible = false;
+                liproductmodification.Visible = false;
+                licategoryMgmt.Visible = false;
+                liProductPublish.Visible = false;
+
+                liMarketing.Visible = false;
+                linotification.Visible = false;
+                licampaign.Visible = false;
+                liofferforall.Visible = false;
+                liblog.Visible = false;
+
+
+                liAppMgmt.Visible = false;
+                lisendsms.Visible = false;
+                liappvisitor.Visible = false;
+                liappshare.Visible = false;
+                licashback.Visible = false;
+                libanner.Visible = false;
+
+                liAnalytics.Visible = false;
+                liweekly.Visible = false;
+                lisocietywise.Visible = false;
+                lidropouthouses.Visible = false;
+                liloyalcustomer.Visible = false;
+                ligmvrpt.Visible = false;
+                lihourly.Visible = false;
+
+                liCustomrpt.Visible = false;
+                liordersummaryrpt.Visible = false;
+                linewactivation.Visible = false;
+                liproductpurchase.Visible = false;
+                liproductconsumption.Visible = false;
+                liorderrangerpt.Visible = false;
+                liloyalty.Visible = false;
+                liapptrafficrpt.Visible = false;
+
+                lisettings.Visible = false;
+                liadduser.Visible = false;
+                liaddrole.Visible = false;
+                liaddpages.Visible = false;
+                liUserRole.Visible = false;
+                liUserPage.Visible = false;
+                liRolePage.Visible = false;
+                liadduser.Visible = false;
+                limarketinguser.Visible = false;
+                liPurchaseUser.Visible = false;
+                //licollectionboy.Visible = false;
+                //lideliveryboy.Visible = false;
+
+                livendormanagement.Visible = false;
+                livendorlist.Visible = false;
+                lisettings.Visible = false;
+                lisettingpage.Visible = false;
+                limainadduser.Visible = false;
+                limarketinguser.Visible = false;
+                liadduser.Visible = false;
+                liPurchaseUser.Visible = false;
+                liadddeliveryboy.Visible = false;
+                liaddcollectionboy.Visible = false;
+                liaddrole.Visible = false;
+                liaddpages.Visible = false;
+                liUserRole.Visible = false;
+                liUserPage.Visible = false;
+                liRolePage.Visible = false;
+
+
+                bool showPage = isPageAccessible(userId, getCurrentPageName());
+                if (showPage == false)
+                {
+                    Response.Redirect("~/noaccess.aspx");
+                }
+                DataTable dtroles = dbc.GetDataTable("select userid,roleid,RoleName from User_Role_Mapping inner join Taaza_Role on Taaza_Role.Id=User_Role_Mapping.RoleId where userid=" + userId + "");
+                for (int i = 0; i < dtroles.Rows.Count; i++)
+                {
+                    if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("address"))
+                    {
+                        liAddressMgmt.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("purchase"))
+                    {
+                        liPurchaseMgmt.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("price"))
+                    {
+                        liPriceMgmt.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("order"))
+                    {
+                        liOrderMgmt.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("delivery"))
+                    {
+                        liDeliveryMgmt.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("collection"))
+                    {
+                        liCollectionMgmt.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("customer"))
+                    {
+                        liCustomerMgmt.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("product"))
+                    {
+                        liProductMgmt.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("marketing"))
+                    {
+                        liMarketing.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("app"))
+                    {
+                        liAppMgmt.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("analytics"))
+                    {
+                        liAnalytics.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("custom reports"))
+                    {
+                        liCustomrpt.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("vendor management"))
+                    {
+                        livendormanagement.Visible = true;
+                    }
+                    else if (dtroles.Rows[i]["RoleName"].ToString().ToLower().Contains("settings"))
+                    {
+                        lisettings.Visible = true;
+                    }
+
+                }
+                DataTable dtpages = dbc.GetDataTable("select userid,pageid,name,pageurl from user_page_mapping inner join taaza_Pages on taaza_Pages.Id=user_page_mapping.pageid where userid=" + userId + "");
+                for (int i = 0; i < dtpages.Rows.Count; i++)
+                {
+                    if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("societylist.aspx"))
+                    {
+                        lisocietylist.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("addcity.aspx"))
+                    {
+                        liAddcity.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("addroute.aspx"))
+                    {
+                        liAddRoute.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("addsociety.aspx"))
+                    {
+                        liAddSociety.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("societyshippingorder.aspx"))
+                    {
+                        liSocietyorder.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("shippinghouse.aspx"))
+                    {
+                        liAddhouse.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("housenumber_displayorder.aspx"))
+                    {
+                        lihouseorder.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("addtimeslot.aspx"))
+                    {
+                        litimeslot.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("routetimeslotmapping.aspx"))
+                    {
+                        lirouteslotmapping.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("purchasereport2.aspx"))
+                    {
+                        lipurchaserpt2.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("purchasereporthistory.aspx"))
+                    {
+                        lipurchasrerpthisrpt.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("purchaseentry.aspx"))
+                    {
+                        lipurchaseentry.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("checkpurchasereport.aspx"))
+                    {
+                        liCheckPurchaseReport.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("simplepr.aspx"))
+                    {
+                        livendorpurchase.Visible = true;
+                    }
+
+                    //else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("priceentry2.aspx"))
+                    //{
+                    //    lipriceentry.Visible = true;
+                    //}
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("priceentry.aspx"))
+                    {
+                        lipriceentryvar.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("pricecomparison.aspx"))
+                    {
+                        liPricingReport.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("alocateorderstodeliveryboy.aspx"))
+                    {
+                        liallocateorders.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("allocateboytodeliveryboy.aspx"))
+                    {
+                        liallocateboys.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("packaging.aspx"))
+                    {
+                        liorderpacking.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("packaging_new.aspx"))
+                    {
+                        lipackingnew.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("orderreport.aspx"))
+                    {
+                        liordersummary.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("packgingdonereport.aspx"))
+                    {
+                        lipackingdone.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("CancelOrder.aspx"))
+                    {
+                        licancelorder.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("deliveryreport.aspx"))
+                    {
+                        lideliveryrpt.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("deliveryreport_new.aspx"))
+                    {
+                        lideliveryrptnew.Visible = true;
+                    }
+                    //else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("deliveryboy.aspx"))
+                    //{
+                    //    lideliveryboy.Visible = true;
+                    //}
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("deliveryboymapping.aspx"))
+                    {
+                        lideliveryboymapping.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("collectionreport.aspx"))
+                    {
+                        licollectionpending.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("CollectionReportForSociety.aspx?IsHotel=0"))
+                    {
+                        licollecitonpendSociety.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("CollectionReportForSociety.aspx?IsHotel=1"))
+                    {
+                        licollectionPendHotel.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("totalcollectionreport.aspx"))
+                    {
+                        litotalcollectionleft.Visible = true;
+                    }
+                    //else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("collectionboy.aspx"))
+                    //{
+                    //    licollectionboy.Visible = true;
+                    //}
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("collectedreport.aspx"))
+                    {
+                        lipaymentrecieved.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("collectionrefund.aspx"))
+                    {
+                        lirefund.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("refundreport.aspx"))
+                    {
+                        lirefundrpt.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("paymentcollectionrequest.aspx"))
+                    {
+                        licollectionrequest.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("onlinepaymenttransaction.aspx"))
+                    {
+                        lionlinetransaction.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("onlinepaymentscheduler.aspx"))
+                    {
+                        lionlinescheduler.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("collectionentryform.aspx"))
+                    {
+                        licollectionentry.Visible = true;
+                    }
+
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("customerdetails.aspx"))
+                    {
+                        licustomerdtl.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("customerreport.aspx"))
+                    {
+                        licustomermovement.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("orderfeedbacksummary.aspx"))
+                    {
+                        liorderfeedback.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("customer.aspx"))
+                    {
+                        licustomerrpt.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("purchasetrendreport.aspx"))
+                    {
+                        lipurchasetrends.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("feedbackprogressreport.aspx"))
+                    {
+                        lifeedbackprogressrpt.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("monthlypurchase.aspx"))
+                    {
+                        licustomerwisepurchase.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("deliverychartreport.aspx"))
+                    {
+                        lideliverychart.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("feebackchartreport.aspx"))
+                    {
+                        lifeedbackReport.Visible = true;
+                    }
+
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("productpublished.aspx"))
+                    {
+                        liproductmodification.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("disablespecial.aspx"))
+                    {
+                        licategoryMgmt.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("publishdetails.aspx"))
+                    {
+                        liProductPublish.Visible = true;
+                    }
+
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("marketingboyregisterreport.aspx"))
+                    {
+                        liResellerPayment.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("vendorlist.aspx"))
+                    {
+                        livendorlist.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("sendimgnotification.aspx"))
+                    {
+                        linotification.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("campaignlist.aspx"))
+                    {
+                        licampaign.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("addcampaignproduct.aspx"))
+                    {
+                        liofferforall.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("bloglist.aspx"))
+                    {
+                        liblog.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("sendsms.aspx"))
+                    {
+                        lisendsms.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("apptrackingreport.aspx"))
+                    {
+                        liappvisitor.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("sharereport.aspx"))
+                    {
+                        liappshare.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("cashbackgivenreport.aspx"))
+                    {
+                        licashback.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("bannermgmt.aspx"))
+                    {
+                        libanner.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("targets.aspx"))
+                    {
+                        liweekly.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("societywisetrend.aspx"))
+                    {
+                        lisocietywise.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("custromerdrop.aspx"))
+                    {
+                        lidropouthouses.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("loyalcustomerreport.aspx"))
+                    {
+                        liloyalcustomer.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("gmvreport.aspx"))
+                    {
+                        ligmvrpt.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("hourlyreport.aspx"))
+                    {
+                        lihourly.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("ordersummaryreport.aspx"))
+                    {
+                        liordersummaryrpt.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("newactivation.aspx"))
+                    {
+                        linewactivation.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("productpurchasetrend.aspx"))
+                    {
+                        liproductpurchase.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("purchaseitemtrend.aspx"))
+                    {
+                        liproductconsumption.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("orderrange.aspx"))
+                    {
+                        liorderrangerpt.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("customerloyaltysummaryreport.aspx"))
+                    {
+                        liloyalty.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("visit.aspx"))
+                    {
+                        liapptrafficrpt.Visible = true;
+                    }
+
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("taazasetting.aspx"))
+                    {
+                        lisettingpage.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("marketingboy.aspx"))
+                    {
+                        limainadduser.Visible = true;
+                        limarketinguser.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("user.aspx"))
+                    {
+                        limainadduser.Visible = true;
+                        liadduser.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("purchaseboy.aspx"))
+                    {
+                        limainadduser.Visible = true;
+                        liPurchaseUser.Visible = true;
+                    }
+                    //else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("deliveryboy.aspx"))
+                    //{
+                    //    limainadduser.Visible = true;
+                    //    lideliveryboy.Visible = true;
+                    //}
+                    //else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("collectionboy.aspx"))
+                    //{
+                    //    limainadduser.Visible = true;
+                    //    licollectionboy.Visible = true;
+                    //}
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("role.aspx"))
+                    {
+                        liaddrole.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("addpages.aspx"))
+                    {
+                        liaddpages.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("user_role.aspx"))
+                    {
+                        liUserRole.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("user_page.aspx"))
+                    {
+                        liUserPage.Visible = true;
+                    }
+                    else if (dtpages.Rows[i]["pageurl"].ToString().ToLower().Contains("role_page.aspx"))
+                    {
+                        liRolePage.Visible = true;
+                    }
+
+                }
+            }
+
+            Label1.Text = Request.Cookies["TUser"]["UserName"];
+            Label2.Text = Request.Cookies["TUser"]["UserName"];
+        }
+
+
+    }
+    private bool isPageAccessible(int userId, string url)
+    {
+        if (url.ToLower().Contains("home.aspx"))
+        {
+            return true;
+        }
+        else
+        {
+            DataTable dtpages = dbc.GetDataTable("select userid,pageid,name,pageurl from user_page_mapping inner join taaza_Pages on taaza_Pages.Id=user_page_mapping.pageid where userid=" + userId + " and pageurl like '%" + url + "%'");
+            if (dtpages.Rows.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    private string getCurrentPageName()
+    {
+        string url = HttpContext.Current.Request.Url.AbsoluteUri;
+        // http://localhost:1302/TESTERS/Default6.aspx
+
+        string path = HttpContext.Current.Request.Url.AbsolutePath;
+        // /TESTERS/Default6.aspx
+
+        string host = HttpContext.Current.Request.Url.Host;
+        // localhost
+
+        return path;
+
+    }
+}

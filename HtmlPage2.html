@@ -1,0 +1,296 @@
+﻿
+
+
+<style>
+    td {
+        padding-top: 1px;
+        padding-bottom: 1px;
+        font-size: 10px;
+    }
+
+    tr {
+        padding-bottom: 1px;
+        padding-top: 1px;
+        font-size: 10px;
+    }
+
+    .auto-style1 {
+        height: 123px;
+    }
+</style>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" />
+    <title>
+
+    </title>
+    <script>
+        var urlstr = "../MotorzInner.asmx";
+        $(document).ready(function () {
+            $('html, body').animate({ scrollTop: $('#divDiscount').offset().top }, 'slow');
+            // SetData();
+        });
+        SetData();
+        function SetData()
+        {
+            //  generateGstInvoice(string Jobcardid, string type)
+            $.ajax({
+                type: "POST",
+                url: urlstr + "/generateGstInvoice",
+                data: { "Jobcardid": '5746', "type": '2',"GenerateGstInvoiceNumber":1 },
+                dataType: "json",
+                success: function (response) {
+                    try
+                    {
+                        $("#inv-no").html(response.Id);
+                        $("#Invoice_Date").html(response.Name);
+                    }
+                    catch(Exc){}
+                    $.ajax({
+                        type: "POST",
+                        url: urlstr + "/fillTabledatas_V2",
+                        data: { "fromInvoice": 0, "JobCardId": '5746', "Spare": "", "Service": "", "fromDiscount": false, "type": '2', "fromEstimate": false, "ShowAllocated": true,"GenerateGstInvoiceNumber": 1},
+                dataType: "json",
+                success: function (response) {
+                    $("#div_tblContent").html(response.Name);
+                    $("#RuppesInWord").html($("#rpnword").val());
+                    $("#NotesForCustomer").html($("#customernotes").val());
+                    var src = document.getElementsByTagName("BODY")[0].innerHTML;
+                    src = escape(src);
+                    var tpy = "2";
+                    if (tpy == "2") {
+                        tpy = "11";
+                    }
+                    else {
+                        tpy = "1";
+                    }
+                    var data = { 'htmlData': src, 'jobCardId': '5746', "filename": "", "HtmlContent": "", "Type": tpy };
+
+                    $.ajax({
+                        type: "POST",
+                        url: urlstr +"/GenerateHtml",
+                        cache: false,
+                        data: data,
+                        success: handleHtml,
+                        error: ajaxFailed
+                    });
+                    function handleHtml(data, status) {
+                    }
+                    function ajaxFailed(xmlRequest) {
+                        alert("fail");
+                        alert(xmlRequest.status + ' \n\r ' +
+                    xmlRequest.statusText + '\n\r' +
+                    xmlRequest.responseText);
+                    }
+                   // window.print();
+                },
+                failure: function (response) {
+                }
+            });
+                },
+                failure: function (response) {
+                }
+            });
+}
+
+    </script>
+</head>
+<body>
+    <form method="post" action="./Invoice.aspx?JobCardId=5746&amp;Type=2&amp;ShowHeader=true&amp;gst=true&amp;generate=true" id="form1">
+        <div class="aspNetHidden">
+            <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+        </div>
+
+        <div class="aspNetHidden">
+
+            <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="0A95A2D4" />
+        </div>
+        <div style="padding: 1% 3% 3% 3%">
+
+            <table style="font-family: monospace; font-size: 10px !important; width: 100%; background-size: contain; border: solid thin #ccc;"
+                   cellpadding="0" cellspacing="0" border="0">
+                <tbody>
+
+                    <tr>
+                        <td colspan="4" style="text-align: center; border-bottom: solid thin #ccc;">
+                            <strong>
+                                Tax Invoice
+                            </strong>
+                        </td>
+                    </tr>
+
+                    <tr style="&nbsp;">
+                        <td colspan="4" style="text-align: center;">
+                            <span id="companyTitle" style="font-size: 30px; text-transform: uppercase;">EXPEDITE MOTORS</span>
+                        </td>
+                    </tr>
+
+                    <tr style="&nbsp;">
+                        <td colspan="4" id="companyAddress" style="text-align: center;">
+                            Expedite Motor Solutions Ahmedabad pvt. Ltd, Beside Prasangam party plot, Near. Hathi temple, Gota, S.G. highway, Ahmedabad
+                        </td>
+                    </tr>
+
+                    <tr style="&nbsp;">
+                        <td colspan="4" id="companyContact" style="text-align: center;">
+                            Ph:+919558730080,+919099922259,+917573830059,+917573830012&nbsp;&nbsp;Email: hetal.jani@motorz.co.in,amitjoshi27900@gmail.com,shuklagopal31@gmail.com
+                        </td>
+                    </tr>
+
+                    <tr style="&nbsp;">
+                        <td colspan="4" style="text-align: center;" id="companyGST">
+                            <span style="display: none">Service Tax No:&nbsp;&nbsp;</span>
+                            <span style="display: none">CIN No: &nbsp;&nbsp;</span>
+                            <span style="display: inline-block;"><strong>GSTIN: 24AAECE5795K1Z7</strong></span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4" style="padding: 0px; border-top: solid thin #ccc;">
+                            <table style="width: 100%; font-size: 8pt !important;" cellpadding="0" cellspacing="0">
+                                <tbody>
+                                    <span id="HavingInsuranceDetails"><tr style='text-transform: uppercase; '> <td colspan='1' style='text-align:center;font-weight:bold;border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;'> Insurance Details </td><td colspan='2' style='text-align:center;font-weight:bold;border-bottom: 1px solid #ccc;'> Vehicle Details </td></tr><tr> <td width='50%' style='border-right: 1px solid #ccc;border-bottom: 1px solid #ccc;padding: 5px;vertical-align: top;'> <table style='width:100%;font-size:8pt !important; padding: 5px;'> <tbody><tr style='#SHOWVISIBILITYTR1#'> <td width='20%' style='padding-top: 1px;'> <span style='word-break: break-word;line-height: 1;'>Name:</span></td><td style='padding-top: 1px;' colspan='3'> <span style='word-break: break-word;line-height: 1;'>THE NEW INDIA ASSURANCE CO.  LTD.</span></td></tr><tr style='#SHOWVISIBILITYTR3#'> <td style='vertical-align: top;'> <span style='word-break: break-word;line-height: 1;'>GSTIN:</span></td><td style='vertical-align: top;padding-right: 2px;' colspan='3'> <span style='word-break: break-word;line-height: 1; '>24AAACN4165C2ZW</span></td></tr><tr> <td width='25%' style='vertical-align: top;'> <span style='word-break: break-word;line-height: 1;'>Policy Number:</span></td><td width='25%' style='vertical-align: top;padding-right: 2px;'> <span style='word-break: break-word; line-height: 1;'>21040031180300003863</span></td></tr><tr style='#SHOWVISIBILITYTR4#'> <td> <span style='word-break: break-word;line-height: 1;'>Phone:</span></td><td> <span style='word-break: break-word;line-height: 1;'>7573830023</span></td></tr><tr style='#SHOWVISIBILITYTR2#'> <td style='vertical-align: top;'> <span style='word-break: break-word;line-height: 1;'>Address:</span></td><td colspan='3' style='vertical-align: top;padding-right: 2px;'> <span style='word-break: break-word;line-height: 1; '>The New India Assurance Co. Ltd. (claim Hub) 4th Floor Popular House Opp-Sales India,Ashram Road Ahmedabad-380014</span></td></tr><tr style='border-top: 1px solid #ccc;'><td colspan='4'>&nbsp;</td></tr><tr> <td width='25%' style='vertical-align: top;'> <span style='word-break: break-word;line-height: 1;'>Exp Dt:</span></td><td width='25%' style='vertical-align: top;padding-right: 2px;'> <span style='word-break: break-word;line-height: 1; '>29-08-2019</span></td><td width='19%' style='vertical-align: top;'> <span style='word-break: break-word;line-height: 1;'>Claim Dt:</span></td><td width='31%' style='vertical-align: top;padding-right: 2px;'> <span style='word-break: break-word;line-height: 1; '></span></td></tr><tr> <td style='vertical-align: top;'> <span style='word-break: break-word;line-height: 1;'>Claim No:</span></td><td style='vertical-align: top;padding-right: 2px;'> <span style='word-break: break-word; line-height: 1;'></span></td><td style='vertical-align: top;'> <span style='word-break: break-word;line-height: 1;'>IDV(Rs.):</span></td><td style='vertical-align: top;padding-right: 2px;'> <span style='word-break: break-word;line-height: 1; '></span></td></tr></tbody></table> </td><td width='50' style='border-bottom: 1px solid #ccc;padding: 5px;vertical-align: top;'><table style='width:100%;font-size:8pt !important; padding: 5px;'> <tbody><tr> <td width='20%'> <span style='word-break: break-word;line-height: 1;padding-top: 1px;'> Invoice No: </span> </td><td width='30%'> <span id='inv-no' style='word-break: break-word;line-height: 1;padding-top: 1px;'>A/19-20/I/03/001 </span> </td><td width='20%'> <span style='word-break: break-word;line-height: 1;padding-top: 1px;'> Jobcard No: </span> </td><td width='30%'> <span style='word-break: break-word;line-height: 1;padding-top: 1px;'> <asp:Label ID='JobCardNo' runat='server' Text='5746'>5746</asp:Label> </span> </td></tr><tr> <td> <span style='word-break: break-word;line-height: 1;'> Invoice Date: </span> </td><td> <span style='word-break: break-word;line-height: 1;'> <asp:Label ID='Invoice_Date' runat='server' Text='03 September, 2019 13:52:51'>03 September, 2019 13:52:51</asp:Label> </span> </td><td> <span style='word-break: break-word;line-height: 1;'> Jobcard Date: </span> </td><td> <span style='word-break: break-word;line-height: 1;'> <asp:Label ID='JobCard_Date' runat='server' Text='26 August, 2019 12:39:34'>26 August, 2019 12:39:34</asp:Label></span> </td></tr><tr> <td> <span style='word-break: break-word;line-height: 1;'> Reg. Number: </span> </td><td> <span style='word-break: break-word;line-height: 1;'> <asp:Label ID='Vehicle_Reg_No' runat='server' Text='GJ07DB7071'>GJ07DB7071</asp:Label></span> </td><td> <span style='word-break: break-word;line-height: 1;'> KMS. Driven</span> </td><td> <span style='word-break: break-word;line-height: 1;'> <asp:Label ID='Kms' runat='server' Text='46694'>46694</asp:Label></span> </td></tr><tr> <td> <span style='word-break: break-word; line-height: 1;'>VIN:</span> </td><td> <span style='word-break: break-word; line-height: 1;'> <asp:Label ID='Chasis_No' runat='server' Text='MALA851CLHM638195'>MALA851CLHM638195</asp:Label></span> </td><td> <span style='word-break: break-word;'> Eng No: </span> </td><td> <span style='word-break: break-word;'> <asp:Label ID='EngineNo' runat='server' Text='G4LAHM422844'>G4LAHM422844</asp:Label> </span> </td></tr><tr> <td> <span style='word-break: break-word;'> Model: </span> </td><td> <span style='word-break: break-word;line-height: 1;'><asp:Label ID='ModelName' runat='server' Text='HYUNDAI GRAND I10'>HYUNDAI GRAND I10</asp:Label> </span> </td><td> <span style='word-break: break-word;'> Customer Name: </span> </td><td> <span style='word-break: break-word;'> <asp:Label ID='CustName' runat='server' Text='NILESH M SONI'>NILESH M SONI</asp:Label> </span> </td></tr></tbody></table></span>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="10" style="padding: 0px; border-top: solid thin #ccc;">
+                            <table style="width: 100%; font-size: 8pt !important;" cellpadding="0" cellspacing="0">
+                                <tbody>
+                                   <tr><td>
+                                           <span id="RCDetails"></span>
+                                       </td></tr> 
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4" style="text-transform: uppercase; font-size: 8px;">
+                            <div id="divDiscount">
+                                <div id="div_tblContent">
+                                    <span id="table_data">
+                                        <center><h1>Loading..........<i class="fa fa-refresh fa-spin"></i></h1></center>
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4" style="">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td colspan="4" style="text-align: left; border: solid 1px #ccc; font-weight: bold">
+                                        <b style="padding: 7px;">In words: <span id="RuppesInWord"></span></b>
+                                        <input type="hidden" name="rupees" value="0" id="rupees" />
+                                    </td>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="4" style="text-align: left;">
+                                            <center>
+                                                <table style="width: 100%; overflow: hidden !important; border: 1px solid #ccc !important; ">
+                                                    <tr style="border: solid 1px #ccc; font-weight: bold">
+                                                        <td><b style="padding:5px;">Recommendations.</b></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border-top: solid 1px #ccc;" id="RecommendedWork"></td>
+                                                    </tr>
+                                                </table>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="text-align: left; width: 100%;">
+                                            <table style="width: 100%; overflow: hidden !important; border: 1px solid #ccc !important;">
+                                                <tr style="border: solid 1px #ccc; font-weight: bold">
+                                                    <td style="vertical-align: top; width: 30px;"><b style="padding: 5px;"><u>Notes:</u></b></td>
+                                                    <td><span id="NotesForCustomer"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+                                    <tr style="height: 40px; vertical-align: top;">
+                                        <td colspan="2" style="text-align: left; padding: 5px">
+                                            &nbsp;
+                                        </td>
+                                        <td colspan="2" style="text-align: right; text-transform: uppercase; padding: 5px">
+                                            EXPEDITE MOTORS
+                                        </td>
+                                    </tr>
+                                    <tr style="">
+                                        <td colspan="4">
+                                            <br>
+                                            <div style="width: 40%; display: inline-block; float: left; padding: 5px">Customer signature</div>
+                                            <div style="width: 20%; display: inline-block; float: center; padding: 5px">Verified signature</div>
+                                            <div style="width: auto; display: inline-block; float: right; padding: 5px">Authorised signatory</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="overflow: hidden !important; text-decoration: underline; text-align: center; visibility: visible; padding: 5px">
+                                            I hereby certify that the repairs have been carried out to my utmost satisfaction.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4" style="text-transform: uppercase; text-align: center; border-top: solid thin #ccc; padding: 5px;">
+                            THANK YOU FOR YOUR VISIT
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4" style="text-transform: uppercase; text-align: center; border-top: solid thin #ccc; font-style: italic; padding: 5px;">
+                            THIS IS A COMPUTER GENERATED STATEMENT AND REQUIRES NO SIGNATURE
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </form>
+    <script>
+        $.ajax({
+            type: "GET",
+            url: urlstr + "/getRecommendation",
+            data: { "Id": '5746' },
+            dataType: "json",
+            success: function (data) {
+                var Str = "<ol >";
+
+                for (i = 0; i < data.length; i++) {
+                    Str += "<li>" + data[i].Name + "</li>";
+                }
+                Str += "</ol>";
+                $("#RecommendedWork").html(Str);
+            }
+        });
+        //If ShowHeader ==False
+        var ShowHeader = "1";
+        if (ShowHeader == 0) {
+            $("#companyGST").html("");
+            $("#companyContact").html("");
+            $("#companyAddress").html("");
+            $("#companyTitle").html("");
+        }
+
+    </script>
+</body>
+</html>
+
