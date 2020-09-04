@@ -33,6 +33,14 @@ public class clsCommon
 		//
 	}
 
+    public enum BannerActionType
+    {
+        OpenUrl = 1,
+        NavigateToCategory = 2,
+        AddToCart = 3,
+        None = -1
+    }
+
     //Webapicall fucntion
     public static string GET(string url)
     {

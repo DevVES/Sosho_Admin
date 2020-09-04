@@ -71,6 +71,24 @@
                                 </div>
                             </div>
                         </div>
+
+                        <%--<div class="row pad-bottom">
+                            <div class="col-md-12">
+                                 <div class="col-md-3 pad">
+                                <asp:Label ID="lblAction" runat="server" Text="Action"></asp:Label>
+                                     </div>
+                            
+                            <div class="col-md-7 pad">
+                                <asp:DropDownList ID="ddlintermedicateAction" runat="server" class="form-control" Width="40%" AppendDataBoundItems="true">
+                                    <asp:ListItem Text="Select Action Name" Value=""></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-md-2 pad">
+                                <span id="spnintermediateAction" style="color: #d9534f; display: none;">This field is required</span>
+                            </div>
+                                </div>
+                        </div>--%>
+
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -169,6 +187,9 @@
                                 </div>
                             </div>
                         </div>
+
+                        
+
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -219,12 +240,12 @@
                                     <asp:Label ID="lblintermediateAction" runat="server" Text="Action"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:DropDownList ID="ddlintermedicateAction" runat="server" class="form-control" Width="40%">
-                                        <asp:ListItem Value="">Select Action Type</asp:ListItem>
+                                    <asp:DropDownList ID="ddlintermedicateAction" runat="server" class="form-control" Width="40%" AutoPostBack = "true" OnSelectedIndexChanged = "OnSelectedIndexChanged">
+                                        <%--<asp:ListItem Value="">Select Action Type</asp:ListItem>
                                         <asp:ListItem Value="Add To Cart">Add To Cart</asp:ListItem>
                                         <asp:ListItem Value="Navigate To Category">Navigate To Category</asp:ListItem>
                                         <asp:ListItem Value="Open Url">Open Url</asp:ListItem>
-                                        <asp:ListItem Value="None">None</asp:ListItem>
+                                        <asp:ListItem Value="None">None</asp:ListItem>--%>
                                     </asp:DropDownList>
                                 </div>
                                 <div class="col-md-2 pad">
@@ -232,14 +253,28 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row pad-bottom">
+                        <div class="row pad-bottom" ID="dvintermediateLink" runat="server" style="display:none;">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblintermediateLink" runat="server" Text="Link"  Visible="false"></asp:Label><%--<span id="spanintermediateLink" runat="server" style="color: red">*</span>--%>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <asp:TextBox ID="txtintermediateLink" runat="server" CssClass="form-control" Width="40%" Placeholder="Link"  Visible="false"> </asp:TextBox>
+                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ControlToValidate="txtLink" ValidationExpression="(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,4}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?$" Text="Enter a valid URL" />
+                                </div>
+                                <div class="col-md-2 pad">
+                                    <span id="spnintermediateLink" style="color: #d9534f; display: none;">This field is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pad-bottom" ID="dvintermediateCategory" runat="server" style="display:none;">
                             <div class="col-md-12">
                                  <div class="col-md-3 pad">
-                                <asp:Label ID="lblintermediateCategory" runat="server" Text="Category"></asp:Label>
+                                <asp:Label ID="lblintermediateCategory" runat="server" Text="Category"  Visible="false"></asp:Label>
                                      </div>
                             
                             <div class="col-md-7 pad">
-                                <asp:DropDownList ID="ddlintermedicateCategory" runat="server" class="form-control" Width="40%" AppendDataBoundItems="true">
+                                <asp:DropDownList ID="ddlintermedicateCategory" runat="server" class="form-control" Width="40%" AppendDataBoundItems="true"  Visible="false">
                                     <asp:ListItem Text="Select Category Name" Value=""></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
@@ -248,6 +283,24 @@
                             </div>
                                 </div>
                         </div>
+
+                         <div class="row pad-bottom" ID="dvintermediateProduct" runat="server" style="display:none;">
+                            <div class="col-md-12">
+                                 <div class="col-md-3 pad">
+                                <asp:Label ID="lblintermediateProduct" runat="server" Text="Product" Visible="false"></asp:Label>
+                                     </div>
+                            
+                            <div class="col-md-7 pad">
+                                <asp:DropDownList ID="ddlintermedicateProduct" runat="server" class="form-control" Width="40%" AppendDataBoundItems="true" Visible="false">
+                                    <asp:ListItem Text="Select Product Name" Value=""></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-md-2 pad">
+                                <span id="spnintermediateProduct" style="color: #d9534f; display: none;">This field is required</span>
+                            </div>
+                                </div>
+                        </div>
+
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -261,20 +314,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 pad">
-                                    <asp:Label ID="lblintermediateLink" runat="server" Text="Link"></asp:Label><span style="color: red">*</span>
-                                </div>
-                                <div class="col-md-7 pad">
-                                    <asp:TextBox ID="txtintermediateLink" runat="server" CssClass="form-control" Width="40%" Placeholder="Link"> </asp:TextBox>
-                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ControlToValidate="txtLink" ValidationExpression="(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,4}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?$" Text="Enter a valid URL" />
-                                </div>
-                                <div class="col-md-2 pad">
-                                    <span id="spnintermediateLink" style="color: #d9534f; display: none;">This field is required</span>
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -371,6 +411,24 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row pad-bottom" id="divJurisdictionIncharge" runat="server">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblJurisdictionIncharge" runat="server" Text="Jurisdiction Incharge"></asp:Label>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <div class="block">
+                                        <asp:CheckBoxList runat="server" ID="chklstJurisdictionIncharge" RepeatLayout="Table">
+                                        </asp:CheckBoxList>
+                                        <input id="hdnProductCreatedBy" runat="server" type="hidden" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2 pad">
+                                    <span id="spnJurisdictionIncharge" style="color: #d9534f; display: none;">Please check at least one checkbox</span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -385,6 +443,7 @@
                 </div>
             </div>
             <script type="text/javascript">
+           
                 function previewFile() {
                     var preview = document.querySelector('#<%=productimg.ClientID %>');
                     var file = document.querySelector('#<%=FileUpload1.ClientID %>').files[0];
@@ -423,7 +482,7 @@
                     var Alttextval = $("#ContentPlaceHolder1_txtintermediateAltText").val();
                     var linkval = $("#ContentPlaceHolder1_txtintermediateAltText").val();
                     var Actionval = $("#ContentPlaceHolder1_ddlintermedicateAction").val();
-                    val Categoryval = $("#ContentPlaceHolder1_ddlintermedicateCategory").val();
+                    var Categoryval = $("#ContentPlaceHolder1_ddlintermedicateCategory").val();
                     if (typeval == "") {
                         $("#spnintermediateType").css('display', 'block');
                         flag = false;

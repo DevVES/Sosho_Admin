@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,12 @@ using WebApplication1;
 
 public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
 {
+    public class ActionType
+    {
+        // Auto-Initialized properties  
+        public string Text { get; set; }
+        public int Value { get; set; }
+    }
     dbConnection dbc = new dbConnection();
     string FileName = "",id="", intermediateFileName="";
     protected void Page_Load(object sender, EventArgs e)
@@ -34,6 +41,44 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                 ddlintermedicateCategory.DataValueField = "CategoryId";
                 ddlintermedicateCategory.DataBind();
 
+                string productqry = "SELECT Id,Name FROM Product where isnull(IsDeleted,0)=0 order by Id asc";
+                DataTable dtproduct = dbc.GetDataTable(productqry);
+                ddlintermedicateProduct.DataSource = dtproduct;
+                ddlintermedicateProduct.DataTextField = "Name";
+                ddlintermedicateProduct.DataValueField = "Id";
+                ddlintermedicateProduct.DataBind();
+
+                List<ActionType> ActionList = new List<ActionType>
+                {
+                                    new ActionType { Text = "Select Action Name", Value = 0},
+                                    new ActionType { Text = clsCommon.BannerActionType.OpenUrl.ToString(), Value = clsCommon.BannerActionType.OpenUrl.GetHashCode()},
+                    new ActionType { Text = clsCommon.BannerActionType.NavigateToCategory.ToString(), Value = clsCommon.BannerActionType.NavigateToCategory.GetHashCode()},
+                    new ActionType { Text = clsCommon.BannerActionType.AddToCart.ToString(), Value = clsCommon.BannerActionType.AddToCart.GetHashCode()},
+                    new ActionType { Text = clsCommon.BannerActionType.None.ToString(), Value = clsCommon.BannerActionType.None.GetHashCode()},
+                };
+                ddlintermedicateAction.DataTextField = "Text";
+                ddlintermedicateAction.DataValueField = "Value";
+                ddlintermedicateAction.DataSource = ActionList;
+                ddlintermedicateAction.DataBind();
+
+                string IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
+                string sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
+                if (IsAdmin == "True")
+                {
+                    divJurisdictionIncharge.Visible = true;
+
+                    string JurisdictionInchargeqry = "Select Distinct JurisdictionId,JurisdictionIncharge From JurisdictionMaster where IsActive = 1 order by JurisdictionId";
+                    DataTable dtIncharge = dbc.GetDataTable(JurisdictionInchargeqry);
+                    chklstJurisdictionIncharge.DataSource = dtIncharge;
+                    chklstJurisdictionIncharge.DataTextField = "JurisdictionIncharge";
+                    chklstJurisdictionIncharge.DataValueField = "JurisdictionId";
+                    chklstJurisdictionIncharge.DataBind();
+                }
+                else
+                {
+                    divJurisdictionIncharge.Visible = false;
+                }
+
                 txtdt.Text = dbc.getindiantime().ToString("dd/MMM/yyyy");
                 txtdt1.Text = dbc.getindiantime().ToString("dd/MMM/yyyy");
                 txtintermediateStartDate.Text = dbc.getindiantime().ToString("dd/MMM/yyyy");
@@ -46,6 +91,7 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                     BtnSave.Text = "Update";
 
                     DataTable dt1 = dbc.GetDataTable("SELECT  [Title],[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [dbo].[HomepageBanner] where IsDeleted=0  and Id=" + id);
+                    //DataTable intermediatedt = dbc.GetDataTable("SELECT  [Title],[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [dbo].[IntermediateBanners] where IsDeleted=0  and Id=" + id);
                     if (dt1.Rows.Count > 0)
                     {
                         txtTitle1.Text = dt1.Rows[0]["Title"].ToString();
@@ -121,7 +167,7 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
             string name = System.IO.Path.GetFileName(FileUpload1.FileName);
 
             string ext = System.IO.Path.GetExtension(FileUpload1.FileName);
-
+            
             bool isValidFile = false;
             string imgname = "", imgnamenew="";
             if (FileUpload1.HasFile)
@@ -476,7 +522,7 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                 string path = Server.MapPath("/IntermediateBannerImage");
                 FileUpload2.SaveAs(path + "/" + imgnamenew);
             }
-
+            
             string fileName = "";
             fileName = imgnamenew;
 
@@ -526,14 +572,55 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                 else
                     sCategoryId = ddlintermedicateCategory.SelectedValue.ToString();
 
-                string query = "INSERT INTO [dbo].[IntermediateBanners] ([Title] ,[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],";
-                query += "[IsDeleted],[TypeId],[CreatedOn],[CreatedBy],[Action],[CategoryID]) VALUES ('" + txtintermediateTitle.Text + "','" + txtintermediateAltText.Text + "','";
-                query += txtintermediateLink.Text + "','" + FROM1 + "','" + TO1 + "','" + IsActive + "','" + fileName + "',0,'"; 
-                query +=  ddlintermediateType.SelectedValue.ToString() + "','" + dtCreatedon.ToString() + "'," + userId + ",'" + ddlintermedicateAction.SelectedValue.ToString() + "'," + sCategoryId + ")";
-                int VAL = dbc.ExecuteQuery(query);
+                string sProductId = "";
+                if (string.IsNullOrEmpty(ddlintermedicateProduct.SelectedValue))
+                    sProductId = "0";
+                else
+                    sProductId = ddlintermedicateProduct.SelectedValue.ToString();
 
+                int intermediateActionId = 0;
+                if (ddlintermedicateAction.SelectedIndex > 0)
+                    intermediateActionId = ddlintermedicateAction.SelectedIndex;
+
+                List<ListItem> selectedIncharge = new List<ListItem>();
+                selectedIncharge = chklstJurisdictionIncharge.Items.Cast<ListItem>().Where(n => n.Selected).ToList();
+
+                
+                string[] para1 = { txtintermediateTitle.Text.ToString().Replace("'", "''"),
+            txtintermediateAltText.Text.ToString().Replace("'", "''"),
+            txtintermediateLink.Text.ToString().Replace("'", "''"),
+            FROM1,
+            TO1,
+            IsActive.ToString(),
+            fileName,
+            "0",
+            ddlintermediateType.SelectedValue,
+            dtCreatedon.ToString(),
+            userId,
+            ddlintermedicateAction.SelectedItem.ToString(),
+            sCategoryId,
+            intermediateActionId.ToString(),
+            sProductId,
+            };
+
+                string query = "INSERT INTO [dbo].[IntermediateBanners] ([Title] ,[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],";
+                query += "[IsDeleted],[TypeId],[CreatedOn],[CreatedBy],[Action],[CategoryID],[ActionId],[ProductId]) VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15); SELECT SCOPE_IDENTITY();";
+                //query +=  ddlintermediateType.SelectedValue.ToString() + "','" + dtCreatedon.ToString() + "'," + userId + ",'" + ddlintermedicateAction.SelectedItem.ToString() + "'," + sCategoryId + "," + intermediateActionId + "," + sProductId + "); SELECT SCOPE_IDENTITY();";
+                //int VAL = dbc.ExecuteQuery(query);
+                int VAL = dbc.ExecuteQueryWithParamsId(query, para1);
+                //query += "','" + FROM1 + "','" + TO1 + "','" + IsActive + "','" + fileName + "',0,'";
+
+                
                 if (VAL > 0)
                 {
+                    foreach (ListItem item in selectedIncharge)
+                    {
+                        string sJurisdictionId = item.Value.ToString();
+
+                        string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy])";
+                        Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + VAL + "','" + dtCreatedon.ToString() + "'," + userId + ")";
+                        dbc.ExecuteQuery(Jurisdictionquery);
+                    }
                     sweetMessage("", "Intermediate Banner Added Successfully", "success");
                     Response.Redirect("HomePageBannerList.aspx", true);
                 }
@@ -547,6 +634,43 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
         {
             sweetMessage("", "Please Try Again!!", "warning");
         }
+    }
+
+    protected void OnSelectedIndexChanged(object sender, EventArgs e)
+    {
+            ddlintermedicateCategory.Visible = false;
+            lblintermediateCategory.Visible = false;
+
+            txtintermediateLink.Visible = false;
+            lblintermediateLink.Visible = false;
+
+            ddlintermedicateProduct.Visible = false;
+            lblintermediateProduct.Visible = false;
+
+            dvintermediateLink.Style.Add("display", "none");
+            dvintermediateCategory.Style.Add("display", "none");
+            dvintermediateProduct.Style.Add("display", "none");
+
+            if (ddlintermedicateAction.SelectedIndex == clsCommon.BannerActionType.NavigateToCategory.GetHashCode())
+            {
+                ddlintermedicateCategory.Visible = true;
+                lblintermediateCategory.Visible = true;
+                dvintermediateCategory.Style.Add("display", "block");
+            }
+
+            if (ddlintermedicateAction.SelectedIndex == clsCommon.BannerActionType.OpenUrl.GetHashCode())
+            {
+                txtintermediateLink.Visible = true;
+                lblintermediateLink.Visible = true;
+                dvintermediateLink.Style.Add("display", "block");
+            }
+
+            if (ddlintermedicateAction.SelectedIndex == clsCommon.BannerActionType.AddToCart.GetHashCode())
+            {
+                ddlintermedicateProduct.Visible = true;
+                lblintermediateProduct.Visible = true;
+                dvintermediateProduct.Style.Add("display", "block");
+            }
     }
 
 }

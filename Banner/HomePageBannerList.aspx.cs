@@ -34,7 +34,7 @@ public partial class Banner_HomePageBannerList : System.Web.UI.Page
       
         String[] StrPart1 = to.Split('/');
 
-        string query = "SELECT  [Id],[Title],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [SalebhaiOnePage].[dbo].[HomepageBanner] where IsDeleted=0  and StartDate>=CONVERT(DATETIME, '" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + " 00:00:00', 102) and StartDate<=CONVERT(DATETIME, '" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + " 23:59:59', 102)  order by EndDate desc ";
+        string query = "SELECT  [Id],[Title],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [dbo].[HomepageBanner] where IsDeleted=0  and StartDate>=CONVERT(DATETIME, '" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + " 00:00:00', 102) and StartDate<=CONVERT(DATETIME, '" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + " 23:59:59', 102)  order by EndDate desc ";
         
 
        DataTable dtbannerlist = dbc.GetDataTable(query);
