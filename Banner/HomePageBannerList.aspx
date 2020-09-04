@@ -2,11 +2,10 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <style type="text/css">
-            .content
-            {
-                min-height:100vh;
-            }
-        </style>
+        .content {
+            min-height: 100vh;
+        }
+    </style>
 
     <style>
         .red {
@@ -79,10 +78,17 @@
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
 
+                        <div class="col-md-12">
+                            <asp:DropDownList ID="ddlBannerType" runat="server" class="form-control">
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+
                         <asp:Button ID="Button2" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" />
 
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
                         <a href="UploadHomepageBanner.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" target="_blank">Add</a>
                     </div>
                 </div>
@@ -96,7 +102,7 @@
                                 <asp:HyperLink runat="server" ID="HyperLink2" NavigateUrl='<%# "~/admin/SubOrderDetails.aspx?OrderId=" + Eval("OrderId")%>' Text='<%# Eval("OrderId")%>' Target="_blank"></asp:HyperLink>
                             </ItemTemplate>
                         </asp:TemplateField>--%>
-
+                        <asp:BoundField HeaderText="Type" DataField="Type" />
                         <asp:BoundField HeaderText="Title" DataField="Title" />
                         <asp:BoundField HeaderText="Link" DataField="Link" />
                         <asp:BoundField HeaderText="ImageName" DataField="ImageName" />
@@ -105,27 +111,34 @@
                         <asp:BoundField HeaderText="EndDate" DataField="EndDate" />
 
 
-                        <asp:HyperLinkField DataNavigateUrlFields="Id" ControlStyle-CssClass="red" HeaderText="EDIT" Target="_blank" DataNavigateUrlFormatString="~/Banner/UploadHomepageBanner.aspx?Id={0}" Text="Edit" />
+                        <%--<asp:HyperLinkField DataNavigateUrlFields="Id" ControlStyle-CssClass="red" HeaderText="EDIT" Target="_blank" DataNavigateUrlFormatString="~/Banner/UploadHomepageBanner.aspx?Id={0}&amp;TypeId={1}" Text="Edit" />--%>
+                        <asp:TemplateField>
+                            <ItemTemplate>
+                                <asp:HyperLink ID="lnkEdit"
+                                    NavigateUrl='<%# String.Format("~/Banner/UploadHomepageBanner.aspx?Id={0}&TypeId={1}", Eval("Id"), Eval("TypeId")) %>'
+                                    Text="EDIT" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
                     </Columns>
                     <HeaderStyle HorizontalAlign="Center" BackColor="#EDE8E8"></HeaderStyle>
                 </asp:GridView>
             </div>
             <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#ContentPlaceHolder1_gvbannerlist').DataTable({
-                        "fixedHeader": true,
-                        "paging": true,
-                        "order": [[5, "desc"]],
-                        "lengthChange": true,
-                        "deferRender": true,
-                        "ordering": true,
-                        "scrollX": true,
-                        "info": true,
-                        "autoWidth": false,
-                        "alwaysCloneTop": false,
-                    });
-                });
+                                $(document).ready(function () {
+                                    $('#ContentPlaceHolder1_gvbannerlist').DataTable({
+                                        "fixedHeader": true,
+                                        "paging": true,
+                                        "order": [[5, "desc"]],
+                                        "lengthChange": true,
+                                        "deferRender": true,
+                                        "ordering": true,
+                                        "scrollX": true,
+                                        "info": true,
+                                        "autoWidth": false,
+                                        "alwaysCloneTop": false,
+                                    });
+                                });
             </script>
 
         </section>

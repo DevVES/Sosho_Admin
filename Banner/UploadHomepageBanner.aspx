@@ -253,7 +253,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row pad-bottom" ID="dvintermediateLink" runat="server" style="display:none;">
+                        <div class="row pad-bottom" ID="dvintermediateLink" runat="server" >
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
                                     <asp:Label ID="lblintermediateLink" runat="server" Text="Link"  Visible="false"></asp:Label><%--<span id="spanintermediateLink" runat="server" style="color: red">*</span>--%>
@@ -267,7 +267,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row pad-bottom" ID="dvintermediateCategory" runat="server" style="display:none;">
+                        <div class="row pad-bottom" ID="dvintermediateCategory" runat="server">
                             <div class="col-md-12">
                                  <div class="col-md-3 pad">
                                 <asp:Label ID="lblintermediateCategory" runat="server" Text="Category"  Visible="false"></asp:Label>
@@ -284,7 +284,7 @@
                                 </div>
                         </div>
 
-                         <div class="row pad-bottom" ID="dvintermediateProduct" runat="server" style="display:none;">
+                         <div class="row pad-bottom" ID="dvintermediateProduct" runat="server" >
                             <div class="col-md-12">
                                  <div class="col-md-3 pad">
                                 <asp:Label ID="lblintermediateProduct" runat="server" Text="Product" Visible="false"></asp:Label>
@@ -323,7 +323,7 @@
                                 </div>
                                 <div class="col-md-9 pad" style="padding: 0">
                                     <div class="col-md-3 pad">
-                                        <asp:TextBox ID="txtintermediateStartDate" CssClass="form-control" placeholder="Select Date" runat="server"></asp:TextBox>
+                                        <asp:TextBox ID="txtintermediateStartDate"  CssClass="form-control" placeholder="Select Date" runat="server"></asp:TextBox>
                                         <script>
                                             $('#ContentPlaceHolder1_txtintermediateStartDate').datepicker({
                                                 format: 'dd/M/yyyy',
