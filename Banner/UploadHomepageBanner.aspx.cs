@@ -644,8 +644,8 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                 sProductId = ddlintermedicateProduct.SelectedValue.ToString();
 
             int intermediateActionId = 0;
-            if (ddlintermedicateAction.SelectedIndex > 0)
-                intermediateActionId = ddlintermedicateAction.SelectedIndex;
+            if (Convert.ToInt32(ddlintermedicateAction.SelectedValue) != 0)
+                intermediateActionId = Convert.ToInt32(ddlintermedicateAction.SelectedValue);
 
             List<ListItem> selectedIncharge = new List<ListItem>();
             selectedIncharge = chklstJurisdictionIncharge.Items.Cast<ListItem>().Where(n => n.Selected).ToList();

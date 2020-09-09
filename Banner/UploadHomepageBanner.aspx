@@ -256,7 +256,7 @@
                         <div class="row pad-bottom" ID="dvintermediateLink" runat="server" >
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="lblintermediateLink" runat="server" Text="Link"  Visible="false"></asp:Label><%--<span id="spanintermediateLink" runat="server" style="color: red">*</span>--%>
+                                    <asp:Label ID="lblintermediateLink" runat="server" Text="Link"  Visible="false"></asp:Label><span id="spanintermediateLink" runat="server" style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
                                     <asp:TextBox ID="txtintermediateLink" runat="server" CssClass="form-control" Width="40%" Placeholder="Link"  Visible="false"> </asp:TextBox>
@@ -270,7 +270,7 @@
                         <div class="row pad-bottom" ID="dvintermediateCategory" runat="server">
                             <div class="col-md-12">
                                  <div class="col-md-3 pad">
-                                <asp:Label ID="lblintermediateCategory" runat="server" Text="Category"  Visible="false"></asp:Label>
+                                <asp:Label ID="lblintermediateCategory" runat="server" Text="Category"  Visible="false"></asp:Label><span style="color: red">*</span>
                                      </div>
                             
                             <div class="col-md-7 pad">
@@ -287,7 +287,7 @@
                          <div class="row pad-bottom" ID="dvintermediateProduct" runat="server" >
                             <div class="col-md-12">
                                  <div class="col-md-3 pad">
-                                <asp:Label ID="lblintermediateProduct" runat="server" Text="Product" Visible="false"></asp:Label>
+                                <asp:Label ID="lblintermediateProduct" runat="server" Text="Product" Visible="false"></asp:Label><span style="color: red">*</span>
                                      </div>
                             
                             <div class="col-md-7 pad">
@@ -480,9 +480,10 @@
                     var typeval = $("#ContentPlaceHolder1_ddlintermediateType").val();
                     var titleval = $("#ContentPlaceHolder1_txtintermediateTitle").val();
                     var Alttextval = $("#ContentPlaceHolder1_txtintermediateAltText").val();
-                    var linkval = $("#ContentPlaceHolder1_txtintermediateAltText").val();
+                    var linkval = $("#ContentPlaceHolder1_txtintermediateLink").val();
                     var Actionval = $("#ContentPlaceHolder1_ddlintermedicateAction").val();
                     var Categoryval = $("#ContentPlaceHolder1_ddlintermedicateCategory").val();
+                    var Productval = $("#ContentPlaceHolder1_ddlintermedicateProduct").val();
                     if (typeval == "") {
                         $("#spnintermediateType").css('display', 'block');
                         flag = false;
@@ -495,16 +496,31 @@
                         $("#spnintermediateAltText").css('display', 'block');
                         flag = false;
                     }
-                    if (linkval == "") {
-                        $("#spnintermediateLink").css('display', 'block');
-                        flag = false;
+                    if (Actionval == "1")
+                    {
+                        if (linkval == "") {
+                            $("#spnintermediateLink").css('display', 'block');
+                            flag = false;
+                        }
+                    }
+                    if (Actionval == "2") {
+                        if (Categoryval == "") {
+                            $("#spnintermediateCategory").css('display', 'block');
+                            flag = false;
+                        }
+                    }
+                    if (Actionval == "3") {
+                        if (Productval == "") {
+                            $("#spnintermediateProduct").css('display', 'block');
+                            flag = false;
+                        }
                     }
                     if (Actionval == "") {
                         $("#spnintermediateAction").css('display', 'block');
                         flag = false;
                     }
                     else {
-                        if (Actioval == "Navigate To Category") {
+                        if (Actionval == "Navigate To Category") {
                             if (Categoryval == "") {
                                 $("#spnintermediateCategory").css('display', 'block');
                                 flag = false;

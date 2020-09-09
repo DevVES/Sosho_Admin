@@ -424,22 +424,22 @@
 
 
                             <script type="text/javascript" lang="javascript">
-                                function isNumber(evt) {
-                                    var theEvent = evt || window.event;
-                                    var key = theEvent.keyCode || theEvent.which;
-                                    var keyCode = key;
-                                    key = String.fromCharCode(key);
-                                    if (key.length == 0) return;
-                                    var regex = /^[0-9.\b]+$/;
-                                    if (keyCode == 188 || keyCode == 190) {
-                                        return;
-                                    } else {
-                                        if (!regex.test(key)) {
-                                            theEvent.returnValue = false;
-                                            if (theEvent.preventDefault) theEvent.preventDefault();
-                                        }
-                                    }
-                                }
+                                            function isNumber(evt) {
+                                                var theEvent = evt || window.event;
+                                                var key = theEvent.keyCode || theEvent.which;
+                                                var keyCode = key;
+                                                key = String.fromCharCode(key);
+                                                if (key.length == 0) return;
+                                                var regex = /^[0-9.\b]+$/;
+                                                if (keyCode == 188 || keyCode == 190) {
+                                                    return;
+                                                } else {
+                                                    if (!regex.test(key)) {
+                                                        theEvent.returnValue = false;
+                                                        if (theEvent.preventDefault) theEvent.preventDefault();
+                                                    }
+                                                }
+                                            }
                             </script>
 
 
@@ -641,7 +641,7 @@
                         </div>
                         <div class="row pad-bottom">
                             <div class="col-md-12">
-                                <asp:GridView ID="grdgProduct" runat="server" AutoGenerateColumns="false" EmptyDataText="No records has been added." class="table table-bordered table-hover" rules="all" role="grid" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" Width="95%" CellPadding="10" CellSpacing="5" >
+                                <%--<asp:GridView ID="grdgProduct" runat="server" AutoGenerateColumns="false" EmptyDataText="No records has been added." class="table table-bordered table-hover" rules="all" role="grid" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" Width="95%" CellPadding="10" CellSpacing="5" >
 
                                     <Columns>
                                         <asp:TemplateField HeaderText="Unit Name">
@@ -653,7 +653,6 @@
                                                 <asp:Label ID="lblname" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "grpUnitName")%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
-                                        <%--<asp:BoundField HeaderText="Unit Name" DataField="grpUnitName" />--%>
                                         <asp:BoundField HeaderText="Unit" DataField="grpUnit" />
                                         <asp:BoundField HeaderText="MRP" DataField="grpMrp" />
                                         <asp:BoundField HeaderText="Discount Type" DataField="grpDiscountType" />
@@ -661,21 +660,9 @@
                                         <asp:BoundField HeaderText="Sosho Price" DataField="grpSoshoPrice" />
                                         <asp:BoundField HeaderText="Packing Type" DataField="grpPackingType" />
                                         <asp:BoundField HeaderText="Is Selected" DataField="grpisSelected" />
-                                             <%--   <asp:HyperLinkField DataNavigateUrlFields="Id,grpId" 
-                                                    ControlStyle-CssClass="red" HeaderText="EDIT" 
-                                                    DataNavigateUrlFormatString="~/Product/ManageProducts.aspx?Id={0}&grpId={1}"
-                                                    Text="Edit"/>
-                                            --%>
                                        <asp:TemplateField>
             <ItemTemplate>
-                
-             <%--   <asp:HyperLink ID="lnkEnquiry" NavigateUrl='<%# Eval("Country","http://www.xyz.com/web/enquiries.asp?id={0}") %>'
-                    Text="Enquiry" Visible='<%# Eval("Country").ToString() == "India" %>'
-                 NavigateUrl = '<%# ("~/Product/ManageProducts.aspx?Id=") + Eval("Id") %>'
-                 NavigateUrl='<%# Eval("Id", "~/Product/ManageProducts.aspx?Id={0}") %>'
-                    runat="server" />--%>
                  <asp:HyperLink ID="lnkEdit" 
-                     
                      navigateurl='<%# String.Format("~/Product/ManageProducts.aspx?Id={0}&grpId={1}", Eval("Id"), Eval("grpId")) %>'
                     Text="EDIT" Visible='<%# Eval("Status").ToString() == "Update" %>'
                     runat="server" />
@@ -683,7 +670,56 @@
         </asp:TemplateField>
                                       
                                     </Columns>
+                                </asp:GridView>--%>
+                                
+<asp:UpdatePanel runat="server">
+<ContentTemplate>
+                                <asp:GridView ID="grdgProduct" runat="server" AutoPostBack="false" AutoGenerateColumns="false" 
+                                    AllowPaging="true" OnRowEditing="OnRow_Editing" Width="99%"    >
+                                    <PagerStyle ForeColor="#8C4510" 
+          HorizontalAlign="Center"></PagerStyle>
+        <HeaderStyle ForeColor="White" Font-Bold="True" 
+          BackColor="#A55129"></HeaderStyle>
+                                          <Columns>
+                                        <asp:TemplateField HeaderText="Unit Name">
+                                            <ItemTemplate>
+                                                <asp:HiddenField ID="HiddenFieldgrpUnitId" runat="server" Value='<%# Bind("grpUnitId") %>' />
+                                                <asp:HiddenField ID="HiddenFieldgrpImage" runat="server" Value='<%# Bind("grpImage") %>' />
+                                                <asp:HiddenField ID="HiddenFieldgrpisOutOfStock" runat="server" Value='<%# Bind("grpisOutOfStock") %>' />
+                                                <asp:HiddenField ID="HiddenFieldgrpisSelected" runat="server" Value='<%# Bind("grpisSelected") %>' />
+                                                <asp:Label ID="lblname" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "grpUnitName")%>'></asp:Label>
+                                                <asp:HiddenField ID="HiddenFieldgrpid" runat="server" Value='<%# Bind("grpId") %>' />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:BoundField HeaderText="Unit" DataField="grpUnit" />
+                                        <asp:BoundField HeaderText="MRP" DataField="grpMrp" />
+                                        <asp:BoundField HeaderText="Discount Type" DataField="grpDiscountType" />
+                                        <asp:BoundField HeaderText="Discount" DataField="grpDiscount" />
+                                        <asp:BoundField HeaderText="Sosho Price" DataField="grpSoshoPrice" />
+                                        <asp:BoundField HeaderText="Packing Type" DataField="grpPackingType" />
+                                        <asp:BoundField HeaderText="Is Selected" DataField="grpisSelected" />
+                                       
+                                     <%-- <asp:TemplateField>
+        <ItemTemplate>
+            <asp:LinkButton Text="Edit" runat="server" CommandName="Edit" />
+        </ItemTemplate>
+        <EditItemTemplate>
+            <asp:LinkButton Text="Update" runat="server" OnClick="OnUpdate" />
+            <asp:LinkButton Text="Cancel" runat="server" OnClick="OnCancel" />
+        </EditItemTemplate>
+    </asp:TemplateField>--%>
+                                               <asp:TemplateField>
+            <ItemTemplate>
+                 <asp:HyperLink ID="lnkEdit" 
+                     navigateurl='<%# String.Format("~/Product/ManageProducts.aspx?Id={0}&grpId={1}", Eval("Id"), Eval("grpId")) %>'
+                    Text="EDIT" Visible='<%# Eval("Status").ToString() == "Update" %>'
+                    runat="server" />
+            </ItemTemplate>
+                                                   </asp:TemplateField>
+                                    </Columns>
                                 </asp:GridView>
+    </ContentTemplate>
+</asp:UpdatePanel>
                             </div>
                         </div>
                     </div>
@@ -731,8 +767,8 @@
                             </div>
                         </div>
                         <script type="text/javascript">
-                            function previewFile1() {
-                                var preview2 = document.querySelector('#<%=productimg1.ClientID %>');
+                                function previewFile1() {
+                                    var preview2 = document.querySelector('#<%=productimg1.ClientID %>');
                                 var file2 = document.querySelector('#<%=FileUpload2.ClientID %>').files[0];
                                 var reader2 = new FileReader();
 
@@ -745,7 +781,7 @@
                                 } else {
                                     preview2.src = "";
                                 }
-                            }
+                                }
 
                         </script>
 
@@ -994,7 +1030,7 @@
                                 <asp:Label ID="lblimages" runat="server" Text="Images"></asp:Label><span style="color: red">*</span>
                             </div>
                             <div class="col-md-9 pad">
-                                <asp:FileUpload ID="FileUploadMainImages" onchange="previewFile()" OnDataBinding="FileUploadMainImages_DataBinding" OnLoad="FileUploadMainImages_Load" OnInit="FileUploadMainImagesControl_Init" runat="server"  />
+                                <asp:FileUpload ID="FileUploadMainImages" onchange="previewFile()" OnDataBinding="FileUploadMainImages_DataBinding" OnLoad="FileUploadMainImages_Load" OnInit="FileUploadMainImagesControl_Init" runat="server" />
 
                                 <asp:Image ID="productimg" Width="202px" Height="90px" runat="server" />
                                 <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server"
@@ -1117,19 +1153,19 @@
 
 
             <script type="text/javascript" lang="javascript">
-                function validatenumerics(key) {
-                    //getting key code of pressed key
-                    var keycode = (key.which) ? key.which : key.keyCode;
-                    //comparing pressed keycodes
+                            function validatenumerics(key) {
+                                //getting key code of pressed key
+                                var keycode = (key.which) ? key.which : key.keyCode;
+                                //comparing pressed keycodes
 
-                    if (keycode > 31 && (keycode < 48 || keycode > 57)) {
-                        alert(" You can enter only characters 0 to 9 ");
-                        return false;
-                    }
-                    else return true;
+                                if (keycode > 31 && (keycode < 48 || keycode > 57)) {
+                                    alert(" You can enter only characters 0 to 9 ");
+                                    return false;
+                                }
+                                else return true;
 
 
-                }
+                            }
             </script>
             <script>
                 var today = new Date();
