@@ -33,11 +33,11 @@ public partial class Jurisdiction_AddJurisdiction : System.Web.UI.Page
 
                 chkisactive.Checked = true;
 
-                string PinCodeqry = "Select Location,zipcode from Zipcode order by zipcode";
+                string PinCodeqry = "Select Distinct Zipcode from Zipcode Where zipcode not in ( SELECT PinCodeID FROM JurisdictionDetail where IsActive = 1)";
                 DataTable dtPincode = dbc.GetDataTable(PinCodeqry);
                 chklstPincode.DataSource = dtPincode;
                 chklstPincode.DataTextField = "zipcode";
-                chklstPincode.DataValueField = "Location";
+                chklstPincode.DataValueField = "zipcode";
                 chklstPincode.DataBind();
 
                 
@@ -112,6 +112,7 @@ public partial class Jurisdiction_AddJurisdiction : System.Web.UI.Page
                     hdnJurisdictionID.Value = VAL.ToString();
                     hdnContact.Value = txtContact.Text.ToString().Replace("'", "''");
                     sweetMessage("", "Jurisdiction Added Successfully", "success");
+                    Response.Redirect("Jurisdiction.aspx");
                 }
                 else
                 {

@@ -237,7 +237,15 @@
                                 </ul>
                             </li>
 
-
+                            <li runat="server" id="li7" class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-google-wallet  text-yellow" aria-hidden="true"></i><span>Wallet</span> <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li id="liAddWallet"><a class="myABC" href="/Wallet/ManageWallets.aspx"><i class="fa fa-circle-o"></i>Manage Wallet</a></li>
+                                    <li id="liWalletList"><a class="myABC" href="/Wallet/WalletList.aspx"><i class="fa fa-circle-o"></i>Wallet List</a></li>
+                                </ul>
+                            </li>
                             <%-- Store End --%>
 
                             <%-- Report Start --%>

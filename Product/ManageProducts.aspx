@@ -672,9 +672,8 @@
                                     </Columns>
                                 </asp:GridView>--%>
                                 
-<asp:UpdatePanel runat="server">
-<ContentTemplate>
-                                <asp:GridView ID="grdgProduct" runat="server" AutoPostBack="false" AutoGenerateColumns="false" 
+
+                                <asp:GridView ID="grdgProduct" runat="server"  AutoGenerateColumns="false" 
                                     AllowPaging="true" OnRowEditing="OnRow_Editing" Width="99%"    >
                                     <PagerStyle ForeColor="#8C4510" 
           HorizontalAlign="Center"></PagerStyle>
@@ -699,27 +698,26 @@
                                         <asp:BoundField HeaderText="Packing Type" DataField="grpPackingType" />
                                         <asp:BoundField HeaderText="Is Selected" DataField="grpisSelected" />
                                        
-                                     <%-- <asp:TemplateField>
+                                      <asp:TemplateField>
         <ItemTemplate>
-            <asp:LinkButton Text="Edit" runat="server" CommandName="Edit" />
+            <asp:LinkButton Text="Edit" runat="server" CommandName="Edit" CausesValidation="false" />
         </ItemTemplate>
         <EditItemTemplate>
-            <asp:LinkButton Text="Update" runat="server" OnClick="OnUpdate" />
-            <asp:LinkButton Text="Cancel" runat="server" OnClick="OnCancel" />
+            <asp:LinkButton Text="Update" runat="server" OnClick="OnUpdate" CausesValidation="false" />
+            <asp:LinkButton Text="Cancel" runat="server" OnClick="OnCancel" CausesValidation="false" />
         </EditItemTemplate>
-    </asp:TemplateField>--%>
-                                               <asp:TemplateField>
+    </asp:TemplateField>
+                                              <%-- <asp:TemplateField>
             <ItemTemplate>
                  <asp:HyperLink ID="lnkEdit" 
                      navigateurl='<%# String.Format("~/Product/ManageProducts.aspx?Id={0}&grpId={1}", Eval("Id"), Eval("grpId")) %>'
                     Text="EDIT" Visible='<%# Eval("Status").ToString() == "Update" %>'
                     runat="server" />
             </ItemTemplate>
-                                                   </asp:TemplateField>
+                                                   </asp:TemplateField>--%>
                                     </Columns>
                                 </asp:GridView>
-    </ContentTemplate>
-</asp:UpdatePanel>
+    
                             </div>
                         </div>
                     </div>
