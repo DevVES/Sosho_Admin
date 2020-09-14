@@ -297,9 +297,14 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                     {
                         foreach (DataRow item in dtcustomerlist.Rows)
                         {
-                            
-                                string customerlinkinsertquery = "INSERT INTO [dbo].[tblWalletCustomerLink] ([wallet_id],[customer_id],[is_active],[created_date],[created_by]) VALUES (" + VAL + "," + item.ItemArray[1] + "," + IsActive + ",'" + dtCreatedon.ToString() + "'," + userId + ")";
-                                dbc.ExecuteQuery(customerlinkinsertquery);
+                            string[] para2 = { VAL.ToString(),item.ItemArray[1].ToString(),IsActive.ToString(),dtCreatedon.ToString(), userId };
+                            string customerlinkinsertquery = "INSERT INTO [dbo].[tblWalletCustomerLink] ([wallet_id],[customer_id],[is_active],[created_date],[created_by]) VALUES (@1,@2,@3,@4,@5) SELECT SCOPE_IDENTITY();";
+                            int linkVAL = dbc.ExecuteQueryWithParamsId(customerlinkinsertquery, para2);
+
+                            string[] para3 = { VAL.ToString(), item.ItemArray[1].ToString(), linkVAL.ToString(), startdate,campaignname,walletAmt.ToString(), "", "", 0.ToString(), walletAmt.ToString(), IsActive.ToString(), dtCreatedon.ToString(), userId };
+                            //string customerwallethistoryQuery = "INSERT INTO [dbo].[tblWalletCustomerHistory] ([wallet_id],[customer_id],[wallet_link_id],[Cr_date],[Cr_description],[Cr_amount],[Dr_date],[Dr_description],[Dr_amount],[balance],[is_active],[created_date],[created_by]) VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13) SELECT SCOPE_IDENTITY();";
+                            string customerwallethistoryQuery = "INSERT INTO [dbo].[tblWalletCustomerHistory] ([wallet_id],[customer_id],[wallet_link_id],[Cr_date],[Cr_description],[Cr_amount],[Dr_date],[Dr_description],[Dr_amount],[balance],[is_active],[created_date],[created_by]) VALUES ("+VAL.ToString()+", " +item.ItemArray[1].ToString()+","+ linkVAL.ToString()+", '"+startdate+"','"+campaignname+"',"+ walletAmt.ToString()+", '', '', 0, " + walletAmt.ToString() +","+ IsActive.ToString()+",'"+ dtCreatedon.ToString()+"',"+ userId +");";
+                            dbc.ExecuteQuery(customerwallethistoryQuery);
                         }
                     }
                 }
