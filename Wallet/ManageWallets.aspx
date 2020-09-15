@@ -107,7 +107,24 @@
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="lblWalletAmount" runat="server" Text="Wallet Amount"></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="lblOfferType" runat="server" Text="Offer Type"></asp:Label><span style="color: red">*</span>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <asp:DropDownList ID="ddlOfferType" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true">
+                                        <asp:ListItem Text="Select Offer Type" Value=""></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-md-2 pad">
+                                    <span id="spnOfferType" style="color: #d9534f; display: none;">This field is required</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblWalletAmount" runat="server" Text="Wallet Amount"></asp:Label>
                                 </div>
                                 <div class="col-md-7 pad">
                                     <asp:TextBox ID="txtWalletAmount" runat="server" CssClass="form-control calculate" Width="40%" onkeypress="return isNumber(event)" placeholder="Wallet Amount"> </asp:TextBox>
@@ -121,19 +138,18 @@
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="lblcouponcode" runat="server" Text="Coupon Code"></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="lblcouponcode" runat="server" Text="Coupon Code"></asp:Label>
                                 </div>
                                 <div class="col-md-7 pad" style="padding-left: 0px;">
                                     <div class="col-md-5 pad">
-                                        <asp:TextBox ID="txtcouponcode" runat="server" CssClass="form-control" placeholder="Coupon Code" Enabled="false"> </asp:TextBox>
+                                        <asp:TextBox ID="txtcouponcode" runat="server" CssClass="form-control" placeholder="Coupon Code"> </asp:TextBox>
                                     </div>
                                     <div class="col-md-2 pad">
                                         <asp:Button ID="btnGenerate" runat="server" Text="Generate" CssClass="btn btn-block btn-info" title="Generate" OnClick="BtnGenerate_Click" OnClientClick="return Validate()" />
                                     </div>
                                 </div>
-
                                 <div class="col-md-2 pad">
-                                    <span id="spncouponcode" style="color: #d9534f; display: none;">This field is required</span>
+                                    <span id="spncouponcode" style="color: #d9534f; display: none;" runat="server">This field is required</span>
                                 </div>
 
                             </div>
@@ -448,16 +464,20 @@
                                                 var walletAmount = $("#ContentPlaceHolder1_txtWalletAmount").val();
 
                                                 var MinOrderAmt = $("#ContentPlaceHolder1_txtgrpMinOrderAmt").val();
-
+                                                var offertype = $("#ContentPlaceHolder1_ddlOfferType").val();
                                                 if (cnameval == "") {
                                                     $("#spncname").css('display', 'block');
                                                     flag = false;
                                                 }
-                                                if (walletAmount == "") {
+                                                if (offertype == "") {
+                                                    $("#spnOfferType").css('display', 'block');
+                                                    flag = false;
+                                                }
+                                                if (walletAmount == "" && offertype == "1") {
                                                     $("#spnWalletAmount").css('display', 'block');
                                                     flag = false;
                                                 }
-                                                if (couponCode == "") {
+                                                if (couponCode == "" && offertype == "3") {
                                                     $("#spncouponcode").css('display', 'block');
                                                     flag = false;
                                                 }
@@ -490,6 +510,25 @@
                     }
 
                 });
+
+                $("#ContentPlaceHolder1_ddlOfferType").change(function () {
+                    var offertype = $("#ContentPlaceHolder1_ddlOfferType").val();
+                    $("#ContentPlaceHolder1_txtWalletAmount").hide();
+                    $("#ContentPlaceHolder1_lblWalletAmount").hide();
+                    $("#ContentPlaceHolder1_txtcouponcode").hide();
+                    $("#ContentPlaceHolder1_lblcouponcode").hide();
+                    $("#ContentPlaceHolder1_btnGenerate").hide();
+                    if (offertype == "1") {
+                        $("#ContentPlaceHolder1_txtWalletAmount").show();
+                        $("#ContentPlaceHolder1_lblWalletAmount").show();
+                    }
+                    if (offertype == "3") {
+                        $("#ContentPlaceHolder1_txtcouponcode").show();
+                        $("#ContentPlaceHolder1_lblcouponcode").show();
+                        $("#ContentPlaceHolder1_btnGenerate").show();
+                    }
+                });
+
             </script>
         </section>
     </div>

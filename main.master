@@ -169,6 +169,8 @@
                                     <li id="liAddCategory">
                                         <a href="/Category/Category.aspx"><i class="fa fa-circle-o"></i>Category</a>
                                     </li>
+                                    <li id="liAddLocation"><a class="myABC" href="/Location/Location.aspx"><i class="fa fa-circle-o"></i>Location</a></li>
+                                    <li id="liAddArea"><a class="myABC" href="/Area/Area.aspx"><i class="fa fa-circle-o"></i>Area</a></li>
                                 </ul>
                                 
                             </li>
