@@ -80,6 +80,33 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                 {
                     txtcname.Text = dt1.Rows[0]["campaign_name"].ToString();
                     txtcouponcode.Text = dt1.Rows[0]["coupon_code"].ToString();
+                    ddlOfferType.SelectedValue = dt1.Rows[0]["offer_id"].ToString().TrimEnd();
+                    offertype = ddlOfferType.SelectedValue;
+                    if (offertype == "1")
+                    {
+                        txtWalletAmount.Visible = true;
+                        lblWalletAmount.Visible = true;
+                        txtcouponcode.Visible = false;
+                        lblcouponcode.Visible = false;
+                        btnGenerate.Visible = false;
+                    }
+                    else if (offertype == "3")
+                    {
+                        txtcouponcode.Visible = true;
+                        lblcouponcode.Visible = true;
+                        btnGenerate.Visible = true;
+                        txtWalletAmount.Visible = false;
+                        lblWalletAmount.Visible = false;
+                    }
+                    else if (offertype == "2")
+                    {
+                        txtWalletAmount.Visible = false;
+                        lblWalletAmount.Visible = false;
+                        txtcouponcode.Visible = false;
+                        lblcouponcode.Visible = false;
+                        btnGenerate.Visible = false;
+                    }
+
                     string IsApplicable = dt1.Rows[0]["is_applicable_first_order"].ToString();
                     if (IsApplicable == "True")
                     {

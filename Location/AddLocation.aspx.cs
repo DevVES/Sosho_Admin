@@ -28,8 +28,21 @@ public partial class Location_AddLocation : System.Web.UI.Page
 
             if (id != null && !id.Equals(""))
             {
-                //BtnSave.Text = "Update";
-                
+                string query = "SELECT Id,Location,zipcode,State,District AS City,IsActive,CreatedOn FROM ZipCode where isnull(IsDeleted,0)=0  and Id = " + id;
+                DataTable dtUpdate = dbc.GetDataTable(query);
+                if (dtUpdate.Rows.Count > 0)
+                {
+                    BtnSave.Text = "Update";
+                    txtLocationName.Text = dtUpdate.Rows[0]["Location"].ToString();
+                    txtZipCode.Text = dtUpdate.Rows[0]["zipcode"].ToString();
+                    ddlCityName.Items.FindByText(dtUpdate.Rows[0]["City"].ToString()).Selected = true;
+                    ddlStateName.Items.FindByText(dtUpdate.Rows[0]["State"].ToString()).Selected = true;
+                    if (dtUpdate.Rows[0]["IsActive"].ToString() == "True")
+                        chkisactive.Checked = true;
+                    else
+                        chkisactive.Checked = false;
+
+                }
             }
 
         }
@@ -68,7 +81,7 @@ public partial class Location_AddLocation : System.Web.UI.Page
             }
             else
             {
-                string query = "INSERT INTO [dbo].[Zipcode] ([Location] ,[zipcode],[State],[District],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy]) VALUES ('" + location + "','" + zipcode + "','" + state + "'," + city + "'," + IsActive + ",0,'" + dt.ToString() + "'," + userId + ")";
+                string query = "INSERT INTO [dbo].[Zipcode] ([Location] ,[zipcode],[State],[District],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy]) VALUES ('" + location + "','" + zipcode + "','" + state + "','" + city + "'," + IsActive + ",0,'" + dt.ToString() + "'," + userId + ")";
                 int VAL = dbc.ExecuteQuery(query);
 
                 if (VAL > 0)

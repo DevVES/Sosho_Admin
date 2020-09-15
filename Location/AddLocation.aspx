@@ -130,14 +130,24 @@
         });
         $('#ContentPlaceHolder1_BtnSave').click(function () {
             var flag = true;
-            var CategoryName = $("#ContentPlaceHolder1_txtCategoryName").val();
-            var Description = $("#ContentPlaceHolder1_txtDescription").val();
-            if (CategoryName == "") {
-                $("#spnCategoryName").css('display', 'block');
+            var StateName = $("#ContentPlaceHolder1_ddlStateName").val();
+            var CityName = $("#ContentPlaceHolder1_ddlCityName").val();
+            var zipCode = $("#ContentPlaceHolder1_txtZipCode").val();
+            var locationName = $("#ContentPlaceHolder1_txtLocationName").val();
+            if (StateName == "") {
+                $("#spnStateName").css('display', 'block');
                 flag = false;
             }
-            if (Description == "") {
-                $("#spnDescription").css('display', 'block');
+            if (CityName == "") {
+                $("#spnCityName").css('display', 'block');
+                flag = false;
+            }
+            if (zipCode == "") {
+                $("#spnZipCode").css('display', 'block');
+                flag = false;
+            }
+            if (locationName == "") {
+                $("#spnLocationName").css('display', 'block');
                 flag = false;
             }
             if (flag) {
