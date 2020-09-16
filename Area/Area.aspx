@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="Location.aspx.cs" Inherits="Location_Location" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="Area.aspx.cs" Inherits="Area_Area" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <style type="text/css">
@@ -36,7 +36,7 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>Location
+            <h1>Area
                <small>
                    <asp:Label runat="server" ID="lblDateTime"></asp:Label>
                </small>
@@ -81,19 +81,18 @@
                        <asp:Button ID="BtnGo" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" Title="Go" />
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <a href="AddLocation.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" target="_blank" id="BtnAdd">Add</a>
+                        <a href="AddArea.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" target="_blank" id="BtnAdd">Add</a>
                     </div>
                 </div>
             </div>
             <div style="width: 100%;" class="table-responsive">
-                <asp:GridView ID="gvLocationlist" OnRowDataBound="gvLocationlist_RowDataBound" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" EnableViewState="False" Caption="<b><u>LOCATION LIST</u></b>" CaptionAlign="Top">
+                <asp:GridView ID="gvArealist" OnRowDataBound="gvArealist_RowDataBound" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" EnableViewState="False" Caption="<b><u>AREA LIST</u></b>" CaptionAlign="Top">
                     <Columns>
-                        <asp:BoundField HeaderText="State" DataField="State" />
-                        <asp:BoundField HeaderText="City" DataField="City" />
+                        <asp:BoundField HeaderText="ZipCode" DataField="ZipCode" />
                         <asp:BoundField HeaderText="Location Name" DataField="Location" />
-                        <asp:BoundField HeaderText="zipcode" DataField="zipcode" />
+                        <asp:BoundField HeaderText="Area" DataField="Area" />
                         <asp:BoundField HeaderText="IsActive" DataField="IsActive" />
-                        <asp:HyperLinkField DataNavigateUrlFields="Id" ControlStyle-CssClass="red" HeaderText="EDIT" Target="_blank" DataNavigateUrlFormatString="~/Location/AddLocation.aspx?Id={0}" Text="Edit" />
+                        <asp:HyperLinkField DataNavigateUrlFields="Id" ControlStyle-CssClass="red" HeaderText="EDIT" Target="_blank" DataNavigateUrlFormatString="~/Area/AddArea.aspx?Id={0}" Text="Edit" />
 
                     </Columns>
                     <HeaderStyle HorizontalAlign="Center" BackColor="#EDE8E8"></HeaderStyle>
