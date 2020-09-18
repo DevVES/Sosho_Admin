@@ -99,7 +99,7 @@
                     <li class="active">
                         <a href="#basic" aria-controls="basic" role="tab" data-toggle="tab" title="BASIC">BASIC</a></li>
                     <li id="ligrpProduct">
-                        <a href="#grpproduct" aria-controls="grpproduct" role="tab" data-toggle="tab" title="GRPPRODUCT">GROUP PRODUCT</a></li>
+                        <a href="#grpproduct" aria-controls="grpproduct" role="tab" data-toggle="tab" title="GRPPRODUCT">PRICE</a></li>
                     <li>
                         <a href="#sco" aria-controls="sco" role="tab" data-toggle="tab" title="SCO">SCO</a></li>
                     <li>
@@ -339,6 +339,41 @@
                                 </div>
                                 <div class="col-md-7 pad">
                                     <asp:TextBox ID="txtRecommended" runat="server" CssClass="form-control" Width="40%" placeholder="Recommended"></asp:TextBox>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblIsFreeShipping" runat="server" Text="IsFreeShipping"></asp:Label><span style="color: red">*</span>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <input id="chkIsFreeShipping" name="isActive" type="checkbox" value="valactive" runat="server" />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblIsFixedShipping" runat="server" Text="IsFixedShipping"></asp:Label><span style="color: red">*</span>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <%--<input id="chkIsFixedShipping" name="isActive" type="checkbox" value="valactive" runat="server" AutoPostBack="true" OnCheckedChanged="ChckedChanged" />--%>
+                                    <asp:CheckBox ID="chkIsFixedShipping" runat="server" AutoPostBack="true" OnCheckedChanged="ChckedChanged" /> 
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblFixedShipRate" runat="server" Text="FixedShipRate"></asp:Label><span style="color: red">*</span>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <asp:TextBox ID="txtFixedShipRate" runat="server" CssClass="form-control" Width="40%" onkeypress="return isNumber(event)" Text="0"  placeholder="FixedShipRate"> </asp:TextBox>
                                 </div>
                             </div>
                         </div>
@@ -629,6 +664,52 @@
                                 </div>
                             </div>
                         </div>
+                          <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblgrpIsBestBuy" runat="server" Text="Is Best Buy"></asp:Label>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <input id="chkgrpIsBestBuy" name="isgrpbestBuy" type="checkbox" value="valIsBestBuy" runat="server" />
+                                </div>
+                            </div>
+                        </div>
+                         <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="Isquantityfreez" runat="server" Text="IsQuantityFreez"></asp:Label><span style="color: red">*</span>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <input id="chkIsQuantityFreez" name="isActive" type="checkbox" value="valactive" runat="server" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 ">
+                                    <asp:Label ID="Label5" runat="server" Text="Max Qty"></asp:Label>
+                                </div>
+
+                                <div class="col-md-7 pad">
+                                    <asp:TextBox ID="txtMaxQty" runat="server" onkeypress="return isNumber(event)" CssClass="form-control" Width="40%" placeholder="Max Qty" Text="99"></asp:TextBox>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 ">
+                                    <asp:Label ID="Label6" runat="server" Text="Min Qty"></asp:Label>
+                                </div>
+
+                                <div class="col-md-7 pad">
+                                    <asp:TextBox ID="txtMinQty" runat="server" onkeypress="return isNumber(event)" CssClass="form-control" Width="40%" placeholder="Min Qty" Text="1"></asp:TextBox>
+
+                                </div>
+
+                            </div>
+                        </div>
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -688,6 +769,10 @@
                                                 <asp:HiddenField ID="HiddenFieldgrpisSelected" runat="server" Value='<%# Bind("grpisSelected") %>' />
                                                 <asp:Label ID="lblname" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "grpUnitName")%>'></asp:Label>
                                                 <asp:HiddenField ID="HiddenFieldgrpid" runat="server" Value='<%# Bind("grpId") %>' />
+                                                <asp:HiddenField ID="HiddenFieldMinQty" runat="server" Value='<%# Bind("grpMinQty") %>' />
+                                                <asp:HiddenField ID="HiddenFieldMaxQty" runat="server" Value='<%# Bind("grpMaxQty") %>' />
+                                                <asp:HiddenField ID="HiddenFieldIsQtyFreeze" runat="server" Value='<%# Bind("grpIsQtyFreeze") %>' />
+                                                <asp:HiddenField ID="HiddenFieldIsBestBuy" runat="server" Value='<%# Bind("grpisBestBuy") %>' />
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:BoundField HeaderText="Unit" DataField="grpUnit" />
@@ -918,77 +1003,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 pad">
-                                    <asp:Label ID="Isquantityfreez" runat="server" Text="IsQuantityFreez"></asp:Label><span style="color: red">*</span>
-                                </div>
-                                <div class="col-md-7 pad">
-                                    <input id="chkIsQuantityFreez" name="isActive" type="checkbox" value="valactive" runat="server" />
-                                </div>
-                            </div>
-                        </div>
+                       
 
-                        <div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 pad">
-                                    <asp:Label ID="lblIsFreeShipping" runat="server" Text="IsFreeShipping"></asp:Label><span style="color: red">*</span>
-                                </div>
-                                <div class="col-md-7 pad">
-                                    <input id="chkIsFreeShipping" name="isActive" type="checkbox" value="valactive" runat="server" />
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 pad">
-                                    <asp:Label ID="lblIsFixedShipping" runat="server" Text="IsFixedShipping"></asp:Label><span style="color: red">*</span>
-                                </div>
-                                <div class="col-md-7 pad">
-                                    <input id="chkIsFixedShipping" name="isActive" type="checkbox" value="valactive" runat="server" />
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 pad">
-                                    <asp:Label ID="lblFixedShipRate" runat="server" Text="FixedShipRate"></asp:Label><span style="color: red">*</span>
-                                </div>
-                                <div class="col-md-7 pad">
-                                    <asp:TextBox ID="txtFixedShipRate" runat="server" CssClass="form-control" Width="40%" onkeypress="return isNumber(event)" Text="0" Enabled="false" placeholder="FixedShipRate"> </asp:TextBox>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 ">
-                                    <asp:Label ID="Label5" runat="server" Text="Max Qty"></asp:Label>
-                                </div>
-
-                                <div class="col-md-7 pad">
-                                    <asp:TextBox ID="txtMaxQty" runat="server" onkeypress="return isNumber(event)" CssClass="form-control" Width="40%" placeholder="Max Qty" Text="99"></asp:TextBox>
-
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 ">
-                                    <asp:Label ID="Label6" runat="server" Text="Min Qty"></asp:Label>
-                                </div>
-
-                                <div class="col-md-7 pad">
-                                    <asp:TextBox ID="txtMinQty" runat="server" onkeypress="return isNumber(event)" CssClass="form-control" Width="40%" placeholder="Min Qty" Text="1"></asp:TextBox>
-
-                                </div>
-
-                            </div>
-                        </div>
+                        
 
                     </div>
 
@@ -1214,16 +1231,19 @@
             <script>
                 $(document).ready(function () {
                     var value = $("#ContentPlaceHolder1_ddlProductType").val();
-                    if (value == "2") {
-                        $('#Tabs ul li:eq(1)').show();
-                        $('#Tabs ul li:eq(3)').hide();
-                        $('#Tabs ul li:eq(5)').hide();
-                    }
-                    else {
-                        $('#Tabs ul li:eq(1)').hide();
-                        $('#Tabs ul li:eq(3)').show();
-                        $('#Tabs ul li:eq(5)').show();
-                    }
+                    //if (value == "2") {
+                    //    $('#Tabs ul li:eq(1)').show();
+                    //    $('#Tabs ul li:eq(3)').hide();
+                    //    $('#Tabs ul li:eq(5)').hide();
+                    //}
+                    //else {
+                    //    $('#Tabs ul li:eq(1)').hide();
+                    //    $('#Tabs ul li:eq(3)').show();
+                    //    $('#Tabs ul li:eq(5)').show();
+                    //}
+                    $('#Tabs ul li:eq(1)').show();
+                    $('#Tabs ul li:eq(3)').hide();
+                    $('#Tabs ul li:eq(5)').hide();
                     CalulateSoshoPrice();
                     CalulatePSoshoPrice();
 
@@ -1242,16 +1262,19 @@
 
                 $("#ContentPlaceHolder1_ddlProductType").change(function () {
                     var end = this.value;
-                    if (end == "2") {
-                        $('#Tabs ul li:eq(1)').show();
-                        $('#Tabs ul li:eq(3)').hide();
-                        $('#Tabs ul li:eq(5)').hide();
-                    }
-                    else {
-                        $('#Tabs ul li:eq(1)').hide();
-                        $('#Tabs ul li:eq(3)').show();
-                        $('#Tabs ul li:eq(5)').show();
-                    }
+                    $('#Tabs ul li:eq(1)').show();
+                    $('#Tabs ul li:eq(3)').hide();
+                    $('#Tabs ul li:eq(5)').hide();
+                    //if (end == "2") {
+                    //    $('#Tabs ul li:eq(1)').show();
+                    //    $('#Tabs ul li:eq(3)').hide();
+                    //    $('#Tabs ul li:eq(5)').hide();
+                    //}
+                    //else {
+                    //    $('#Tabs ul li:eq(1)').hide();
+                    //    $('#Tabs ul li:eq(3)').show();
+                    //    $('#Tabs ul li:eq(5)').show();
+                    //}
                 });
 
                 $("#ContentPlaceHolder1_ddlgrpDiscountType").change(function () {
@@ -1402,18 +1425,18 @@
                         $("#spngst").css('display', 'block');
                         flag = false;
                     }
-                    if (unitval == "") {
-                        if (ProductTypeval == "1") {
-                            $("#spnunit").css('display', 'block');
-                            flag = false;
-                        }
-                    }
-                    if (unitnameval == "") {
-                        if (ProductTypeval == "1") {
-                            $("#spnunitname").css('display', 'block');
-                            flag = false;
-                        }
-                    }
+                    //if (unitval == "") {
+                    //    if (ProductTypeval == "1") {
+                    //        $("#spnunit").css('display', 'block');
+                    //        flag = false;
+                    //    }
+                    //}
+                    //if (unitnameval == "") {
+                    //    if (ProductTypeval == "1") {
+                    //        $("#spnunitname").css('display', 'block');
+                    //        flag = false;
+                    //    }
+                    //}
                     if (displayorderval == "") {
                         $("#spnDisplayOrder").css('display', 'block');
                         flag = false;

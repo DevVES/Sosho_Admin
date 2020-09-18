@@ -228,13 +228,13 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
         try
         {
             bool lvalid = true;
-
+            string id1 = Request.QueryString["Id"];
             string couponcode = txtcouponcode.Text.ToString();
             if (!string.IsNullOrEmpty(couponcode))
             {
                 string couponcodecount = "Select Count(wallet_id) AS IdCount FROM  [dbo].[WalletMaster] Where coupon_code = '" + couponcode +"'";
                 DataTable dtcouponcodecount = dbc.GetDataTable(couponcodecount);
-                if (Convert.ToInt32(dtcouponcodecount.Rows[0]["IdCount"]) > 0)
+                if (Convert.ToInt32(dtcouponcodecount.Rows[0]["IdCount"]) > 0 && id1 == "0")
                 {
                     lvalid = false;
                     spncouponcode.InnerText = "Coupon Code already exists.";
@@ -248,7 +248,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             if (lvalid)
             {
                 string userId = Request.Cookies["TUser"]["Id"].ToString();
-                string id1 = Request.QueryString["Id"];
+                
                 int IsActive = 0, IsFirstOrderApplicable = 0, IsApplyAllCustomer = 0;
 
                 string startdate = txtdt.Text.ToString();
