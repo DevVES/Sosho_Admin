@@ -345,6 +345,10 @@
 
                     <div role="tabpanel" class="tab-pane" id="customerlist">
                         <div style="width: 100%;" class="table-responsive">
+                            
+<asp:Button Text="Search" runat="server" OnClick="Search" style="float:right;" />
+                            <asp:TextBox ID="txtSearch" runat="server" style="float:right;"></asp:TextBox>
+                            <%--<asp:TextBox ID="txtSearch" runat="server" OnTextChanged="Search" AutoPostBack="true" style="float:right;" ></asp:TextBox>--%>
                             <asp:GridView ID="gvcustomerlist" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover"
                                 rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8"
                                 HeaderStyle-HorizontalAlign="Center" Caption="<b><u>CUSTOMER LIST</u></b>" CaptionAlign="Top">

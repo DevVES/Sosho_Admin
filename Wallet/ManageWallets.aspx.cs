@@ -56,7 +56,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             CustomerDataList();
 
             string offertypeqry = "SELECT offer_id,offer_name FROM tblOfferTypes where isnull(is_deleted,0)=0 order by offer_id asc";
-            DataTable dtoffer = dbc.GetDataTable(offertypeqry);
+             DataTable dtoffer = dbc.GetDataTable(offertypeqry);
             ddlOfferType.DataSource = dtoffer;
             ddlOfferType.DataTextField = "offer_name";
             ddlOfferType.DataValueField = "offer_id";
@@ -173,7 +173,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             }
 
         }
-    }
+    }    
 
     private void CustomerDataList()
     {
@@ -185,8 +185,12 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
         String[] StrPart1 = to.Split('/');
 
         string IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
-
+        string searchtext = txtSearch.Text.Trim();
         string query = "SELECT [Id],[Mobile],[FirstName],[LastName],[Email],[Sex],[Address],[CityId],[StateId],[Pincode] FROM [dbo].[Customer] ";
+        if (!string.IsNullOrEmpty(searchtext))
+        {
+            query += " WHERE (Mobile LIKE '%"+ searchtext + "%' OR FirstName LIKE '%" + searchtext + "%' OR LastName LIKE '%" + searchtext + "%' OR Email LIKE '%" + searchtext + "%')";
+        }
         query += " order by Id desc ";
 
         DataTable dtcustomerlist = dbc.GetDataTable(query);
@@ -195,6 +199,11 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             gvcustomerlist.DataSource = dtcustomerlist;
             gvcustomerlist.DataBind();
         }
+    }
+
+    protected void Search(object sender, EventArgs e)
+    {
+        CustomerDataList();
     }
 
     protected void chkCustomer_Clicked(Object sender, EventArgs e)
