@@ -75,7 +75,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                 }
                 ddlOfferType.Enabled = false;
                 DataTable dt1;
-                dt1 = dbc.GetDataTable("SELECT  [campaign_name],[offer_id],[wallet_amount],[coupon_code],[is_applicable_first_order],[is_apply_all_customer],[per_type],[per_amount],[min_order_amount],[start_date],[end_date],[is_active] FROM [dbo].[WalletMaster] where ISNULL(is_deleted,0)=0  and wallet_id=" + id);
+                dt1 = dbc.GetDataTable("SELECT  [campaign_name],[offer_id],[wallet_amount],[coupon_code],[is_applicable_first_order],[is_apply_all_customer],[per_type],[per_amount],[min_order_amount],[start_date],[end_date],[is_active],[terms] FROM [dbo].[WalletMaster] where ISNULL(is_deleted,0)=0  and wallet_id=" + id);
                 if (dt1.Rows.Count > 0)
                 {
                     txtcname.Text = dt1.Rows[0]["campaign_name"].ToString();
@@ -133,6 +133,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                     txtgrpTypeValue.Text = dt1.Rows[0]["per_amount"].ToString();
                     txtgrpMinOrderAmt.Text = dt1.Rows[0]["min_order_amount"].ToString();
                     txtWalletAmount.Text = dt1.Rows[0]["wallet_amount"].ToString();
+                    txtterms.Text = dt1.Rows[0]["terms"].ToString();
                     string strtdate = dt1.Rows[0]["start_date"].ToString();
                     string enddate = dt1.Rows[0]["end_date"].ToString();
 
@@ -268,7 +269,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                 string FROM1 = startdate + " " + starttime;
                 string TO1 = enddate + " " + endtime;
                 string campaignname = txtcname.Text.ToString();
-
+                string terms = txtterms.Text.ToString();
                 string offertype = ddlOfferType.SelectedValue.ToString();
                 string type = ddlgrpType.SelectedValue.ToString();
                 string perValue = txtgrpTypeValue.Text.ToString();
@@ -321,7 +322,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                 if (BtnSave.Text.Equals("Update"))
                 {
                     string id = Request.QueryString["id"].ToString();
-                    string query = "UPDATE [dbo].[WalletMaster]  SET [campaign_name] = '" + campaignname + "',[offer_id]=" + offertype + ",[wallet_amount]=" + walletAmt + ",[coupon_code]='" + couponcode + "',[is_applicable_first_order]=" + IsFirstOrderApplicable + ",[is_apply_all_customer]=" + IsApplyAllCustomer + ",[per_type]='" + type + "',[per_amount]=" + perValue + ",[min_order_amount]=" + minOrderAmt + ",[start_date]='" + startdate + "',[end_date]='" + enddate + "',[is_active]=" + IsActive + ",[created_date]='" + dtCreatedon + "',[created_by]=" + userId + " where [wallet_id]=" + id;
+                    string query = "UPDATE [dbo].[WalletMaster]  SET [campaign_name] = '" + campaignname + "',[offer_id]=" + offertype + ",[wallet_amount]=" + walletAmt + ",[coupon_code]='" + couponcode + "',[is_applicable_first_order]=" + IsFirstOrderApplicable + ",[is_apply_all_customer]=" + IsApplyAllCustomer + ",[per_type]='" + type + "',[per_amount]=" + perValue + ",[min_order_amount]=" + minOrderAmt + ",[start_date]='" + startdate + "',[end_date]='" + enddate + "',[is_active]=" + IsActive + ",[created_date]='" + dtCreatedon + "',[created_by]=" + userId + ", [terms]='"+ terms +"' where [wallet_id]=" + id;
                     int VAL = dbc.ExecuteQuery(query);
                     if (IsApplyAllCustomer == 1)
                     {
@@ -374,13 +375,14 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                                      minOrderAmt,
                                     startdate,
                                     enddate,
+                                    terms,
                                     IsActive.ToString(),
                                     dtCreatedon.ToString(),
                                     userId
                 };
                     string query = "INSERT INTO [dbo].[WalletMaster] ([campaign_name],[wallet_amount],[coupon_code],[is_applicable_first_order],[is_apply_all_customer],[offer_id],[per_type], " +
-                                    " [per_amount],[min_order_amount],[start_date],[end_date],[is_active],[created_date],[created_by]) " +
-                                    " VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14)  SELECT SCOPE_IDENTITY(); ";
+                                    " [per_amount],[min_order_amount],[start_date],[end_date],[terms],[is_active],[created_date],[created_by]) " +
+                                    " VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15)  SELECT SCOPE_IDENTITY(); ";
                     int VAL = dbc.ExecuteQueryWithParamsId(query, para1);
                     if (IsApplyAllCustomer == 1)
                     {

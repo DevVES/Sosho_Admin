@@ -273,6 +273,18 @@
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
+                                    <asp:Label ID="lblterms" runat="server" Text="Terms & Condition"></asp:Label>
+                                </div>
+                                <div class="col-md-9 pad">
+                                    <asp:TextBox ID="txtterms" TextMode="multiline" Columns="50" Rows="5" runat="server" CssClass="form-control" Width="40%" placeholder="Terms & Condition"> </asp:TextBox>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
                                     <asp:Label ID="lblIsFirstOrderApplicable" runat="server" Text="Applicable For First Order"></asp:Label>
                                 </div>
                                 <div class="col-md-7 pad">

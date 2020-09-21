@@ -174,7 +174,7 @@
                         <div class="row pad-bottom" id="divFullDescription">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="lblpdisc" runat="server" Text="Product Discription"></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="lblpdisc" runat="server" Text="Product Description"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-9 pad">
                                     <CKEditor:CKEditorControl class="form-control" ID="txtFullDescription" runat="server">
@@ -823,10 +823,10 @@
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="lblmetadisc" runat="server" Text="Meta Discription"></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="lblmetadisc" runat="server" Text="Meta Description"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-9 pad">
-                                    <asp:TextBox ID="txtmetadisc" TextMode="multiline" Columns="50" Rows="5" runat="server" CssClass="form-control" Width="40%" placeholder="Meta Discription"> </asp:TextBox>
+                                    <asp:TextBox ID="txtmetadisc" TextMode="multiline" Columns="50" Rows="5" runat="server" CssClass="form-control" Width="40%" placeholder="Meta Description"> </asp:TextBox>
 
                                 </div>
                             </div>
