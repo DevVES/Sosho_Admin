@@ -79,9 +79,9 @@
                     <li class="active">
                         <a href="#basic" aria-controls="basic" role="tab" data-toggle="tab" title="BASIC">BASIC</a>
                     </li>
-                    <li>
+                   <%-- <li>
                         <a href="#user" aria-controls="basic" role="tab" data-toggle="tab" title="USER">USER</a>
-                    </li>
+                    </li>--%>
                 </ul>
                 <div class="tab-content table-responsive" style="padding-top: 20px">
                     <div role="tabpanel" class="tab-pane active" id="basic">
@@ -186,21 +186,7 @@
                                     <span id="spnPinCode" style="color: #d9534f; display: none;">Please check at least one checkbox</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 pad">
-                                </div>
-                                <div class="col-md-9 pad">
-                                    <asp:Button ID="BtnSave" runat="server" Text="Save" CssClass="btn btn-block btn-info" Width="120 px" title="Save" OnClick="BtnSave_Click" />
-                                    <input type="hidden" id="hdnJurisdictionID" runat="server" />
-                                    <input type="hidden" id="hdnContact" runat="server" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" role="tabpanel" id="user">
-                        <div class="row pad-bottom">
+                            <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
                                     <asp:Label ID="lblUserName" runat="server" Text="User Name"></asp:Label><span style="color: red">*</span>
@@ -242,6 +228,21 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
+                        <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                </div>
+                                <div class="col-md-9 pad">
+                                    <asp:Button ID="BtnSave" runat="server" Text="Save" CssClass="btn btn-block btn-info" Width="120 px" title="Save" OnClick="BtnSave_Click" />
+                                    <input type="hidden" id="hdnJurisdictionID" runat="server" />
+                                    <input type="hidden" id="hdnContact" runat="server" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <%--<div class="tab-pane" role="tabpanel" id="user">
+                        
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -251,7 +252,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>--%>
                 </div>
             </div>
 
@@ -264,41 +265,6 @@
             var Contact = $("#ContentPlaceHolder1_txtContact").val();
             var EmailId = $("#ContentPlaceHolder1_txtEmailId").val();
             var PinCodechecked = $("#ContentPlaceHolder1_chklstPincode input[type='checkbox']:checked").length > 0;
-            if (JurisdictionIncharge == "") {
-                $("#spnJurisdictionIncharge").css('display', 'block');
-                flag = false;
-            }
-            if (Contact == "") {
-                $("#spnContact").css('display', 'block');
-                flag = false;
-            }
-            if (EmailId == "") {
-                $("#spnEmailId").css('display', 'block');
-                flag = false;
-            }
-            else {
-                if ($("#ContentPlaceHolder1_txtEmailId").val().length != 0) {
-                    var emailAddress = $("#ContentPlaceHolder1_txtEmailId").val();
-                    var Emailvalue = '^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$';
-                    var pattern = new RegExp(Emailvalue);
-                    var EmailValid = pattern.test(emailAddress);
-                    if (!EmailValid) {
-                        $('#spnInvalidEmail').css('display', 'block');
-                        flag = false;
-                    }
-                }
-            }
-            if (!PinCodechecked) {
-                $("#spnPinCode").css('display', 'block');
-                flag = false;
-            }
-            if (flag) {
-                $("#ContentPlaceHolder1_BtnSave").click();
-            }
-            return flag;
-        });
-        $('#ContentPlaceHolder1_BtnUserSave').click(function () {
-            var flag = true;
             var UserName = $("#ContentPlaceHolder1_txtUserName").val();
             var Password = $("#ContentPlaceHolder1_txtPassword").val();
             var ConfirmPassword = $("#ContentPlaceHolder1_txtConfirmPassword").val();
@@ -337,15 +303,92 @@
                 $("#spnConfirmPassword").css('display', 'block');
                 flag = false;
             }
-            if (hdnId == undefined || hdnId == "0" || hdnId == "") {
-                $("#ContentPlaceHolder1_lblmsg").html('Please Add Jurisdiction');
+            //if (hdnId == undefined || hdnId == "0" || hdnId == "") {
+            //    $("#ContentPlaceHolder1_lblmsg").html('Please Add Jurisdiction');
+            //    flag = false;
+            //}
+            if (JurisdictionIncharge == "") {
+                $("#spnJurisdictionIncharge").css('display', 'block');
+                flag = false;
+            }
+            if (Contact == "") {
+                $("#spnContact").css('display', 'block');
+                flag = false;
+            }
+            if (EmailId == "") {
+                $("#spnEmailId").css('display', 'block');
+                flag = false;
+            }
+            else {
+                if ($("#ContentPlaceHolder1_txtEmailId").val().length != 0) {
+                    var emailAddress = $("#ContentPlaceHolder1_txtEmailId").val();
+                    var Emailvalue = '^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$';
+                    var pattern = new RegExp(Emailvalue);
+                    var EmailValid = pattern.test(emailAddress);
+                    if (!EmailValid) {
+                        $('#spnInvalidEmail').css('display', 'block');
+                        flag = false;
+                    }
+                }
+            }
+            if (!PinCodechecked) {
+                $("#spnPinCode").css('display', 'block');
                 flag = false;
             }
             if (flag) {
-
+                $("#ContentPlaceHolder1_BtnSave").click();
             }
             return flag;
         });
+        //$('#ContentPlaceHolder1_BtnUserSave').click(function () {
+        //    var flag = true;
+        //    var UserName = $("#ContentPlaceHolder1_txtUserName").val();
+        //    var Password = $("#ContentPlaceHolder1_txtPassword").val();
+        //    var ConfirmPassword = $("#ContentPlaceHolder1_txtConfirmPassword").val();
+        //    var hdnId = $("#ContentPlaceHolder1_hdnJurisdictionID").val();
+        //    var number = /([0-9])/;
+        //    var alphabets = /([a-zA-Z])/;
+        //    var special_characters = /([~,!,@@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
+        //    if (UserName == "") {
+        //        $("#spnUserName").css('display', 'block');
+        //        flag = false;
+        //    }
+        //    if (Password == "") {
+        //        $("#spnPassword").css('display', 'block');
+        //        flag = false;
+        //    }
+        //    else {
+        //        if (Password.length < 8) {
+        //            $('#spnPassword').css('display', 'block');
+        //            $('#spnPassword').html('Password must contain contain at least eight characters');
+        //            flag = false;
+        //        }
+        //        if ($('#ContentPlaceHolder1_txtPassword').val().match(number) && $('#ContentPlaceHolder1_txtPassword').val().match(alphabets) && $('#ContentPlaceHolder1_txtPassword').val().match(special_characters)) {
+        //        }
+        //        else {
+        //            $('#password-strength-status').removeClass();
+        //            $('#password-strength-status').addClass('medium-password');
+        //            $('#password-strength-status').html("Medium (should include alphabets, numbers and special characters.)");
+        //            flag = false;
+        //        }
+        //    }
+        //    if (ConfirmPassword == "") {
+        //        $("#spnConfirmPassword").css('display', 'block');
+        //        flag = false;
+        //    }
+        //    if (Password != ConfirmPassword) {
+        //        $("#spnConfirmPassword").css('display', 'block');
+        //        flag = false;
+        //    }
+        //    if (hdnId == undefined || hdnId == "0" || hdnId == "") {
+        //        $("#ContentPlaceHolder1_lblmsg").html('Please Add Jurisdiction');
+        //        flag = false;
+        //    }
+        //    if (flag) {
+
+        //    }
+        //    return flag;
+        //});
         function checkPasswordStrength() {
             var number = /([0-9])/;
             var alphabets = /([a-zA-Z])/;

@@ -76,7 +76,9 @@ public partial class Login : System.Web.UI.Page
                 aCookie["WorkshopId"] = st.Rows[0]["WorkshopId"].ToString();
                 aCookie["IsAdmin"] = st.Rows[0]["IsAdmin"].ToString();
                 aCookie["JurisdictionID"] = st.Rows[0]["JurisdictionID"].ToString();
+                aCookie["UserType"] = st.Rows[0]["UserType"].ToString();
                 aCookie.Expires = DateTime.Now.AddHours(24);
+
                 Response.Cookies.Add(aCookie);
                 
                 int userId = 0;

@@ -11,7 +11,7 @@ using WebApplication1;
 public partial class OrderList : System.Web.UI.Page
 {
     dbConnection dbc = new dbConnection();
-    string IsAdmin = "", sJurisdictionId = "";
+    string IsAdmin = "", sJurisdictionId = "", IsUserType = "";
     protected void Page_Load(object sender, EventArgs e)
     {
 
@@ -23,6 +23,7 @@ public partial class OrderList : System.Web.UI.Page
             enddate.Value = dtEnd;
             IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
             sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
+            IsUserType = Request.Cookies["TUser"]["UserType"].ToString();
             fillData();
         }
 
@@ -42,12 +43,62 @@ public partial class OrderList : System.Web.UI.Page
     }
     public void fillData()
     {
-        string qry = "SELECT  Convert(varchar(17),[order].CreatedOnUtc,113) as CreatedOnUtc ,[Order].Id as ordid, isnull(Customer.FirstName,(Select CustomerAddress.FirstName from CustomerAddress where CustomerAddress.Id= [Order].AddressId)) as FirstName, [Order].AddressId,CustomerAddress.MobileNo  as Mobile, CustomerAddress.Address AS cadd, [Order].OrderStatusId, OrderItem.Quantity * OrderItem.MrpPerUnit as  PaymentAmt,OrderItem.Quantity * OrderItem.MrpPerUnit AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, [Order].TotalGram, [Order].CustReedeemAmount, [Order].PaymentGatewayId, Product.Name,OrderStatus.Name AS Ex FROM [Order] INNER JOIN Customer ON Customer.Id = [Order].CustomerId INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id INNER JOIN OrderItem ON [Order].Id = OrderItem.OrderId INNER JOIN Product ON OrderItem.ProductId = Product.Id INNER JOIN OrderStatus ON [Order].OrderStatusId = OrderStatus.Id WHERE ([Order].CreatedOnUtc>='" + startdate.Value + " 00:00:00') AND ([Order].CreatedOnUtc<='" + enddate.Value + " 23:59:59') "; 
-        if (IsAdmin == "False")
-            qry += " and JurisdictionID=" + sJurisdictionId;
-        qry += " ORDER BY ordid DESC";
+        string qry = string.Empty;
+        if (IsUserType == "3")
+        {
+            int userId = Convert.ToInt32(Request.Cookies["TUser"]["Id"]);
+            string areaQry = " SELECT * from DeliveryDetail where DeliveryID = " + userId;
+            DataTable dtArea = dbc.GetDataTable(areaQry);
+            if (dtArea.Rows.Count > 0)
+            {
+                int iCtr = 0;
+                string areaIds = string.Empty;
+                foreach (DataRow item in dtArea.Rows)
+                {
+                    if(iCtr > 0)
+                    {
+                        areaIds += ",";
+                    }
+                    ++iCtr;
+                    areaIds += item.ItemArray[4];
+                }
+                qry = "SELECT  Convert(varchar(17),[order].CreatedOnUtc,113) as CreatedOnUtc ,[Order].Id as ordid, " +
+                     " isnull(Customer.FirstName,(Select CustomerAddress.FirstName from CustomerAddress " +
+                     " where CustomerAddress.Id= [Order].AddressId)) as FirstName, [Order].AddressId,CustomerAddress.MobileNo  as Mobile, " +
+                     " CustomerAddress.Address AS cadd, [Order].OrderStatusId, OrderItem.Quantity * OrderItem.MrpPerUnit as  PaymentAmt, " +
+                     " OrderItem.Quantity * OrderItem.MrpPerUnit AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, " +
+                     " [Order].TotalGram, [Order].CustReedeemAmount, [Order].PaymentGatewayId, Product.Name, " +
+                     " OrderStatus.Name AS Ex " +
+                     " FROM [Order] INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
+                     " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id " +
+                     " INNER JOIN OrderItem ON [Order].Id = OrderItem.OrderId " +
+                     " INNER JOIN Product ON OrderItem.ProductId = Product.Id " +
+                     " INNER JOIN OrderStatus ON [Order].OrderStatusId = OrderStatus.Id " +
+                     " WHERE ([Order].CreatedOnUtc>='" + startdate.Value + " 00:00:00') AND ([Order].CreatedOnUtc<='" + enddate.Value + " 23:59:59') " +
+                     "  AND CustomerAddress.AreaId in("+areaIds+") " +
+                    " ORDER BY ordid DESC";
+            }
+        }
+        else
+        {
+            qry = "SELECT  Convert(varchar(17),[order].CreatedOnUtc,113) as CreatedOnUtc ,[Order].Id as ordid, " +
+                     " isnull(Customer.FirstName,(Select CustomerAddress.FirstName from CustomerAddress " +
+                     " where CustomerAddress.Id= [Order].AddressId)) as FirstName, [Order].AddressId,CustomerAddress.MobileNo  as Mobile, " +
+                     " CustomerAddress.Address AS cadd, [Order].OrderStatusId, OrderItem.Quantity * OrderItem.MrpPerUnit as  PaymentAmt, " +
+                     " OrderItem.Quantity * OrderItem.MrpPerUnit AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, " +
+                     " [Order].TotalGram, [Order].CustReedeemAmount, [Order].PaymentGatewayId, Product.Name, " +
+                     " OrderStatus.Name AS Ex " +
+                     " FROM [Order] INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
+                     " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id " +
+                     " INNER JOIN OrderItem ON [Order].Id = OrderItem.OrderId " +
+                     " INNER JOIN Product ON OrderItem.ProductId = Product.Id " +
+                     " INNER JOIN OrderStatus ON [Order].OrderStatusId = OrderStatus.Id " +
+                     " WHERE ([Order].CreatedOnUtc>='" + startdate.Value + " 00:00:00') AND ([Order].CreatedOnUtc<='" + enddate.Value + " 23:59:59') ";
+            if (IsUserType == "2")
+                qry += " and ISNULL([Order].JurisdictionID,0) =" + sJurisdictionId;
+            qry += " ORDER BY ordid DESC";
 
-
+        }
 
 
 

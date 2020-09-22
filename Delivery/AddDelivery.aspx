@@ -79,9 +79,7 @@
                     <li class="active">
                         <a href="#basic" aria-controls="basic" role="tab" data-toggle="tab" title="BASIC">BASIC</a>
                     </li>
-                    <li>
-                        <a href="#user" aria-controls="basic" role="tab" data-toggle="tab" title="USER">USER</a>
-                    </li>
+                    
                 </ul>
                 <div class="tab-content table-responsive" style="padding-top: 20px">
                     <div role="tabpanel" class="tab-pane active" id="basic">
@@ -161,6 +159,16 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <%--<div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                </div>
+                                <div class="col-md-9 pad">
+                                    <asp:Button ID="BtnUserSave" runat="server" Text="Save" CssClass="btn btn-block btn-info" Width="120 px" title="Save" OnClick="BtnUserSave_Click" />
+                                </div>
+                            </div>
+                        </div>--%>
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -177,10 +185,9 @@
                                     <asp:Label ID="lblPinCode" runat="server" Text="Pin Code"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <div class="block">
-                                        <asp:CheckBoxList runat="server" ID="chklstPincode" RepeatLayout="Table" OnSelectedIndexChanged="OnCheckBox_Changed" AutoPostBack="true">
-                                        </asp:CheckBoxList>
-                                    </div>
+                                        <%--<asp:CheckBoxList runat="server" ID="chklstPincode" RepeatLayout="Table" OnSelectedIndexChanged="OnCheckBox_Changed" AutoPostBack="true">
+                                        </asp:CheckBoxList>--%>
+                                        <asp:DropDownList class="form-control" runat="server" ID="ddlPinCode" Width="290px" OnSelectedIndexChanged="OnZipCodeSelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                 </div>
                                 <div class="col-md-2 pad">
                                     <span id="spnPinCode" style="color: #d9534f; display: none;">Please check at least one checkbox</span>
@@ -200,13 +207,13 @@
                                 </div>
                             </div>
                         </div>
-                             <div class="row pad-bottom">
+                        <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
                                     <asp:Label ID="lblArea" runat="server" Text="Area"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <div class="block">
+                                    <div class="block" style="width:290px;">
                                         <asp:CheckBoxList runat="server" ID="chklstArea" RepeatLayout="Table"  AutoPostBack="true">
                                         </asp:CheckBoxList>
                                     </div>
@@ -216,19 +223,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 pad">
-                                </div>
-                                <div class="col-md-9 pad">
-                                    <asp:Button ID="BtnSave" runat="server" Text="Save" CssClass="btn btn-block btn-info" Width="120 px" title="Save" OnClick="BtnSave_Click" />
-                                    <input type="hidden" id="hdnDeliveryID" runat="server" />
-                                    <input type="hidden" id="hdnContact" runat="server" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" role="tabpanel" id="user">
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -276,11 +270,14 @@
                                 <div class="col-md-3 pad">
                                 </div>
                                 <div class="col-md-9 pad">
-                                    <asp:Button ID="BtnUserSave" runat="server" Text="Save" CssClass="btn btn-block btn-info" Width="120 px" title="Save" OnClick="BtnUserSave_Click" />
+                                    <asp:Button ID="BtnSave" runat="server" Text="Save" CssClass="btn btn-block btn-info" Width="120 px" title="Save" OnClick="BtnSave_Click" />
+                                    <input type="hidden" id="hdnDeliveryID" runat="server" />
+                                    <input type="hidden" id="hdnContact" runat="server" />
                                 </div>
                             </div>
                         </div>
                     </div>
+                  
                 </div>
             </div>
 
@@ -292,7 +289,6 @@
             var DeliveryIncharge = $("#ContentPlaceHolder1_txtDeliveryIncharge").val();
             var Contact = $("#ContentPlaceHolder1_txtContact").val();
             var EmailId = $("#ContentPlaceHolder1_txtEmailId").val();
-            var PinCodechecked = $("#ContentPlaceHolder1_chklstPincode input[type='checkbox']:checked").length > 0;
             if (DeliveryIncharge == "") {
                 $("#spnDeliveryIncharge").css('display', 'block');
                 flag = false;
@@ -317,64 +313,12 @@
                     }
                 }
             }
-            if (!PinCodechecked) {
-                $("#spnPinCode").css('display', 'block');
-                flag = false;
-            }
             if (flag) {
                 $("#ContentPlaceHolder1_BtnSave").click();
             }
             return flag;
         });
-        $('#ContentPlaceHolder1_BtnUserSave').click(function () {
-            var flag = true;
-            var UserName = $("#ContentPlaceHolder1_txtUserName").val();
-            var Password = $("#ContentPlaceHolder1_txtPassword").val();
-            var ConfirmPassword = $("#ContentPlaceHolder1_txtConfirmPassword").val();
-            var hdnId = $("#ContentPlaceHolder1_hdnDeliveryID").val();
-            var number = /([0-9])/;
-            var alphabets = /([a-zA-Z])/;
-            var special_characters = /([~,!,@@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
-            if (UserName == "") {
-                $("#spnUserName").css('display', 'block');
-                flag = false;
-            }
-            if (Password == "") {
-                $("#spnPassword").css('display', 'block');
-                flag = false;
-            }
-            else {
-                if (Password.length < 8) {
-                    $('#spnPassword').css('display', 'block');
-                    $('#spnPassword').html('Password must contain contain at least eight characters');
-                    flag = false;
-                }
-                if ($('#ContentPlaceHolder1_txtPassword').val().match(number) && $('#ContentPlaceHolder1_txtPassword').val().match(alphabets) && $('#ContentPlaceHolder1_txtPassword').val().match(special_characters)) {
-                }
-                else {
-                    $('#password-strength-status').removeClass();
-                    $('#password-strength-status').addClass('medium-password');
-                    $('#password-strength-status').html("Medium (should include alphabets, numbers and special characters.)");
-                    flag = false;
-                }
-            }
-            if (ConfirmPassword == "") {
-                $("#spnConfirmPassword").css('display', 'block');
-                flag = false;
-            }
-            if (Password != ConfirmPassword) {
-                $("#spnConfirmPassword").css('display', 'block');
-                flag = false;
-            }
-            if (hdnId == undefined || hdnId == "0" || hdnId == "") {
-                $("#ContentPlaceHolder1_lblmsg").html('Please Add Delivery');
-                flag = false;
-            }
-            if (flag) {
-
-            }
-            return flag;
-        });
+        
         function checkPasswordStrength() {
             var number = /([0-9])/;
             var alphabets = /([a-zA-Z])/;
@@ -383,6 +327,7 @@
             var flag = true;
             $('#spnPassword').html('');
             $('#spnPassword').css('display', 'none');
+            debugger
             if (password == '') {
                 $('#spnPassword').css('display', 'block');
                 $('#spnPassword').html('This field is required');

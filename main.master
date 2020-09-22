@@ -111,6 +111,7 @@
                                         <p style="color: #fef112; font-weight: bold;">
                                             <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
                                             <input type="hidden" id="hdnmainIsAdmin" runat="server" />
+                                            <input type="hidden" id="hdnUserType" runat="server" />
                                         </p>
                                     </li>
 
@@ -585,17 +586,38 @@
             });
 
             var hiddenvalue = $("#hdnmainIsAdmin").val();
-            if (hiddenvalue == "False") {
+            var hiddenUserType = $("#hdnUserType").val();
+
+            //if (hiddenvalue == "False") {
+                
+            //}
+            if (hiddenUserType == 2)
+            {
                 $("#li1").hide();
                 $("#li3").hide();
                 $("#li15").hide();
                 $("#li16").hide();
-                $("#liAddJurisdiction").hide();
-                $("#liDelivery").hide();
+                $("#li7").hide();
+                $("#liJurisdiction").hide();
                 $("#liwhatsappmsg").hide();
                 $("#liApprovedProduct").hide();
             }
-
+            if (hiddenUserType == 3)
+            {
+                $("#li1").hide();
+                $("#li2").hide();
+                $("#li3").hide();
+                $("#li15").hide();
+                $("#li16").hide();
+                $("#li7").hide();
+                $("#liJurisdiction").hide();
+                //$("#liDelivery").hide();
+                //$("#liAddCategory").hide();
+                //$("#liAddLocation").hide();
+                //$("#liAddArea").hide();
+                $("#liwhatsappmsg").hide();
+                $("#liApprovedProduct").hide();
+            }
         });
 
     </script>

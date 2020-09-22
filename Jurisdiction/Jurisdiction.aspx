@@ -98,7 +98,7 @@
                         <asp:BoundField HeaderText="Comments" DataField="Comments" />
                            <asp:BoundField HeaderText="IsActive" DataField="IsActive" />
 
-                          <asp:HyperLinkField DataNavigateUrlFields="JurisdictionID" ControlStyle-CssClass="red" HeaderText="EDIT" Target="_blank" DataNavigateUrlFormatString="~/Jurisdiction/UpdateJurisdiction.aspx?Id={0}" Text="Edit" />
+                          <asp:HyperLinkField DataNavigateUrlFields="JurisdictionID" ControlStyle-CssClass="red" HeaderText="EDIT" Target="_blank" DataNavigateUrlFormatString="~/Jurisdiction/AddJurisdiction.aspx?Id={0}" Text="Edit" />
 
                     </Columns>
                     <HeaderStyle HorizontalAlign="Center" BackColor="#EDE8E8"></HeaderStyle>

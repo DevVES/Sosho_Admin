@@ -56,6 +56,7 @@ public partial class main : System.Web.UI.MasterPage
             Label1.Text = Request.Cookies["TUser"]["UserName"];
             Label2.Text = Request.Cookies["TUser"]["UserName"];
             hdnmainIsAdmin.Value = Request.Cookies["TUser"]["IsAdmin"];
+            hdnUserType.Value = Request.Cookies["TUser"]["UserType"];
             //403
             try
             {
