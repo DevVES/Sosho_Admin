@@ -30,7 +30,7 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                 ddlintermediateType.DataBind();
                 ddlintermediateType.Items.Insert(0, new ListItem("Select Banner Type", ""));
 
-                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 order by CategoryId asc";
+                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 order by Sequence asc";
                 DataTable dtcategory = dbc.GetDataTable(categoryqry);
                 ddlintermedicateCategory.DataSource = dtcategory;
                 ddlintermedicateCategory.DataTextField = "CategoryName";

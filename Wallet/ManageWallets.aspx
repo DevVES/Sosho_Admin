@@ -71,7 +71,7 @@
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-3">
-                        <a href="WalletList.aspx" class="btn btn-block btn-success pull-right" style="width: 50%" target="_blank" title="Back to List">Back To List</a>
+                        <a href="WalletList.aspx" class="btn btn-block btn-success pull-right" style="width: 50%" title="Back to List">Back To List</a>
                     </div>
                 </div>
 

@@ -38,7 +38,7 @@
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-3">
-                        <a href="Category.aspx" class="btn btn-block btn-success pull-right" style="width: 50%" target="_blank">Back To List</a>
+                        <a href="Category.aspx" class="btn btn-block btn-success pull-right" style="width: 50%">Back To List</a>
                     </div>
                 </div>
             </div>
@@ -85,6 +85,19 @@
                 </div>
             </div>
 
+            <div class="row pad-bottom">
+                <div class="col-md-12">
+                    <div class="col-md-3 pad">
+                        <asp:Label ID="lblSequence" runat="server" Text="Sequence"></asp:Label><span style="color: red">*</span>
+                    </div>
+                    <div class="col-md-7 pad">
+                        <asp:TextBox ID="txtSequence" runat="server" TextMode="Number" CssClass="form-control" Width="40%" onkeypress="return isNumber(event)" placeholder="Sequence"> </asp:TextBox>
+                    </div>
+                    <div class="col-md-2 pad">
+                        <span id="spnSequence" style="color: #d9534f; display: none;">This field is required</span>
+                    </div>
+                </div>
+            </div>
             <div class="row pad-bottom">
                 <div class="col-md-12">
                     <div class="col-md-3 pad">
@@ -135,7 +148,7 @@
         });
         function previewFile() {
             var preview = document.querySelector('#<%=CategoryImage.ClientID %>');
-             var file = document.querySelector('#<%=FileUpload1.ClientID %>').files[0];
+            var file = document.querySelector('#<%=FileUpload1.ClientID %>').files[0];
             var reader = new FileReader();
 
             reader.onloadend = function () {

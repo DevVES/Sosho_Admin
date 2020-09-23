@@ -38,7 +38,7 @@
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-3">
-                        <a href="Area.aspx" class="btn btn-block btn-success pull-right" style="width: 50%" target="_blank">Back To List</a>
+                        <a href="Area.aspx" class="btn btn-block btn-success pull-right" style="width: 50%">Back To List</a>
                     </div>
                 </div>
             </div>

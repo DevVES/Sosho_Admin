@@ -36,7 +36,7 @@
             padding: 7px 100px;
         }
     </style>
-   
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -53,7 +53,7 @@
             <!-- Small boxes (Stat box) -->
 
             <div class="row">
-                <a href="ManageProducts.aspx" class="btn btn-success pull-right add-padding" style="width:80px" target="_blank">ADD</a>
+                <a href="ManageProducts.aspx" class="btn btn-success pull-right add-padding" style="width: 80px">ADD</a>
             </div>
             <div class="row">
                 <div class="col-md-3 col-sm-6 col-xs-12">
@@ -82,6 +82,8 @@
                         <!-- /.input group -->
                     </div>
                 </div>
+                
+
                 <div class="col-md-3 col-sm-6 col-xs-12">
 
                     <asp:Button ID="Button2" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" />
@@ -89,6 +91,21 @@
                 </div>
 
             </div>
+
+            <div class="row">
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <asp:DropDownList ID="ddlCategoryName" runat="server" class="form-control" OnSelectedIndexChanged = "OnSelectedIndexChanged" AutoPostBack = "true">
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <asp:DropDownList ID="ddlProduct" runat="server" class="form-control">
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                </div>
 
             <div style="width: 100%;" class="table-responsive">
                 <asp:GridView ID="gvproductlist" OnRowDataBound="gvproductlist_RowDataBound" OnRowCommand="gvproductlist_RowCommand" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" EnableViewState="False" Caption="<b><u>PRODUCT LIST</u></b>" CaptionAlign="Top">
@@ -115,22 +132,22 @@
                     <HeaderStyle HorizontalAlign="Center" BackColor="#EDE8E8"></HeaderStyle>
                 </asp:GridView>
             </div>
-          
-              <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#ContentPlaceHolder1_gvproductlist').DataTable({
-                        "fixedHeader": true,
-                        "paging": true,
-                        "order": [[5, "desc"]],
-                        "lengthChange": true,
-                        "deferRender": true,
-                        "ordering": true,
-                        "scrollX": true,
-                        "info": true,
-                        "autoWidth": false,
-                        "alwaysCloneTop": false,
-                    });
-                });
+
+            <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#ContentPlaceHolder1_gvproductlist').DataTable({
+                                    "fixedHeader": true,
+                                    "paging": true,
+                                    "order": [[5, "desc"]],
+                                    "lengthChange": true,
+                                    "deferRender": true,
+                                    "ordering": true,
+                                    "scrollX": true,
+                                    "info": true,
+                                    "autoWidth": false,
+                                    "alwaysCloneTop": false,
+                                });
+                            });
             </script>
 
         </section>

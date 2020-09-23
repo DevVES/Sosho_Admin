@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Data;
 using System.IO;
 using WebApplication1;
@@ -25,12 +20,13 @@ public partial class Category_AddCategory : System.Web.UI.Page
                 {
                     BtnSave.Text = "Update";
 
-                    string query = "SELECT CategoryID,CategoryName,CategoryDescription,IsActive,CreatedOn,CategoryImage FROM Category where isnull(IsDeleted,0)=0  and CategoryID = " + id;
+                    string query = "SELECT CategoryID,CategoryName,CategoryDescription,IsActive,CreatedOn,CategoryImage, Sequence FROM Category where isnull(IsDeleted,0)=0  and CategoryID = " + id;
                     DataTable dtUpdate = dbc.GetDataTable(query);
                     if (dtUpdate.Rows.Count > 0)
                     {
                         txtCategoryName.Text = dtUpdate.Rows[0]["CategoryName"].ToString();
                         txtDescription.Text = dtUpdate.Rows[0]["CategoryDescription"].ToString();
+                        txtSequence.Text = dtUpdate.Rows[0]["Sequence"].ToString();
                         if (dtUpdate.Rows[0]["IsActive"].ToString() == "True")
                             chkisactive.Checked = true;
                         else
@@ -196,8 +192,8 @@ public partial class Category_AddCategory : System.Web.UI.Page
                 string id = Request.QueryString["id"].ToString();
                 if (fileName != "")
                 {
-                    string[] para1 = { txtCategoryName.Text, txtDescription.Text, IsActive.ToString(), fileName, dt.ToString(),userId, id };
-                    string query = "UPDATE [Category] SET [CategoryName]=@1,[CategoryDescription]=@2,[IsActive]=@3,[CategoryImage]=@4,[ModifiedOn]=@5,[ModifiedBy]=@6 where [CategoryID]=@7";
+                    string[] para1 = { txtCategoryName.Text, txtDescription.Text, IsActive.ToString(), fileName, dt.ToString(),userId, id, txtSequence.Text };
+                    string query = "UPDATE [Category] SET [CategoryName]=@1,[CategoryDescription]=@2,[IsActive]=@3,[CategoryImage]=@4,[ModifiedOn]=@5,[ModifiedBy]=@6,[sequence]=@8 where [CategoryID]=@7";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     if (v1 > 0)
                     {
@@ -207,9 +203,9 @@ public partial class Category_AddCategory : System.Web.UI.Page
                 }
                 else if (fileName == "")
                 {
-                    string[] para1 = { txtCategoryName.Text, txtDescription.Text,  IsActive.ToString(), dt.ToString(), userId, id };
+                    string[] para1 = { txtCategoryName.Text, txtDescription.Text,  IsActive.ToString(), dt.ToString(), userId, id, txtSequence.Text };
 
-                    string query = "UPDATE [Category] SET [CategoryName]=@1,[CategoryDescription]=@2,[IsActive]=@3,[ModifiedOn]=@4,[ModifiedBy]=@5 where [CategoryID]=@6";
+                    string query = "UPDATE [Category] SET [CategoryName]=@1,[CategoryDescription]=@2,[IsActive]=@3,[ModifiedOn]=@4,[ModifiedBy]=@5,[sequence]=@7 where [CategoryID]=@6";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     if (v1 > 0)
                     {
@@ -224,7 +220,7 @@ public partial class Category_AddCategory : System.Web.UI.Page
             }
             else
             {
-                string query = "INSERT INTO [dbo].[Category] ([CategoryName] ,[CategoryDescription],[CategoryImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy]) VALUES ('" + txtCategoryName.Text.ToString().Replace("'", "''") + "','" + txtDescription.Text.ToString().Replace("'", "''") + "','" + fileName + "'," + IsActive + ",0,'" + dt.ToString() + "'," + userId + ")";
+                string query = "INSERT INTO [dbo].[Category] ([CategoryName] ,[CategoryDescription],[CategoryImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[sequence]) VALUES ('" + txtCategoryName.Text.ToString().Replace("'", "''") + "','" + txtDescription.Text.ToString().Replace("'", "''") + "','" + fileName + "'," + IsActive + ",0,'" + dt.ToString() + "'," + userId + ","+txtSequence.Text+")";
                 int VAL = dbc.ExecuteQuery(query);
 
                 if (VAL > 0)

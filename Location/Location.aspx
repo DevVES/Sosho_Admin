@@ -81,7 +81,7 @@
                        <asp:Button ID="BtnGo" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" Title="Go" />
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <a href="AddLocation.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" target="_blank" id="BtnAdd">Add</a>
+                        <a href="AddLocation.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" id="BtnAdd">Add</a>
                     </div>
                 </div>
             </div>

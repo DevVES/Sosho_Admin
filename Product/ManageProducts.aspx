@@ -79,7 +79,7 @@
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-3">
-                        <a href="ProductList.aspx" class="btn btn-block btn-success pull-right" style="width: 50%" target="_blank" title="Back to List">Back To List</a>
+                        <a href="ProductList.aspx" class="btn btn-block btn-success pull-right" style="width: 50%" title="Back to List">Back To List</a>
                     </div>
                 </div>
 
@@ -484,7 +484,7 @@
                         <div class="row pad-bottom" id="divIsApproved" runat="server">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="lblIsApproved" runat="server" Text="IsApproved"></asp:Label>
+                                    <asp:Label ID="lblIsApproved" runat="server" Text="Approved"></asp:Label>
                                 </div>
                                 <div class="col-md-7 pad">
                                     <input id="ChkIsApproved" name="IsApproved" type="checkbox" value="valIsApproved" runat="server" />
@@ -677,11 +677,23 @@
                          <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="Isquantityfreez" runat="server" Text="IsQuantityFreez"></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="Isquantityfreez" runat="server" Text="IsQuantityFreez"  ></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <input id="chkIsQuantityFreez" name="isActive" type="checkbox" value="valactive" runat="server" />
+                                    <asp:CheckBox ID="chkIsQuantityFreez" runat="server" AutoPostBack="true" OnCheckedChanged="FreezeQtyChckedChanged" /> 
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 ">
+                                    <asp:Label ID="lblFreezeQty" runat="server" Text="Freeze Qty"></asp:Label>
+                                </div>
+
+                                <div class="col-md-7 pad">
+                                    <asp:TextBox ID="txtFreezeQty" runat="server" onkeypress="return isNumber(event)" CssClass="form-control" Width="40%" placeholder="Freeze Qty" Text="1"></asp:TextBox>
+                                </div>
+
                             </div>
                         </div>
                         <div class="row pad-bottom">
@@ -773,6 +785,7 @@
                                                 <asp:HiddenField ID="HiddenFieldMaxQty" runat="server" Value='<%# Bind("grpMaxQty") %>' />
                                                 <asp:HiddenField ID="HiddenFieldIsQtyFreeze" runat="server" Value='<%# Bind("grpIsQtyFreeze") %>' />
                                                 <asp:HiddenField ID="HiddenFieldIsBestBuy" runat="server" Value='<%# Bind("grpisBestBuy") %>' />
+                                                <asp:HiddenField ID="HiddenFieldFreezeQty" runat="server" Value='<%# Bind("grpFreezeQty") %>' />
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:BoundField HeaderText="Unit" DataField="grpUnit" />

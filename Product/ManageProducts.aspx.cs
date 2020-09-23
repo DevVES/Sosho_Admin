@@ -27,6 +27,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 id = Request.QueryString["Id"];
                 string grpId = Request.QueryString["grpId"];
                 txtFixedShipRate.Enabled = false;
+                txtFreezeQty.Enabled = false;
                 dtgrpProduct = new DataTable("GrpProduct");
                 dtgrpProduct.Columns.Add("grpUnitName", typeof(string));
                 dtgrpProduct.Columns.Add("grpUnit", typeof(string));
@@ -46,8 +47,9 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 dtgrpProduct.Columns.Add("grpMaxQty", typeof(string));
                 dtgrpProduct.Columns.Add("grpIsQtyFreeze", typeof(string));
                 dtgrpProduct.Columns.Add("grpisBestBuy", typeof(string));
+                dtgrpProduct.Columns.Add("grpFreezeQty", typeof(string));
 
-                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 order by CategoryId asc";
+                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 order by Sequence asc";
                 DataTable dtcategory = dbc.GetDataTable(categoryqry);
                 ddlCategoryName.DataSource = dtcategory;
                 ddlCategoryName.DataTextField = "CategoryName";
@@ -98,7 +100,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 if (IsAdmin == "True")
                 {
                     hdnIsAdmin.Value = "1";
-                    ChkIsApproved.Checked = true;
+                    //ChkIsApproved.Checked = true;
                     divIsApproved.Visible = true;
                     divRejectedReason.Visible = true;
                     divJurisdictionIncharge.Visible = true;
@@ -127,9 +129,9 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                     ImageData();
                     DataTable dt1;
                     if (IsAdmin == "True")
-                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id);
+                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[IsApproved] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id);
                     else
-                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id + " and JurisdictionId=" + sJurisdictionId);
+                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[IsApproved] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id + " and JurisdictionId=" + sJurisdictionId);
 
                     if (dt1.Rows.Count > 0)
                     {
@@ -158,15 +160,18 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         if (IsQuantity == "True")
                         {
                             chkIsQuantityFreez.Checked = true;
+                            txtFreezeQty.Enabled = true;
                         }
                         else
                         {
                             chkIsQuantityFreez.Checked = false;
+                            txtFreezeQty.Enabled = false;
                         }
                         string IsFreeShipping = dt1.Rows[0]["IsFreeShipping"].ToString();
                         if(IsFreeShipping == "True")
                         {
                             chkIsFreeShipping.Checked = true;
+
                         }
                         else
                         {
@@ -182,6 +187,16 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         {
                             chkIsFixedShipping.Checked = false;
                             txtFixedShipRate.Enabled = false;
+                        }
+                       
+                        string IsApproved = dt1.Rows[0]["IsApproved"].ToString();
+                        if (IsApproved == "True")
+                        {
+                            ChkIsApproved.Checked = true;
+                        }
+                        else
+                        {
+                            ChkIsApproved.Checked = false;
                         }
                         string SoldTime = txtNoOfSoldItems.Text.ToString();
                         string solditems = "Sold " + SoldTime + " Times";
@@ -247,7 +262,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
                         productimg1.ImageUrl = "../ProductOGImage/" + dt1.Rows[0]["OGImage"].ToString();
 
-                        DataTable dtProductAttribute = dbc.GetDataTable("SELECT UnitId as grpUnitId,um.UnitName as grpUnitName,Unit as grpUnit,Mrp as grpMrp,DiscountType as grpDiscountType,Discount as grpDiscount,SoshoPrice as grpSoshoPrice,PackingType as grpPackingType,ProductImage as grpImage,ProductId as Id,pam.Id as grpId,pam.isOutofStock as grpisOutOfStock,pam.isSelected as grpisSelected,'Update' as Status, pam.MinQty as grpMinQty, pam.MaxQty as grpMaxQty, pam.IsQtyFreeze as grpIsQtyFreeze, pam.IsBestBuy AS grpisBestBuy  FROM [dbo].[Product_ProductAttribute_Mapping] pam INNER JOIN [UnitMaster] um on pam.UnitId=um.Id  where pam.IsDeleted=0 and ProductId=" + id);
+                        DataTable dtProductAttribute = dbc.GetDataTable("SELECT UnitId as grpUnitId,um.UnitName as grpUnitName,Unit as grpUnit,Mrp as grpMrp,DiscountType as grpDiscountType,Discount as grpDiscount,SoshoPrice as grpSoshoPrice,PackingType as grpPackingType,ProductImage as grpImage,ProductId as Id,pam.Id as grpId,pam.isOutofStock as grpisOutOfStock,pam.isSelected as grpisSelected,'Update' as Status, pam.MinQty as grpMinQty, pam.MaxQty as grpMaxQty, pam.IsQtyFreeze as grpIsQtyFreeze, pam.IsBestBuy AS grpisBestBuy, pam.FreezeQty AS grpFreezeQty  FROM [dbo].[Product_ProductAttribute_Mapping] pam INNER JOIN [UnitMaster] um on pam.UnitId=um.Id  where pam.IsDeleted=0 and ProductId=" + id);
                         if (dtProductAttribute.Rows.Count > 0)
                         {
                             ViewState["dt"] = dtProductAttribute;
@@ -271,7 +286,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
                     if (id != null && !id.Equals(""))
                     {
-                        DataTable dtProductAttribute = dbc.GetDataTable("SELECT UnitId as grpUnitId,um.UnitName as grpUnitName,Unit as grpUnit,Mrp as grpMrp,DiscountType as grpDiscountType,Discount as grpDiscount,SoshoPrice as grpSoshoPrice,PackingType as grpPackingType,ProductImage as grpImage,ProductId as Id,pam.Id as grpId, pam.MinQty as grpMinQty, pam.MaxQty as grpMaxQty, pam.IsQtyFreeze as grpIsQtyFreeze, pam.IsBestBuy as grpIsBestBuy  FROM [dbo].[Product_ProductAttribute_Mapping] pam INNER JOIN [UnitMaster] um on pam.UnitId=um.Id  where pam.IsDeleted=0 and ProductId=" + id + " and pam.Id=" + grpId);
+                        DataTable dtProductAttribute = dbc.GetDataTable("SELECT UnitId as grpUnitId,um.UnitName as grpUnitName,Unit as grpUnit,Mrp as grpMrp,DiscountType as grpDiscountType,Discount as grpDiscount,SoshoPrice as grpSoshoPrice,PackingType as grpPackingType,ProductImage as grpImage,ProductId as Id,pam.Id as grpId, pam.MinQty as grpMinQty, pam.MaxQty as grpMaxQty, pam.IsQtyFreeze as grpIsQtyFreeze, pam.IsBestBuy as grpIsBestBuy, pam.FreezeQty AS grpFreezeQty  FROM [dbo].[Product_ProductAttribute_Mapping] pam INNER JOIN [UnitMaster] um on pam.UnitId=um.Id  where pam.IsDeleted=0 and ProductId=" + id + " and pam.Id=" + grpId);
                         if (dtProductAttribute.Rows.Count > 0)
                         {
                             ddlgrpUnitName.SelectedValue = dtProductAttribute.Rows[0]["grpUnitId"].ToString();
@@ -283,13 +298,17 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             txtgrpPackingType.Text = dtProductAttribute.Rows[0]["grpPackingType"].ToString();
                             txtMinQty.Text = dtProductAttribute.Rows[0]["grpMinQty"].ToString();
                             txtMaxQty.Text = dtProductAttribute.Rows[0]["grpMaxQty"].ToString();
+                            txtFreezeQty.Text = dtProductAttribute.Rows[0]["grpFreezeQty"].ToString();
                             int isQtyFreez = Convert.ToInt32(dtProductAttribute.Rows[0]["grpIsQtyFreeze"]);
+
                             if (isQtyFreez == 1) {
                                 chkIsQuantityFreez.Checked = true;
+                                txtFreezeQty.Enabled = true;
                                     }
                             else
                             {
                                 chkIsQuantityFreez.Checked = false;
+                                txtFreezeQty.Enabled = false;
                             }
                             int isBestBuy = Convert.ToInt32(dtProductAttribute.Rows[0]["grpIsBestBuy"]);
                             if (isBestBuy == 1)
@@ -710,7 +729,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             }
                         }
                         string strUnitId = "", strImage = "", strisOutOfStock = "", strisSelected = "", strPackingType = "", strisBestBuy = "";
-                        string MinQty = "", isQtyFreezeVal = "";
+                        string MinQty = "", isQtyFreezeVal = "", FreezeQty = "";
                         var resultselected = (from GridViewRow msgRow in grdgProduct.Rows
                                               where strisSelected == ((HiddenField)msgRow.FindControl("HiddenFieldgrpisSelected")).Value
                                               select new { msgRow }).ToList();
@@ -734,16 +753,21 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             MinQty = hdnMinQty.Value;
                             HiddenField hdnMaxQty = (HiddenField)g1.FindControl("HiddenFieldMaxQty");
                             string MaxQty = hdnMaxQty.Value;
+
                             HiddenField hdnisQtyFreeze = (HiddenField)g1.FindControl("HiddenFieldIsQtyFreeze");
                             isQtyFreezeVal = hdnisQtyFreeze.Value;
+
                             if (isQtyFreezeVal == "True")
                             {
                                 isQtyFreezeVal = "1";
+
                             }
                             else
                             {
                                 isQtyFreezeVal = "0";
                             }
+                            HiddenField hdnFreezeQty = (HiddenField)g1.FindControl("HiddenFieldFreezeQty");
+                            FreezeQty = hdnFreezeQty.Value;
 
                             HiddenField hdnUnitId = (HiddenField)g1.FindControl("HiddenFieldgrpUnitId");
                             strUnitId = hdnUnitId.Value;
@@ -802,7 +826,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             {
                                 strPackingType = "";
                             }
-                            string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy]) VALUES (" + id1 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + ","+ isQtyFreezeVal + ","+ strisBestBuy + ")";
+                            string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id1 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + ","+ isQtyFreezeVal + ","+ strisBestBuy + ","+ FreezeQty + ")";
                             int VALatt = dbc.ExecuteQuery(ProductAttrqry);
                         }
                         sweetMessage("", "Product Updated Successfully", "success");
@@ -882,7 +906,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
                         //Product Attribute Mapping Save
                         string strUnitId = "", strImage = "", strisOutOfStock = "", strisSelected = "", strPackingType = "", strisBestBuy = "";
-                        string MinQty = "", isQtyFreezeVal = "", MaxQty = "";
+                        string MinQty = "", isQtyFreezeVal = "", MaxQty = "", FreezeQty = "";
                         var resultselected = (from GridViewRow msgRow in grdgProduct.Rows
                                               where strisSelected == ((HiddenField)msgRow.FindControl("HiddenFieldgrpisSelected")).Value
                                               select new { msgRow }).ToList();
@@ -907,6 +931,8 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             {
                                 isQtyFreezeVal = "0";
                             }
+                            HiddenField hdnFreezeQty = (HiddenField)g1.FindControl("HiddenFieldFreezeQty");
+                            FreezeQty = hdnFreezeQty.Value;
                             HiddenField hdnUnitId = (HiddenField)g1.FindControl("HiddenFieldgrpUnitId");
                             strUnitId = hdnUnitId.Value;
                             HiddenField hdnImage = (HiddenField)g1.FindControl("HiddenFieldgrpImage");
@@ -956,7 +982,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                 strPackingType = "";
                             }
 
-                            string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy]) VALUES (" + id11 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+")";
+                            string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id11 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+","+ FreezeQty + ")";
                             int VALatt = dbc.ExecuteQuery(ProductAttrqry);
                         }
                        
@@ -987,7 +1013,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
                     //Product Attribute Mapping Save
                     string strUnitId = "", strImage = "", strisOutOfStock = "", strisSelected = "", strPackingType = "", strisBestBuy = "";
-                    string MinQty = "", isQtyFreezeVal = "", MaxQty = "";
+                    string MinQty = "", isQtyFreezeVal = "", MaxQty = "", FreezeQty="";
                     var resultselected = (from GridViewRow msgRow in grdgProduct.Rows
                                           where strisSelected == ((HiddenField)msgRow.FindControl("HiddenFieldgrpisSelected")).Value
                                           select new { msgRow }).ToList();
@@ -1004,14 +1030,16 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         MaxQty = hdnMaxQty.Value;
                         HiddenField hdnisQtyFreeze = (HiddenField)g1.FindControl("HiddenFieldIsQtyFreeze");
                         isQtyFreezeVal = hdnisQtyFreeze.Value;
-                        if (isQtyFreezeVal == "True")
-                        {
-                            isQtyFreezeVal = "1";
-                        }
-                        else
-                        {
-                            isQtyFreezeVal = "0";
-                        }
+                        //if (isQtyFreezeVal == "True")
+                        //{
+                        //    isQtyFreezeVal = "1";
+                        //}
+                        //else
+                        //{
+                        //    isQtyFreezeVal = "0";
+                        //}
+                        HiddenField hdnFreezeQty = (HiddenField)g1.FindControl("HiddenFieldFreezeQty");
+                        FreezeQty = hdnFreezeQty.Value;
                         HiddenField hdnUnitId = (HiddenField)g1.FindControl("HiddenFieldgrpUnitId");
                         strUnitId = hdnUnitId.Value;
                         HiddenField hdnImage = (HiddenField)g1.FindControl("HiddenFieldgrpImage");
@@ -1061,7 +1089,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             strPackingType = "";
                         }
 
-                        string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy]) VALUES (" + id11 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+")";
+                        string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id11 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+","+ FreezeQty + ")";
                         int VALatt = dbc.ExecuteQuery(ProductAttrqry);
                     }
                     
@@ -1654,6 +1682,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 dtgrpProduct.Rows[_lastIndex]["grpMaxQty"] = txtMaxQty.Text;
                 dtgrpProduct.Rows[_lastIndex]["grpIsQtyFreeze"] = isQtyFreeze;
                 dtgrpProduct.Rows[_lastIndex]["grpisBestBuy"] = bisbestbuy;
+                dtgrpProduct.Rows[_lastIndex]["grpFreezeQty"] = txtFreezeQty.Text;
                 //dtgrpProduct.Rows[_lastIndex]["HiddenFieldgrpid"] = grpId;
             }
             else
@@ -1667,7 +1696,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                     , txtgrpSoshoPrice.Text
                     , sPackingType.ToString()
                     , "", "", ddlgrpUnitName.SelectedValue.ToString(), fileName, isOutOfStock, bisSelected, "", txtMinQty.Text,
-                     txtMaxQty.Text,isQtyFreeze,bisbestbuy
+                     txtMaxQty.Text,isQtyFreeze,bisbestbuy,txtFreezeQty.Text
                     );
 
                 DataTable dtgrpProduct1 = ViewState["dt"] as DataTable;
@@ -1704,7 +1733,8 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                          row["grpMinQty"],
                          row["grpMaxQty"],
                          isQtyFreeze,
-                         bisbestbuy
+                         bisbestbuy,
+                         row["grpFreezeQty"]
                     );
                     }
                 }
@@ -1718,6 +1748,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             txtgrpSoshoPrice.Text = String.Empty;
             txtMinQty.Text = "1";
             txtMaxQty.Text = "99";
+            txtFreezeQty.Text = "1";
             chkIsQuantityFreez.Checked = false;
             chkgrpIsOutOfStock.Checked = false;
             chkgrpIsSelected.Checked = false;
@@ -1754,6 +1785,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
             txtMinQty.Text = dtgrpProduct.Rows[_lastIndex]["grpMinQty"].ToString();
             txtMaxQty.Text = dtgrpProduct.Rows[_lastIndex]["grpMaxQty"].ToString();
+            txtFreezeQty.Text = dtgrpProduct.Rows[_lastIndex]["grpFreezeQty"].ToString();
             //chkIsQuantityFreez.Checked = true;//Convert.ToBoolean(dtgrpProduct.Rows[_lastIndex]["grpIsQtyFreeze"]); 
 
             grdgProduct.EditIndex = -1;
@@ -1766,6 +1798,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             txtgrpSoshoPrice.Text = String.Empty;
             txtMinQty.Text = "1";
             txtMaxQty.Text = "99";
+            txtFreezeQty.Text = "1";
             chkgrpIsOutOfStock.Checked = false;
             chkgrpIsSelected.Checked = false;
             chkgrpIsBestBuy.Checked = false;
@@ -1801,6 +1834,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             isQtyFreeze = Convert.ToInt32(dtgrpProduct.Rows[_lastIndex]["grpIsQtyFreeze"]);
             if (isQtyFreeze == 1)
                 chkIsQuantityFreez.Checked = true;
+                txtFreezeQty.Enabled = true;
 
             ddlgrpDiscountType.SelectedValue = dtgrpProduct.Rows[_lastIndex]["grpDiscountType"].ToString();
             txtgrpMRP.Text = dtgrpProduct.Rows[_lastIndex]["grpMrp"].ToString();
@@ -1814,6 +1848,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             ddlgrpUnitName.SelectedValue = dtgrpProduct.Rows[_lastIndex]["grpUnitId"].ToString();
             txtMinQty.Text = dtgrpProduct.Rows[_lastIndex]["grpMinQty"].ToString();
             txtMaxQty.Text = dtgrpProduct.Rows[_lastIndex]["grpMaxQty"].ToString();
+            txtFreezeQty.Text = dtgrpProduct.Rows[_lastIndex]["grpFreezeQty"].ToString();
             //chkIsQuantityFreez.Checked = Convert.ToBoolean(dtgrpProduct.Rows[_lastIndex]["grpIsQtyFreeze"]);
 
             BtnAdd.Text = "Update";
@@ -1941,13 +1976,13 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             string sSoshoPrice = txtgrpSoshoPrice.Text.ToString();
             string sPackingType = txtgrpPackingType.Text.ToString();
             string grpImage = FileUploadgrpImages.FileName;
-
+            string FreezeQty = txtFreezeQty.Text;
 
             if (chkgrpIsOutOfStock.Checked)
                 iisOutOfStock = 1;
             if (id != null && !id.Equals("") && grpId != null && !grpId.Equals(""))
             {
-                string updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + sUnit + "',UnitId=" + sUnitId + ",Mrp='" + sMrp + "',DiscountType='" + sDiscountType + "',Discount='" + sDiscount + "',SoshoPrice='" + sSoshoPrice + "',PackingType='" + sPackingType + "',isOutOfStock=" + iisOutOfStock + ",IsDeleted = " + IsDeleted + ", ProductImage = '" + grpImage + "' Where Id=" + grpId + " and ProductId = " + id;
+                string updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + sUnit + "',UnitId=" + sUnitId + ",Mrp='" + sMrp + "',DiscountType='" + sDiscountType + "',Discount='" + sDiscount + "',SoshoPrice='" + sSoshoPrice + "',PackingType='" + sPackingType + "',isOutOfStock=" + iisOutOfStock + ",IsDeleted = " + IsDeleted + ", ProductImage = '" + grpImage + "', FreezeQty = " + FreezeQty + " Where Id=" + grpId + " and ProductId = " + id;
                 int VALupdate = dbc.ExecuteQuery(updateqty);
                 if (VALupdate > 0)
                 {
@@ -1975,6 +2010,13 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             txtFixedShipRate.Enabled = false;
 
     }
+    protected void FreezeQtyChckedChanged(Object sender, EventArgs e)
+    {
+        if (chkIsQuantityFreez.Checked == true)
+            txtFreezeQty.Enabled = true;
+        else
+            txtFreezeQty.Enabled = false;
 
+    }
 
 }

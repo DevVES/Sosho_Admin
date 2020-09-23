@@ -53,7 +53,7 @@
             <!-- Small boxes (Stat box) -->
 
             <div class="row">
-                <a href="ManageWallets.aspx" class="btn btn-success pull-right add-padding" style="width:80px" target="_blank">ADD</a>
+                <a href="ManageWallets.aspx" class="btn btn-success pull-right add-padding" style="width:80px" >ADD</a>
             </div>
             <div class="row">
                 <div class="col-md-3 col-sm-6 col-xs-12">
