@@ -37,12 +37,22 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                 ddlintermedicateCategory.DataValueField = "CategoryId";
                 ddlintermedicateCategory.DataBind();
 
+                ddlbasicCategory.DataSource = dtcategory;
+                ddlbasicCategory.DataTextField = "CategoryName";
+                ddlbasicCategory.DataValueField = "CategoryId";
+                ddlbasicCategory.DataBind();
+
                 string productqry = "SELECT Id,Name FROM Product where isnull(IsDeleted,0)=0 order by Id asc";
                 DataTable dtproduct = dbc.GetDataTable(productqry);
                 ddlintermedicateProduct.DataSource = dtproduct;
                 ddlintermedicateProduct.DataTextField = "Name";
                 ddlintermedicateProduct.DataValueField = "Id";
                 ddlintermedicateProduct.DataBind();
+
+                ddlbasicProduct.DataSource = dtproduct;
+                ddlbasicProduct.DataTextField = "Name";
+                ddlbasicProduct.DataValueField = "Id";
+                ddlbasicProduct.DataBind();
 
                 List<ActionType> ActionList = new List<ActionType>
                 {
@@ -57,6 +67,11 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                 ddlintermedicateAction.DataSource = ActionList;
                 ddlintermedicateAction.DataBind();
 
+                ddlbasicAction.DataTextField = "Text";
+                ddlbasicAction.DataValueField = "Value";
+                ddlbasicAction.DataSource = ActionList;
+                ddlbasicAction.DataBind();
+
                 string IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
                 string sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
                 if (IsAdmin == "True")
@@ -69,6 +84,11 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                     chklstJurisdictionIncharge.DataTextField = "JurisdictionIncharge";
                     chklstJurisdictionIncharge.DataValueField = "JurisdictionId";
                     chklstJurisdictionIncharge.DataBind();
+
+                    chklstBasicJurisdictionIncharge.DataSource = dtIncharge;
+                    chklstBasicJurisdictionIncharge.DataTextField = "JurisdictionIncharge";
+                    chklstBasicJurisdictionIncharge.DataValueField = "JurisdictionId";
+                    chklstBasicJurisdictionIncharge.DataBind();
                 }
                 else
                 {
@@ -81,6 +101,16 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                 txtintermediateEndDate.Text = dbc.getindiantime().ToString("dd/MMM/yyyy");
                 chkisactive.Checked = true;
                 ChkintermediateisActive.Checked = true;
+
+                txtbasicLink.Visible = false;
+                lblbasicLink.Visible = false;
+                ddlbasicCategory.Visible = false;
+                lblbasicCategory.Visible = false;
+                ddlbasicProduct.Visible = false;
+                lblbasicProduct.Visible = false;
+                dvbasicLink.Style.Add("display", "none");
+                dvbasicCategory.Style.Add("display", "none");
+                dvbasicProduct.Style.Add("display", "none");
 
                 txtintermediateLink.Visible = false;
                 lblintermediateLink.Visible = false;
@@ -98,12 +128,45 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                     BtnSave.Text = "Update";
                     if (typeid == "1")
                     {
-                        DataTable dt1 = dbc.GetDataTable("SELECT  [Title],[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [dbo].[HomepageBanner] where IsDeleted=0  and Id=" + id);
+                        DataTable dt1 = dbc.GetDataTable("SELECT  [Title],[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],[ActionId],[CategoryId],[ProductId] FROM [dbo].[HomepageBanner] where IsDeleted=0  and Id=" + id);
                         if (dt1.Rows.Count > 0)
                         {
                             txtTitle1.Text = dt1.Rows[0]["Title"].ToString();
                             txtAltText.Text = dt1.Rows[0]["AltText"].ToString();
-                            txtLink.Text = dt1.Rows[0]["Link"].ToString();
+                            //txtLink.Text = dt1.Rows[0]["Link"].ToString();
+                            ddlbasicAction.SelectedIndex = Convert.ToInt32(dt1.Rows[0]["ActionId"]);
+                            txtbasicLink.Text = dt1.Rows[0]["Link"].ToString();
+                            ddlbasicCategory.SelectedValue = Convert.ToInt32(dt1.Rows[0]["CategoryId"]).ToString();
+                            ddlbasicProduct.SelectedValue = Convert.ToInt32(dt1.Rows[0]["ProductId"]).ToString();
+
+                            if (ddlbasicAction.SelectedIndex == clsCommon.BannerActionType.OpenUrl.GetHashCode())
+                            {
+                                if (!string.IsNullOrEmpty(txtbasicLink.Text))
+                                {
+                                    txtbasicLink.Visible = true;
+                                    lblbasicLink.Visible = true;
+                                    dvbasicLink.Style.Add("display", "block");
+                                }
+                            }
+                            if (ddlbasicAction.SelectedIndex == clsCommon.BannerActionType.NavigateToCategory.GetHashCode())
+                            {
+                                if (ddlbasicCategory.SelectedIndex > 0)
+                                {
+                                    ddlbasicCategory.Visible = true;
+                                    lblbasicCategory.Visible = true;
+                                    dvbasicCategory.Style.Add("display", "block");
+                                }
+                            }
+                            if (ddlbasicAction.SelectedIndex == clsCommon.BannerActionType.AddToCart.GetHashCode())
+                            {
+                                if (ddlbasicProduct.SelectedIndex > 0)
+                                {
+                                    ddlbasicProduct.Visible = true;
+                                    lblbasicProduct.Visible = true;
+                                    dvbasicProduct.Style.Add("display", "block");
+                                }
+                            }
+
 
                             if (dt1.Rows[0]["IsActive"].ToString() == "True")
                                 chkisactive.Checked = true;
@@ -142,6 +205,21 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
 
 
                             productimg.ImageUrl = "../BannerImage/" + dt1.Rows[0]["ImageName"].ToString();
+
+                            DataTable Jurisdictiondt = dbc.GetDataTable("SELECT  [JurisdictionId] FROM [dbo].[JurisdictionBanner] where BannerType = 'HomePage' AND BannerId=" + id);
+                            if (Jurisdictiondt.Rows.Count > 0)
+                            {
+                                foreach (ListItem li in chklstBasicJurisdictionIncharge.Items)
+                                {
+                                    for (int i = 0; i < Jurisdictiondt.Rows.Count; i++)
+                                    {
+                                        if (li.Value == Jurisdictiondt.Rows[i]["JurisdictionId"].ToString())
+                                        {
+                                            li.Selected = true;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     if (typeid == "2")
@@ -153,8 +231,8 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                             txtintermediateTitle.Text = intermediatedt.Rows[0]["Title"].ToString();
                             ddlintermedicateAction.SelectedIndex = Convert.ToInt32(intermediatedt.Rows[0]["ActionId"]);
                             txtintermediateLink.Text = intermediatedt.Rows[0]["Link"].ToString();
-                            ddlintermedicateCategory.SelectedIndex = Convert.ToInt32(intermediatedt.Rows[0]["CategoryId"]);
-                            ddlintermedicateProduct.SelectedIndex = Convert.ToInt32(intermediatedt.Rows[0]["ProductId"]);
+                            ddlintermedicateCategory.SelectedValue = Convert.ToInt32(intermediatedt.Rows[0]["CategoryId"]).ToString();
+                            ddlintermedicateProduct.SelectedValue = Convert.ToInt32(intermediatedt.Rows[0]["ProductId"]).ToString();
                             txtintermediateAltText.Text = intermediatedt.Rows[0]["AltText"].ToString();
                             string strtdate = intermediatedt.Rows[0]["StartDate"].ToString();
                             string enddate = intermediatedt.Rows[0]["EndDate"].ToString();
@@ -306,29 +384,76 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                 IsActive = 1;
             }
 
+            string sCategoryId = "";
+            if (string.IsNullOrEmpty(ddlbasicCategory.SelectedValue))
+                sCategoryId = "0";
+            else
+                sCategoryId = ddlbasicCategory.SelectedValue.ToString();
+
+            string sProductId = "";
+            if (string.IsNullOrEmpty(ddlbasicProduct.SelectedValue))
+                sProductId = "0";
+            else
+                sProductId = ddlbasicProduct.SelectedValue.ToString();
+
+            int sActionId = 0;
+            if (Convert.ToInt32(ddlbasicAction.SelectedValue) != 0)
+                sActionId = Convert.ToInt32(ddlbasicAction.SelectedValue);
+
+
+
+            List<ListItem> selectedIncharge = new List<ListItem>();
+            selectedIncharge = chklstBasicJurisdictionIncharge.Items.Cast<ListItem>().Where(n => n.Selected).ToList();
+
+            
+
             if (BtnSave.Text.Equals("Update"))
             {
                 string id = Request.QueryString["id"].ToString();
 
+                string delJurisdictionBanner = " Delete FROM [dbo].[JurisdictionBanner]  where BannerType = 'HomePage' AND BannerId=" + Convert.ToInt32(id);
+                dbc.ExecuteQuery(delJurisdictionBanner);
+
                 if (fileName != "")
                 {
-                    string[] para1 = { txtTitle1.Text, txtAltText.Text, txtLink.Text, FROM1, TO1, IsActive.ToString(), fileName, dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), id1 };
-                    string query = "UPDATE [HomepageBanner] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4,[EndDate]=@5,[IsActive]=@6,[ImageName]=@7,[DOM]=@8 where [Id]=@9";
+                    string[] para1 = { txtTitle1.Text, txtAltText.Text, txtbasicLink.Text, FROM1, TO1, IsActive.ToString(), fileName, dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), sCategoryId, sProductId, sActionId.ToString(),id1 };
+                    string query = "UPDATE [HomepageBanner] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4," + 
+                                   " [EndDate]=@5,[IsActive]=@6,[ImageName]=@7,[DOM]=@8,[CategoryId]=@9,[ProductId]=@10, [ActionId]=@11 where [Id]=@12";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     if (v1 > 0)
                     {
+
+                        foreach (ListItem item in selectedIncharge)
+                        {
+                            string sJurisdictionId = item.Value.ToString();
+
+                            string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                            Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
+                            dbc.ExecuteQuery(Jurisdictionquery);
+                        }
+
                         sweetMessage("", "Banner Updated Successfully", "success");
                         Response.Redirect("HomePageBannerList.aspx", true);
                     }
                 }
                 else if (fileName == "")
                 {
-                    string[] para1 = { txtTitle1.Text, txtAltText.Text, txtLink.Text, FROM1, TO1, IsActive.ToString(), dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), id1 };
+                    string[] para1 = { txtTitle1.Text, txtAltText.Text, txtbasicLink.Text, FROM1, TO1, IsActive.ToString(), dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), sCategoryId, sProductId, sActionId.ToString(), id1 };
 
-                    string query = "UPDATE [HomepageBanner] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4,[EndDate]=@5,[IsActive]=@6,[DOM]=@7 where [Id]=@8";
+                    string query = "UPDATE [HomepageBanner] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4," +
+                                   " [EndDate]=@5,[IsActive]=@6,[DOM]=@7,[CategoryId]=@8,[ProductId]=@9, [ActionId]=@10 where [Id]=@11";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     if (v1 > 0)
                     {
+                        foreach (ListItem item in selectedIncharge)
+                        {
+                            string sJurisdictionId = item.Value.ToString();
+
+                            string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                            Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
+                            dbc.ExecuteQuery(Jurisdictionquery);
+                        }
+
                         sweetMessage("", "Banner Updated Successfully", "success");
                         Response.Redirect("HomePageBannerList.aspx", true);
                     }
@@ -340,11 +465,36 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
             }
             else
             {
-                string query = "INSERT INTO [dbo].[HomepageBanner] ([Title] ,[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],[IsDeleted],[DOC],[DOM]) VALUES ('" + txtTitle1.Text + "','" + txtAltText.Text + "','" + txtLink.Text + "','" + FROM1 + "','" + TO1 + "','" + IsActive + "','" + fileName + "',0,'" + dbc.getindiantimeString() + "','" + dbc.getindiantimeString() + "')";
-                int VAL = dbc.ExecuteQuery(query);
-
+                string[] para1 = { txtTitle1.Text.ToString().Replace("'", "''"),
+            txtAltText.Text.ToString().Replace("'", "''"),
+            txtbasicLink.Text.ToString().Replace("'", "''"),
+            FROM1,
+            TO1,
+            IsActive.ToString(),
+            fileName,
+            "0",
+            dbc.getindiantimeString(),
+            dbc.getindiantimeString(),
+            sActionId.ToString(),
+            sCategoryId,
+            sProductId,
+            };
+                //string query = "INSERT INTO [dbo].[HomepageBanner] ([Title] ,[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],[IsDeleted],[DOC],[DOM],[ActionId],[CategoryId],[ProductId]) VALUES ('" + txtTitle1.Text + "','" + txtAltText.Text + "','" + txtbasicLink.Text + "','" + FROM1 + "','" + TO1 + "','" + IsActive + "','" + fileName + "',0,'" + dbc.getindiantimeString() + "','" + dbc.getindiantimeString() + "',"+sActionId+","+sCategoryId+","+sProductId+")";
+                string query = "INSERT INTO [dbo].[HomepageBanner] ([Title] ,[AltText],[Link],[StartDate],[EndDate]," + 
+                               " [IsActive],[ImageName],[IsDeleted],[DOC],[DOM],[ActionId],[CategoryId],[ProductId])" +
+                               " VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13); SELECT SCOPE_IDENTITY();";
+                //int VAL = dbc.ExecuteQuery(query);
+                int VAL = dbc.ExecuteQueryWithParamsId(query, para1);
                 if (VAL > 0)
                 {
+                    foreach (ListItem item in selectedIncharge)
+                    {
+                        string sJurisdictionId = item.Value.ToString();
+
+                        string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                        Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + VAL + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
+                        dbc.ExecuteQuery(Jurisdictionquery);
+                    }
                     sweetMessage("", "Banner Uploaded Successfully", "success");
                     Response.Redirect("HomePageBannerList.aspx", true);
                 }
@@ -671,8 +821,8 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                         {
                             string sJurisdictionId = item.Value.ToString();
 
-                            string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy])";
-                            Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id1 + "','" + dtCreatedon.ToString() + "'," + userId + ")";
+                            string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                            Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id1 + "','" + dtCreatedon.ToString() + "'," + userId + ",'Intermediate')";
                             dbc.ExecuteQuery(Jurisdictionquery);
                         }
                         sweetMessage("", "Intermediate Updated Successfully", "success");
@@ -693,8 +843,8 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                         {
                             string sJurisdictionId = item.Value.ToString();
 
-                            string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy])";
-                            Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id1 + "','" + dtCreatedon.ToString() + "'," + userId + ")";
+                            string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                            Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id1 + "','" + dtCreatedon.ToString() + "'," + userId + ",'Intermediate')";
                             dbc.ExecuteQuery(Jurisdictionquery);
                         }
                         sweetMessage("", "Intermediate Banner Updated Successfully", "success");
@@ -744,8 +894,8 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                     {
                         string sJurisdictionId = item.Value.ToString();
 
-                        string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy])";
-                        Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + VAL + "','" + dtCreatedon.ToString() + "'," + userId + ")";
+                        string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                        Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + VAL + "','" + dtCreatedon.ToString() + "'," + userId + ",'Intermediate')";
                         dbc.ExecuteQuery(Jurisdictionquery);
                     }
                     sweetMessage("", "Intermediate Banner Added Successfully", "success");
@@ -797,6 +947,43 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
             ddlintermedicateProduct.Visible = true;
             lblintermediateProduct.Visible = true;
             dvintermediateProduct.Style.Add("display", "block");
+        }
+    }
+
+    protected void OnSelectedBasicActionChanged(object sender, EventArgs e)
+    {
+        ddlbasicCategory.Visible = false;
+        lblbasicCategory.Visible = false;
+
+        txtbasicLink.Visible = false;
+        lblbasicLink.Visible = false;
+
+        ddlbasicProduct.Visible = false;
+        lblbasicProduct.Visible = false;
+
+        dvbasicLink.Style.Add("display", "none");
+        dvbasicCategory.Style.Add("display", "none");
+        dvbasicProduct.Style.Add("display", "none");
+
+        if (ddlbasicAction.SelectedIndex == clsCommon.BannerActionType.NavigateToCategory.GetHashCode())
+        {
+            ddlbasicCategory.Visible = true;
+            lblbasicCategory.Visible = true;
+            dvbasicCategory.Style.Add("display", "block");
+        }
+
+        if (ddlbasicAction.SelectedIndex == clsCommon.BannerActionType.OpenUrl.GetHashCode())
+        {
+            txtbasicLink.Visible = true;
+            lblbasicLink.Visible = true;
+            dvbasicLink.Style.Add("display", "block");
+        }
+
+        if (ddlbasicAction.SelectedIndex == clsCommon.BannerActionType.AddToCart.GetHashCode())
+        {
+            ddlbasicProduct.Visible = true;
+            lblbasicProduct.Visible = true;
+            dvbasicProduct.Style.Add("display", "block");
         }
     }
 
