@@ -200,7 +200,7 @@
                                     <asp:Label ID="lblLocation" runat="server" Text="Location"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:DropDownList class="form-control" runat="server" ID="ddlLocation" Width="290px" OnSelectedIndexChanged="OnLocationSelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                    <asp:DropDownList class="form-control" runat="server" ID="ddlArea" Width="290px" OnSelectedIndexChanged="OnLocationSelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                 </div>
                                 <div class="col-md-2 pad">
                                     <span id="spnLocation" style="color: #d9534f; display: none;">This field is required</span>

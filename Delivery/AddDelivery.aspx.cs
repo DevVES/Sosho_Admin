@@ -41,12 +41,12 @@ public partial class Delivery_AddDelivery : System.Web.UI.Page
                 ddlPinCode.DataValueField = "zipcode";
                 ddlPinCode.DataBind();
 
-                string Locationqry = "Select Id as Id,Location as Name from [ZipCode] where IsActive = 1 AND zipcode =" + ddlPinCode.SelectedItem.Text + "  order by Id";
-                DataTable dtLocation = dbc.GetDataTable(Locationqry);
-                ddlLocation.DataSource = dtLocation;
-                ddlLocation.DataTextField = "Name";
-                ddlLocation.DataValueField = "Id";
-                ddlLocation.DataBind();
+                string Areaqry = "Select Id as Id,Area as Name from [ZipCode] where IsActive = 1 AND zipcode =" + ddlPinCode.SelectedItem.Text + "  order by Id";
+                DataTable dtArea = dbc.GetDataTable(Areaqry);
+                ddlArea.DataSource = dtArea;
+                ddlArea.DataTextField = "Name";
+                ddlArea.DataValueField = "Id";
+                ddlArea.DataBind();
 
                 id = Request.QueryString["Id"];
 
@@ -89,27 +89,27 @@ public partial class Delivery_AddDelivery : System.Web.UI.Page
                     ddlPinCode.DataValueField = "zipcode";
                     ddlPinCode.DataBind();
 
-                    Locationqry = "Select Id as Id,Location as Name from [ZipCode] where IsActive = 1  order by Id";
-                    dtLocation = dbc.GetDataTable(Locationqry);
-                    ddlLocation.DataSource = dtLocation;
-                    ddlLocation.DataTextField = "Name";
-                    ddlLocation.DataValueField = "Id";
-                    ddlLocation.DataBind();
+                    Areaqry = "Select Id as Id,Area as Name from [ZipCode] where IsActive = 1  order by Id";
+                    dtArea = dbc.GetDataTable(Areaqry);
+                    ddlArea.DataSource = dtArea;
+                    ddlArea.DataTextField = "Name";
+                    ddlArea.DataValueField = "Id";
+                    ddlArea.DataBind();
 
 
                     DataTable dtAreaQuery = dbc.GetDataTable("SELECT DeliveryDetailID,PinCodeID,LocationId, Z.Location, A.Area,DD.AreaId FROM DeliveryDetail DD INNER JOIN Zipcode Z ON DD.LocationId = Z.Id INNER JOIN tblArea A ON A.Id = DD.AreaId WHERE DeliveryID = " + id);
                     if (dtAreaQuery.Rows.Count > 0)
                     {
-                        string Areaqry = "Select Id,Area from tblArea Where Location = '" + dtAreaQuery.Rows[0]["Location"].ToString() + "' order by Id";
-                        DataTable dtArea = dbc.GetDataTable(Areaqry);
-                        chklstArea.DataSource = dtArea;
+                        string societyqry = "Select Id,Area from tblArea Where Location = '" + dtAreaQuery.Rows[0]["Location"].ToString() + "' order by Id";
+                        DataTable dtSociety = dbc.GetDataTable(societyqry);
+                        chklstArea.DataSource = dtSociety;
                         chklstArea.DataTextField = "Area";
                         chklstArea.DataValueField = "Id";
                         chklstArea.DataBind();
 
-                        ddlLocation.Items.FindByText(dtAreaQuery.Rows[0]["Location"].ToString()).Selected = true;
+                        ddlArea.Items.FindByText(dtAreaQuery.Rows[0]["Location"].ToString()).Selected = true;
                         ddlPinCode.Items.FindByText(dtAreaQuery.Rows[0]["PinCodeID"].ToString()).Selected = true;
-                        ddlLocation.Enabled = false;
+                        ddlArea.Enabled = false;
                         ddlPinCode.Enabled = false;
                         chklstArea.Enabled = false;
                         List<ListItem> selectedArea = new List<ListItem>();
@@ -151,17 +151,17 @@ public partial class Delivery_AddDelivery : System.Web.UI.Page
     }
     protected void OnCitySelectedIndexChanged(object sender, EventArgs e)
     {
-        string PinCodeqry = "Select Location,zipcode from Zipcode Where State = '" + ddlState.SelectedItem.Text + "' and District = '" + ddlCity.SelectedItem.Text + "' order by zipcode";
+        string PinCodeqry = "Select Area,zipcode from Zipcode Where State = '" + ddlState.SelectedItem.Text + "' and District = '" + ddlCity.SelectedItem.Text + "' order by zipcode";
         DataTable dtPincode = dbc.GetDataTable(PinCodeqry);
         ddlPinCode.DataSource = dtPincode;
         ddlPinCode.DataTextField = "zipcode";
-        ddlPinCode.DataValueField = "Location";
+        ddlPinCode.DataValueField = "Area";
         ddlPinCode.DataBind();
     }
 
     protected void OnLocationSelectedIndexChanged(object sender, EventArgs e)
     {
-        string Areaqry = "Select Id,Area from tblArea Where Location = '" + ddlLocation.SelectedItem.Text + "' order by Id";
+        string Areaqry = "Select Id,Area from tblArea Where Location = '" + ddlArea.SelectedItem.Text + "' order by Id";
         DataTable dtArea = dbc.GetDataTable(Areaqry);
         chklstArea.DataSource = dtArea;
         chklstArea.DataTextField = "Area";
@@ -215,9 +215,9 @@ public partial class Delivery_AddDelivery : System.Web.UI.Page
 
                 if (VAL > 0)
                 {
-                    int locationId = Convert.ToInt32(ddlLocation.SelectedValue);
+                    int areaId = Convert.ToInt32(ddlArea.SelectedValue);
                     string pincode = string.Empty;
-                    string pincodeQry = " SELECT Top 1 zipCode FROM ZipCode WHERE Id = " + locationId;
+                    string pincodeQry = " SELECT Top 1 zipCode FROM ZipCode WHERE Id = " + areaId;
                     DataTable dtPincode = dbc.GetDataTable(pincodeQry);
                     if (dtPincode.Rows.Count > 0)
                     {
@@ -228,7 +228,7 @@ public partial class Delivery_AddDelivery : System.Web.UI.Page
                     selectedArea = chklstArea.Items.Cast<ListItem>().Where(n => n.Selected).ToList();
                     foreach (ListItem item in selectedArea)
                     {
-                        InsertDetailqry = "INSERT INTO [DeliveryDetail] ([DeliveryID],[PinCodeID],[LocationId],[AreaId],[IsActive],[CreatedOn],[CreatedBy]) VALUES ('" + VAL + "','" + pincode + "'," + locationId + "," + item.Value + "," + IsActive + ",'" + dt + "'," + userId + ")";
+                        InsertDetailqry = "INSERT INTO [DeliveryDetail] ([DeliveryID],[PinCodeID],[AreaId],[BuildingId],[IsActive],[CreatedOn],[CreatedBy]) VALUES ('" + VAL + "','" + pincode + "'," + areaId + "," + item.Value + "," + IsActive + ",'" + dt + "'," + userId + ")";
                         int VAL1 = dbc.ExecuteQuery(InsertDetailqry);
                     }
                     if (Convert.ToInt32(VAL) > 0)
@@ -263,14 +263,14 @@ public partial class Delivery_AddDelivery : System.Web.UI.Page
     protected void OnZipCodeSelectedIndexChanged(object sender, EventArgs e)
     {
 
-        string Locationqry = "Select Id as Id,Location as Name from [ZipCode] where IsActive = 1 AND zipcode = '" + ddlPinCode.SelectedItem.Text + "' order by Id";
+        string Locationqry = "Select Id as Id,Area as Name from [ZipCode] where IsActive = 1 AND zipcode = '" + ddlPinCode.SelectedItem.Text + "' order by Id";
         DataTable dtLocation = dbc.GetDataTable(Locationqry);
-        ddlLocation.DataSource = dtLocation;
-        ddlLocation.DataTextField = "Name";
-        ddlLocation.DataValueField = "Id";
-        ddlLocation.DataBind();
+        ddlArea.DataSource = dtLocation;
+        ddlArea.DataTextField = "Name";
+        ddlArea.DataValueField = "Id";
+        ddlArea.DataBind();
 
-        string Areaqry = "Select Id,Area from tblArea Where Location = '" + ddlLocation.SelectedItem.Text + "' order by Id";
+        string Areaqry = "Select Id,Area from tblArea Where Location = '" + ddlArea.SelectedItem.Text + "' order by Id";
         DataTable dtArea = dbc.GetDataTable(Areaqry);
         chklstArea.DataSource = dtArea;
         chklstArea.DataTextField = "Area";
@@ -305,28 +305,4 @@ public partial class Delivery_AddDelivery : System.Web.UI.Page
         sb.Append("</script>");
         ClientScript.RegisterClientScriptBlock(this.GetType(), "Message", sb.ToString());
     }
-
-    //protected void BtnUserSave_Click(object sender, EventArgs e)
-    //{
-    //    try
-    //    {
-    //        if (hdnDeliveryID.Value.ToString() != "0")
-    //        {
-    //            string InsertUserqry = "INSERT INTO [Users] ([UserName],[Password],[Name],[UserType],[DeliveryID],[Mobile]) VALUES ('" + txtUserName.Text.ToString().Replace("'", "''") + "','" + txtPassword.Text.ToString().Replace("'", "''") + "','" + txtUserName.Text.ToString().Replace("'", "''") + "',3," + hdnDeliveryID.Value + "," + hdnContact.Value + ")";
-    //            int VAL = dbc.ExecuteQuery(InsertUserqry);
-    //            if (VAL > 0)
-    //            {
-    //                sweetMessage("", "Delivery User Added Successfully", "success");
-    //            }
-    //            else
-    //            {
-    //                sweetMessage("", "Please Try Again!!", "warning");
-    //            }
-    //        }
-    //    }
-    //    catch (Exception E)
-    //    {
-    //        sweetMessage("", "Please Try Again!!", "warning");
-    //    }
-    //}
 }

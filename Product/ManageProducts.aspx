@@ -933,7 +933,7 @@
                                     <asp:Label ID="Label2" runat="server" Text="Discount Type"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:DropDownList ID="ddlDiscountType" runat="server" class="form-control" Width="40%">
+                                    <asp:DropDownList ID="ddlDiscountType" runat="server" class="form-control" Width="40%" >
                                         <asp:ListItem Value="">Select Discount Type</asp:ListItem>
                                         <asp:ListItem Value="%">%</asp:ListItem>
                                         <asp:ListItem Value="Fixed">Fixed</asp:ListItem>
@@ -1290,6 +1290,32 @@
                     //}
                 });
 
+               $("#ContentPlaceHolder1_ddlDiscountType").change(function () {
+                    debugger
+                    var end = this.value;
+                    alert(end);
+                    if (end != "") {
+                        $("#spnDiscountType").css('display', 'none');
+                        var total = 0;
+                        var grpDiscountTypeval = $("#ContentPlaceHolder1_ddlDiscountType").val();
+                        var grpMrpval = $("#ContentPlaceHolder1_txtMRP").val();
+                        var val = $("#ContentPlaceHolder1_txtDiscount").val();
+                        var soshoPrice = $("#ContentPlaceHolder1_txtSoshoPrice").val();
+                        if (grpDiscountTypeval == "%") {
+                            //total = grpMrpval - ((grpMrpval * val) / 100);
+                            total = (soshoPrice * 100) / grpMrpval;
+                        }
+                        else if (grpDiscountTypeval == "Fixed") {
+                            //total = grpMrpval - val;
+                            total = grpMrpval - soshoPrice;
+                        }
+                        $('#<%=txtSoshoPrice.ClientID %>').val(total.toFixed(2));
+                    }
+                    else {
+                        $("#spnDiscountType").css('display', 'block');
+                    }
+                });
+
                 $("#ContentPlaceHolder1_ddlgrpDiscountType").change(function () {
                     var end = this.value;
                     if (end != "") {
@@ -1504,26 +1530,9 @@
                 });
 
 
-                $("#ContentPlaceHolder1_ddlDiscountType").change(function () {
-                    var end = this.value;
-                    if (end != "") {
-                        $("#spnDiscountType").css('display', 'none');
-                        var total = 0;
-                        var grpDiscountTypeval = $("#ContentPlaceHolder1_ddlDiscountType").val();
-                        var grpMrpval = $("#ContentPlaceHolder1_txtMRP").val();
-                        var val = $("#ContentPlaceHolder1_txtDiscount").val();
-                        if (grpDiscountTypeval == "%") {
-                            total = grpMrpval - ((grpMrpval * val) / 100);
-                        }
-                        else if (grpDiscountTypeval == "Fixed") {
-                            total = grpMrpval - val;
-                        }
-                        $('#<%=txtSoshoPrice.ClientID %>').val(total.toFixed(2));
-                    }
-                    else {
-                        $("#spnDiscountType").css('display', 'block');
-                    }
-                });
+                
+
+                
 
                 function CalulatePSoshoPrice() {
                     $(".calculatediscount").each(function () {

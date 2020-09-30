@@ -2,7 +2,7 @@
 using System.Data;
 using WebApplication1;
 
-public partial class Location_AddLocation : System.Web.UI.Page
+public partial class Area_AddArea : System.Web.UI.Page
 {
     dbConnection dbc = new dbConnection();
     string id = "";

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="AddLocation.aspx.cs" Inherits="Location_AddLocation" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="AddBuilding.aspx.cs" Inherits="Building_AddBuilding" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script src="../Scripts/jquery-1.12.4.min.js"></script>
@@ -25,7 +25,7 @@
     </style>
     <div class="content-wrapper">
         <section class="content-header">
-            <h1>Add Location</h1>
+            <h1>Add Society/Building</h1>
         </section>
         <section class="content" style="">
             <div class="row">
@@ -38,49 +38,19 @@
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-3">
-                        <a href="Location.aspx" class="btn btn-block btn-success pull-right" style="width: 50%">Back To List</a>
+                        <a href="Building.aspx" class="btn btn-block btn-success pull-right" style="width: 50%">Back To List</a>
                     </div>
                 </div>
             </div>
-            <div class="row pad-bottom">
-                <div class="col-md-12">
-                    <div class="col-md-3 pad">
-                        <asp:Label ID="lblStateName" runat="server" Text="State Name"></asp:Label><span style="color: red">*</span>
-                    </div>
-                    <div class="col-md-7 pad">
-                        <asp:DropDownList ID="ddlStateName" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true">
-                            <asp:ListItem Text="Select State" Value=""></asp:ListItem>
-                        </asp:DropDownList>
-                    </div>
-                    <div class="col-md-2 pad">
-                        <span id="spnStateName" style="color: #d9534f; display: none;">This field is required</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row pad-bottom">
-                <div class="col-md-12">
-                    <div class="col-md-3 pad">
-                        <asp:Label ID="lblCityName" runat="server" Text="City Name"></asp:Label><span style="color: red">*</span>
-                    </div>
-                    <div class="col-md-7 pad">
-                        <asp:DropDownList ID="ddlCityName" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true">
-                            <asp:ListItem Text="Select City" Value=""></asp:ListItem>
-                        </asp:DropDownList>
-                    </div>
-                    <div class="col-md-2 pad">
-                        <span id="spnCityName" style="color: #d9534f; display: none;">This field is required</span>
-                    </div>
-                </div>
-            </div>
-
             <div class="row pad-bottom">
                 <div class="col-md-12">
                     <div class="col-md-3 pad">
                         <asp:Label ID="lblZipCode" runat="server" Text="ZipCode"></asp:Label><span style="color: red">*</span>
                     </div>
                     <div class="col-md-7 pad">
-                        <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" Width="40%" placeholder="ZipCode"> </asp:TextBox>
+                        <asp:DropDownList ID="ddlZipCode" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true" OnSelectedIndexChanged = "OnSelectedIndexChanged" AutoPostBack = "true">
+                            <asp:ListItem Text="Select ZipCode" Value=""></asp:ListItem>
+                        </asp:DropDownList>
                     </div>
                     <div class="col-md-2 pad">
                         <span id="spnZipCode" style="color: #d9534f; display: none;">This field is required</span>
@@ -91,13 +61,31 @@
             <div class="row pad-bottom">
                 <div class="col-md-12">
                     <div class="col-md-3 pad">
-                        <asp:Label ID="lblLocationName" runat="server" Text="Location Name"></asp:Label><span style="color: red">*</span>
+                        <asp:Label ID="lblArea" runat="server" Text="Area"></asp:Label><span style="color: red">*</span>
                     </div>
                     <div class="col-md-7 pad">
-                        <asp:TextBox ID="txtLocationName" runat="server" CssClass="form-control" Width="40%" placeholder="Location Name"> </asp:TextBox>
+                        <asp:DropDownList ID="ddlArea" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true">
+                            <asp:ListItem Text="Select Area" Value=""></asp:ListItem>
+                        </asp:DropDownList>
                     </div>
                     <div class="col-md-2 pad">
-                        <span id="spnLocationName" style="color: #d9534f; display: none;">This field is required</span>
+                        <span id="spnArea" style="color: #d9534f; display: none;">This field is required</span>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <div class="row pad-bottom">
+                <div class="col-md-12">
+                    <div class="col-md-3 pad">
+                        <asp:Label ID="lblBuilding" runat="server" Text="Society/Building"></asp:Label><span style="color: red">*</span>
+                    </div>
+                    <div class="col-md-7 pad">
+                        <asp:TextBox ID="txtBuilding" runat="server" CssClass="form-control" Width="40%" placeholder="Society/Building"> </asp:TextBox>
+                    </div>
+                    <div class="col-md-2 pad">
+                        <span id="spnBuilding" style="color: #d9534f; display: none;">This field is required</span>
                     </div>
                 </div>
             </div>
@@ -130,26 +118,22 @@
         });
         $('#ContentPlaceHolder1_BtnSave').click(function () {
             var flag = true;
-            var StateName = $("#ContentPlaceHolder1_ddlStateName").val();
-            var CityName = $("#ContentPlaceHolder1_ddlCityName").val();
-            var zipCode = $("#ContentPlaceHolder1_txtZipCode").val();
-            var locationName = $("#ContentPlaceHolder1_txtLocationName").val();
-            if (StateName == "") {
-                $("#spnStateName").css('display', 'block');
-                flag = false;
-            }
-            if (CityName == "") {
-                $("#spnCityName").css('display', 'block');
-                flag = false;
-            }
-            if (zipCode == "") {
+            var zipcode = $("#ContentPlaceHolder1_ddlZipCode").val();
+            var location = $("#ContentPlaceHolder1_ddlLocation").val();
+            var area = $("#ContentPlaceHolder1_txtArea").val();
+            if (zipcode == "") {
                 $("#spnZipCode").css('display', 'block');
                 flag = false;
             }
-            if (locationName == "") {
-                $("#spnLocationName").css('display', 'block');
+            if (location == "") {
+                $("#spnLocation").css('display', 'block');
                 flag = false;
             }
+            if (area == "") {
+                $("#spnArea").css('display', 'block');
+                flag = false;
+            }
+            
             if (flag) {
                 $("#ContentPlaceHolder1_BtnSave").click();
             }
@@ -158,7 +142,3 @@
 
     </script>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="cphScripts" runat="Server">
-</asp:Content>
-
-

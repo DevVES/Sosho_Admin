@@ -91,13 +91,13 @@
             <div class="row pad-bottom">
                 <div class="col-md-12">
                     <div class="col-md-3 pad">
-                        <asp:Label ID="lblArea" runat="server" Text="Area Name"></asp:Label><span style="color: red">*</span>
+                        <asp:Label ID="lblLocationName" runat="server" Text="Location Name"></asp:Label><span style="color: red">*</span>
                     </div>
                     <div class="col-md-7 pad">
-                        <asp:TextBox ID="txtArea" runat="server" CssClass="form-control" Width="40%" placeholder="Area Name"> </asp:TextBox>
+                        <asp:TextBox ID="txtLocationName" runat="server" CssClass="form-control" Width="40%" placeholder="Location Name"> </asp:TextBox>
                     </div>
                     <div class="col-md-2 pad">
-                        <span id="spnArea" style="color: #d9534f; display: none;">This field is required</span>
+                        <span id="spnLocationName" style="color: #d9534f; display: none;">This field is required</span>
                     </div>
                 </div>
             </div>
@@ -126,14 +126,14 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-
+            
         });
         $('#ContentPlaceHolder1_BtnSave').click(function () {
             var flag = true;
             var StateName = $("#ContentPlaceHolder1_ddlStateName").val();
             var CityName = $("#ContentPlaceHolder1_ddlCityName").val();
             var zipCode = $("#ContentPlaceHolder1_txtZipCode").val();
-            var areaName = $("#ContentPlaceHolder1_txtArea").val();
+            var locationName = $("#ContentPlaceHolder1_txtLocationName").val();
             if (StateName == "") {
                 $("#spnStateName").css('display', 'block');
                 flag = false;
@@ -146,8 +146,8 @@
                 $("#spnZipCode").css('display', 'block');
                 flag = false;
             }
-            if (areaName == "") {
-                $("#spnArea").css('display', 'block');
+            if (locationName == "") {
+                $("#spnLocationName").css('display', 'block');
                 flag = false;
             }
             if (flag) {
@@ -160,3 +160,5 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphScripts" runat="Server">
 </asp:Content>
+
+

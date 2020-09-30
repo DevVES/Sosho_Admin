@@ -345,7 +345,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                                 DataTable dtcountlist = dbc.GetDataTable(linkquerycount);
                                 if (dtcountlist.Rows[0]["linkCount"].ToString() == "0")
                                 {
-                                    string customerlinkinsertquery = "INSERT INTO [dbo].[tblWalletCustomerLink] ([wallet_id],[customer_id],[is_active],[created_date],[created_by]) VALUES (" + id + "," + item.ItemArray[1] + "," + IsActive + ",'" + dtCreatedon.ToString() + "'," + userId + ")";
+                                    string customerlinkinsertquery = "INSERT INTO [dbo].[tblWalletCustomerLink] ([wallet_id],[customer_id],[is_active],[created_date],[created_by]) VALUES (" + id + "," + item.ItemArray[1] + ",1,'" + dtCreatedon.ToString() + "'," + userId + ")";
                                     dbc.ExecuteQuery(customerlinkinsertquery);
                                 }
                             }
@@ -386,7 +386,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                     int VAL = dbc.ExecuteQueryWithParamsId(query, para1);
                     if (IsApplyAllCustomer == 1)
                     {
-                        string customerlinkquery = "INSERT INTO [dbo].[tblWalletCustomerLink] ([wallet_id],[customer_id],[is_active],[created_date],[created_by]) VALUES (" + VAL + ",-1," + IsActive + ",'" + dtCreatedon.ToString() + "'," + userId + ")";
+                        string customerlinkquery = "INSERT INTO [dbo].[tblWalletCustomerLink] ([wallet_id],[customer_id],[is_active],[created_date],[created_by]) VALUES (" + VAL + ",-1,1,'" + dtCreatedon.ToString() + "'," + userId + ")";
                         dbc.ExecuteQuery(customerlinkquery);
                     }
                     else

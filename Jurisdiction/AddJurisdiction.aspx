@@ -79,7 +79,7 @@
                     <li class="active">
                         <a href="#basic" aria-controls="basic" role="tab" data-toggle="tab" title="BASIC">BASIC</a>
                     </li>
-                   <%-- <li>
+                    <%-- <li>
                         <a href="#user" aria-controls="basic" role="tab" data-toggle="tab" title="USER">USER</a>
                     </li>--%>
                 </ul>
@@ -186,7 +186,6 @@
                                     <span id="spnPinCode" style="color: #d9534f; display: none;">Please check at least one checkbox</span>
                                 </div>
                             </div>
-                            <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
                                     <asp:Label ID="lblUserName" runat="server" Text="User Name"></asp:Label><span style="color: red">*</span>
@@ -198,8 +197,6 @@
                                     <span id="spnUserName" style="color: #d9534f; display: none;">This field is required</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
                                     <asp:Label ID="lblPassword" runat="server" Text="Password"></asp:Label><span style="color: red">*</span>
@@ -214,8 +211,6 @@
                                     <div id="password-strength-status"></div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
                                     <asp:Label ID="lblConfirmPassword" runat="server" Text="Confirm Password"></asp:Label><span style="color: red">*</span>
@@ -227,19 +222,18 @@
                                     <span id="spnConfirmPassword" style="color: #d9534f; display: none;">New password and confirm password does not match</span>
                                 </div>
                             </div>
-                        </div>
-                        </div>
-                        <div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 pad">
-                                </div>
-                                <div class="col-md-9 pad">
-                                    <asp:Button ID="BtnSave" runat="server" Text="Save" CssClass="btn btn-block btn-info" Width="120 px" title="Save" OnClick="BtnSave_Click" />
-                                    <input type="hidden" id="hdnJurisdictionID" runat="server" />
-                                    <input type="hidden" id="hdnContact" runat="server" />
-                                </div>
+                    </div>
+                    <div class="row pad-bottom">
+                        <div class="col-md-12">
+                            <div class="col-md-3 pad">
+                            </div>
+                            <div class="col-md-9 pad">
+                                <asp:Button ID="BtnSave" runat="server" Text="Save" CssClass="btn btn-block btn-info" Width="120 px" title="Save" OnClick="BtnSave_Click" />
+                                <input type="hidden" id="hdnJurisdictionID" runat="server" />
+                                <input type="hidden" id="hdnContact" runat="server" />
                             </div>
                         </div>
+                    </div>
                     </div>
                     <%--<div class="tab-pane" role="tabpanel" id="user">
                         

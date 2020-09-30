@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="Location.aspx.cs" Inherits="Location_Location" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="Area.aspx.cs" Inherits="Area_Area" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <style type="text/css">
@@ -86,7 +86,7 @@
                 </div>
             </div>
             <div style="width: 100%;" class="table-responsive">
-                <asp:GridView ID="gvLocationlist" OnRowDataBound="gvLocationlist_RowDataBound" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" EnableViewState="False" Caption="<b><u>LOCATION LIST</u></b>" CaptionAlign="Top">
+                <asp:GridView ID="gvArealist" OnRowDataBound="gvArealist_RowDataBound" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" EnableViewState="False" Caption="<b><u>LOCATION LIST</u></b>" CaptionAlign="Top">
                     <Columns>
                         <asp:BoundField HeaderText="State" DataField="State" />
                         <asp:BoundField HeaderText="City" DataField="City" />
