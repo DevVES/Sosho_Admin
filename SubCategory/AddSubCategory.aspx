@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="AddCategory.aspx.cs" Inherits="Category_AddCategory" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="AddSubCategory.aspx.cs" Inherits="SubCategory_AddSubCategory" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script src="../Scripts/jquery-1.12.4.min.js"></script>
@@ -25,7 +25,7 @@
     </style>
     <div class="content-wrapper">
         <section class="content-header">
-            <h1>Add Category</h1>
+            <h1>Add SubCategory</h1>
         </section>
         <section class="content" style="">
             <div class="row">
@@ -38,17 +38,17 @@
                     <div class="col-md-3">
                     </div>
                     <div class="col-md-3">
-                        <a href="Category.aspx" class="btn btn-block btn-success pull-right" style="width: 50%">Back To List</a>
+                        <a href="SubCategory.aspx" class="btn btn-block btn-success pull-right" style="width: 50%">Back To List</a>
                     </div>
                 </div>
             </div>
             <div class="row pad-bottom">
                 <div class="col-md-12">
                     <div class="col-md-3 pad">
-                        <asp:Label ID="lblCategoryName" runat="server" Text="Name"></asp:Label><span style="color: red">*</span>
+                        <asp:Label ID="lblCategoryName" runat="server" Text="Category"></asp:Label><span style="color: red">*</span>
                     </div>
                     <div class="col-md-7 pad">
-                        <asp:TextBox ID="txtCategoryName" runat="server" CssClass="form-control" Width="40%" placeholder="Category Name"> </asp:TextBox>
+                        <asp:DropDownList class="form-control" runat="server" ID="ddlCategoryName" Width="290px" AutoPostBack="true"></asp:DropDownList>
                     </div>
                     <div class="col-md-2 pad">
                         <span id="spnCategoryName" style="color: #d9534f; display: none;">This field is required</span>
@@ -58,29 +58,27 @@
             <div class="row pad-bottom">
                 <div class="col-md-12">
                     <div class="col-md-3 pad">
-                        <asp:Label ID="lblDescription" runat="server" Text="Description"></asp:Label><span style="color: red">*</span>
+                        <asp:Label ID="lblSubCategoryName" runat="server" Text="Name"></asp:Label><span style="color: red">*</span>
                     </div>
                     <div class="col-md-7 pad">
-                        <asp:TextBox ID="txtDescription" runat="server" CssClass="form-control" Width="40%" placeholder="Category Description"> </asp:TextBox>
+                        <asp:TextBox ID="txtSubCategoryName" runat="server" CssClass="form-control" Width="40%" placeholder="SubCategory Name"> </asp:TextBox>
                     </div>
                     <div class="col-md-2 pad">
-                        <span id="spnDescription" style="color: #d9534f; display: none;">This field is required</span>
+                        <span id="spnSubCategoryName" style="color: #d9534f; display: none;">This field is required</span>
                     </div>
                 </div>
             </div>
             <div class="row pad-bottom">
                 <div class="col-md-12">
                     <div class="col-md-3 pad">
-                        <asp:Label ID="lblImage" runat="server" Text="Image"></asp:Label><span style="color: red">*</span>
+                        <asp:Label ID="lblDescription" runat="server" Text="Description"></asp:Label><span style="color: red">*</span>
                     </div>
-                    <div class="col-md-9 pad">
-                        <asp:FileUpload ID="FileUpload1" runat="server" onchange="previewFile()" OnDataBinding="FileUpload1_DataBinding" OnLoad="FileUpload1_Load" OnInit="FileUploadControl_Init" />
-                        <asp:Image ID="CategoryImage" Width="202px" Height="90px" runat="server" />
-                        <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server"
-                            ControlToValidate="FileUpload1" ErrorMessage="Only .jpg,.png,.jpeg,.gif Files are allowed" Font-Bold="True"
-                            Font-Size="Medium" ValidationExpression="(.*?)\.(jpg|jpeg|png|JPG|JPEG|PNG)$"></asp:RegularExpressionValidator>
+                    <div class="col-md-7 pad">
 
-                        <asp:Button ID="BtnRemoveImage" runat="server" Text="Remove Image" CssClass="btn btn-block btn-danger" Width="120 px" title="Remove Image" OnClick="BtnRemoveImage_Click" />
+                        <asp:TextBox ID="txtDescription" runat="server" TextMode="multiline" CssClass="form-control" Width="40%" placeholder="SubCategory Description"> </asp:TextBox>
+                    </div>
+                    <div class="col-md-2 pad">
+                        <span id="spnDescription" style="color: #d9534f; display: none;">This field is required</span>
                     </div>
                 </div>
             </div>
@@ -95,16 +93,6 @@
                     </div>
                     <div class="col-md-2 pad">
                         <span id="spnSequence" style="color: #d9534f; display: none;">This field is required</span>
-                    </div>
-                </div>
-            </div>
-               <div class="row pad-bottom">
-                <div class="col-md-12">
-                    <div class="col-md-3 pad">
-                        <asp:Label ID="lblIsDefault" runat="server" Text="Is Default"></asp:Label><span style="color: red">*</span>
-                    </div>
-                    <div class="col-md-9 pad">
-                        <input id="chkIsDefault" name="isDefault" type="checkbox" value="valdefault" runat="server" />
                     </div>
                 </div>
             </div>
@@ -132,18 +120,18 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-            var hiddenvalue = $("#hdnmainIsAdmin").val();
-            if (hiddenvalue == "False") {
-                $("#ContentPlaceHolder1_FileUpload1").attr('disabled', true);
-                $("#ContentPlaceHolder1_BtnRemoveImage").attr('disabled', true);
-                $("#ContentPlaceHolder1_BtnSave").attr('disabled', true);
-            }
+
         });
         $('#ContentPlaceHolder1_BtnSave').click(function () {
             var flag = true;
-            var CategoryName = $("#ContentPlaceHolder1_txtCategoryName").val();
+            var SubCategoryName = $("#ContentPlaceHolder1_txtSubCategoryName").val();
             var Description = $("#ContentPlaceHolder1_txtDescription").val();
-            if (CategoryName == "") {
+            var categoryName = $("#ContentPlaceHolder1_ddlCategoryName").val();
+            if (SubCategoryName == "") {
+                $("#spnSubCategoryName").css('display', 'block');
+                flag = false;
+            }
+            if (categoryName == "") {
                 $("#spnCategoryName").css('display', 'block');
                 flag = false;
             }
@@ -156,21 +144,7 @@
             }
             return flag;
         });
-        function previewFile() {
-            var preview = document.querySelector('#<%=CategoryImage.ClientID %>');
-            var file = document.querySelector('#<%=FileUpload1.ClientID %>').files[0];
-            var reader = new FileReader();
 
-            reader.onloadend = function () {
-                preview.src = reader.result;
-            }
-
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = "";
-            }
-        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphScripts" runat="Server">

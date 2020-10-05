@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="Category.aspx.cs" Inherits="Category_Category" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/main.master" CodeFile="SubCategory.aspx.cs" Inherits="SubCategory_SubCategory" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <style type="text/css">
@@ -36,7 +36,7 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>Category
+            <h1>SubCategory
                <small>
                    <asp:Label runat="server" ID="lblDateTime"></asp:Label>
                </small>
@@ -81,19 +81,20 @@
                         <asp:Button ID="BtnGo" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" Title="Go" />
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        <a href="AddCategory.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" id="BtnAdd">Add</a>
+                        <a href="AddSubCategory.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" id="BtnAdd">Add</a>
                     </div>
                 </div>
             </div>
             <div style="width: 100%;" class="table-responsive">
-                <asp:GridView ID="gvCategorylist" OnRowDataBound="gvCategorylist_RowDataBound" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" EnableViewState="False" Caption="<b><u>CATEGORY LIST</u></b>" CaptionAlign="Top">
+                <asp:GridView ID="gvSubCategorylist" OnRowDataBound="gvSubCategorylist_RowDataBound" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" EnableViewState="False" Caption="<b><u>SUBCATEGORY LIST</u></b>" CaptionAlign="Top">
                     <Columns>
+                        <asp:BoundField HeaderText="SubCategory Name" DataField="SubCategory" />
                         <asp:BoundField HeaderText="Category Name" DataField="CategoryName" />
-                        <asp:BoundField HeaderText="Description" DataField="CategoryDescription" />
+                        <asp:BoundField HeaderText="Description" DataField="Description" />
                         <asp:BoundField HeaderText="IsActive" DataField="IsActive" />
                         <asp:BoundField HeaderText="StartDate" DataField="CreatedOn" />
 
-                        <asp:HyperLinkField DataNavigateUrlFields="CategoryID" ControlStyle-CssClass="red" HeaderText="EDIT" DataNavigateUrlFormatString="~/Category/AddCategory.aspx?Id={0}" Text="Edit" />
+                        <asp:HyperLinkField DataNavigateUrlFields="Id" ControlStyle-CssClass="red" HeaderText="EDIT" DataNavigateUrlFormatString="~/SubCategory/AddSubCategory.aspx?Id={0}" Text="Edit" />
 
                     </Columns>
                     <HeaderStyle HorizontalAlign="Center" BackColor="#EDE8E8"></HeaderStyle>
@@ -101,7 +102,7 @@
             </div>
             <script type="text/javascript">
                 $(document).ready(function () {
-                    $('#ContentPlaceHolder1_gvJurisdictionlist').DataTable({
+                    $('#ContentPlaceHolder1_gvSubCategorylist').DataTable({
                         "fixedHeader": true,
                         "paging": true,
                         "order": [[5, "desc"]],

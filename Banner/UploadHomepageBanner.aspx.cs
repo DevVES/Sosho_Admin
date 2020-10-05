@@ -24,11 +24,11 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
             {
                 string bannerqry = "Select Id as Id,BannerName as Name from BannerTypeMaster where IsActive = 1 order by Id";
                 DataTable dtbanner = dbc.GetDataTable(bannerqry);
-                ddlintermediateType.DataSource = dtbanner;
-                ddlintermediateType.DataTextField = "Name";
-                ddlintermediateType.DataValueField = "Id";
-                ddlintermediateType.DataBind();
-                ddlintermediateType.Items.Insert(0, new ListItem("Select Banner Type", ""));
+                ddlBannerType.DataSource = dtbanner;
+                ddlBannerType.DataTextField = "Name";
+                ddlBannerType.DataValueField = "Id";
+                ddlBannerType.DataBind();
+                ddlBannerType.Items.Insert(0, new ListItem("Select Banner Type", ""));
 
                 string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 order by Sequence asc";
                 DataTable dtcategory = dbc.GetDataTable(categoryqry);
@@ -227,7 +227,7 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
                         DataTable intermediatedt = dbc.GetDataTable("SELECT  [TypeId],[Title],[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],[ActionId],[CategoryId],[ProductId] FROM [dbo].[IntermediateBanners] where IsDeleted=0  and Id=" + id);
                         if (intermediatedt.Rows.Count > 0)
                         {
-                            ddlintermediateType.SelectedIndex = Convert.ToInt32(intermediatedt.Rows[0]["TypeId"]);
+                            ddlBannerType.SelectedIndex = Convert.ToInt32(intermediatedt.Rows[0]["TypeId"]);
                             txtintermediateTitle.Text = intermediatedt.Rows[0]["Title"].ToString();
                             ddlintermedicateAction.SelectedIndex = Convert.ToInt32(intermediatedt.Rows[0]["ActionId"]);
                             txtintermediateLink.Text = intermediatedt.Rows[0]["Link"].ToString();
@@ -871,7 +871,7 @@ public partial class Banner_UploadHomepageBanner : System.Web.UI.Page
             IsActive.ToString(),
             fileName,
             "0",
-            ddlintermediateType.SelectedValue,
+            ddlBannerType.SelectedValue,
             dtCreatedon.ToString(),
             userId,
             ddlintermedicateAction.SelectedItem.ToString(),

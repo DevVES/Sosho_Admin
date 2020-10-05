@@ -135,7 +135,7 @@
                                     <asp:Label ID="lblCategoryName" runat="server" Text="Category Name"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:DropDownList ID="ddlCategoryName" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true">
+                                    <asp:DropDownList ID="ddlCategoryName" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true" OnSelectedIndexChanged="OnSelectedCategoryChanged"  AutoPostBack = "true">
                                         <asp:ListItem Text="Select Category Name" Value=""></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
@@ -144,6 +144,21 @@
                                 </div>
                             </div>
 
+                        </div>
+                         <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblSubCategoryName" runat="server" Text="SubCategory Name"></asp:Label><span style="color: red">*</span>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <asp:DropDownList ID="ddlSubCategoryName" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true">
+                                        <asp:ListItem Text="Select SubCategory Name" Value=""></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-md-2 pad">
+                                    <span id="spnSubCategoryName" style="color: #d9534f; display: none;">This field is required</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="row pad-bottom">
                             <div class="col-md-12">
@@ -963,7 +978,7 @@
                                     <asp:Label ID="Label4" runat="server" Text="Sosho Price"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:TextBox ID="txtSoshoPrice" runat="server" CssClass="form-control" Width="40%" placeholder="Sosho Price"> </asp:TextBox>
+                                    <asp:TextBox ID="txtSoshoPrice" runat="server" CssClass="form-control" Width="40%" placeholder="Sosho Price" > </asp:TextBox>
                                 </div>
                                 <div class="col-md-2 pad">
                                     <span id="spnSoshoPrice" style="color: #d9534f; display: none;">This field is required</span>
@@ -1315,7 +1330,42 @@
                         $("#spnDiscountType").css('display', 'block');
                     }
                 });
+               
+                $('#ContentPlaceHolder1_txtgrpSoshoPrice').focusout(function (event) {
+                    debugger
+                    var total = 0;
+                    var grpDiscountTypeval = $("#ContentPlaceHolder1_ddlgrpDiscountType").val();
+                    var grpMrpval = $("#ContentPlaceHolder1_txtgrpMRP").val();
+                    var val = $("#ContentPlaceHolder1_txtgrpDiscount").val();
+                    var soshoPrice = $("#ContentPlaceHolder1_txtgrpSoshoPrice").val();
+                    if (grpDiscountTypeval == "%") {
+                        //total = grpMrpval - ((grpMrpval * val) / 100);
+                        total = 100 - (soshoPrice * 100) / grpMrpval;
+                    }
+                    else if (grpDiscountTypeval == "Fixed") {
+                        //total = grpMrpval - val;
+                        total = grpMrpval - soshoPrice;
+                    }
+                    $('#<%=txtgrpDiscount.ClientID %>').val(total.toFixed(2));
+                });
 
+                $('#ContentPlaceHolder1_txtgrpMRP').focusout(function (event) {
+                    debugger
+                    var total = 0;
+                    var grpDiscountTypeval = $("#ContentPlaceHolder1_ddlgrpDiscountType").val();
+                    var grpMrpval = $("#ContentPlaceHolder1_txtgrpMRP").val();
+                    var val = $("#ContentPlaceHolder1_txtgrpDiscount").val();
+                    var soshoPrice = $("#ContentPlaceHolder1_txtgrpSoshoPrice").val();
+                    if (grpDiscountTypeval == "%") {
+                        //total = grpMrpval - ((grpMrpval * val) / 100);
+                        total = 100 - (soshoPrice * 100) / grpMrpval;
+                    }
+                    else if (grpDiscountTypeval == "Fixed") {
+                        //total = grpMrpval - val;
+                        total = grpMrpval - soshoPrice;
+                    }
+                    $('#<%=txtgrpDiscount.ClientID %>').val(total.toFixed(2));
+                });
                 $("#ContentPlaceHolder1_ddlgrpDiscountType").change(function () {
                     var end = this.value;
                     if (end != "") {

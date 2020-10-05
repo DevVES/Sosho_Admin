@@ -20,7 +20,7 @@ public partial class Category_AddCategory : System.Web.UI.Page
                 {
                     BtnSave.Text = "Update";
 
-                    string query = "SELECT CategoryID,CategoryName,CategoryDescription,IsActive,CreatedOn,CategoryImage, Sequence FROM Category where isnull(IsDeleted,0)=0  and CategoryID = " + id;
+                    string query = "SELECT CategoryID,CategoryName,CategoryDescription,IsActive,IsDefault,CreatedOn,CategoryImage, Sequence FROM Category where isnull(IsDeleted,0)=0  and CategoryID = " + id;
                     DataTable dtUpdate = dbc.GetDataTable(query);
                     if (dtUpdate.Rows.Count > 0)
                     {
@@ -31,6 +31,12 @@ public partial class Category_AddCategory : System.Web.UI.Page
                             chkisactive.Checked = true;
                         else
                             chkisactive.Checked = false;
+
+
+                        if (dtUpdate.Rows[0]["IsDefault"].ToString() == "True")
+                            chkIsDefault.Checked = true;
+                        else
+                            chkIsDefault.Checked = false;
 
                         CategoryImage.ImageUrl = "../CategoryImage/" + dtUpdate.Rows[0]["CategoryImage"].ToString();
                     }
@@ -135,7 +141,7 @@ public partial class Category_AddCategory : System.Web.UI.Page
         try
         {
             string userId = Request.Cookies["TUser"]["Id"].ToString();
-            int IsActive = 0;
+            int IsActive = 0, IsDefault = 0;
             string[] validFileTypes = { "png", "jpg", "jpeg" };
             Stream fs = FileUpload1.PostedFile.InputStream;
             BinaryReader br = new BinaryReader(fs);
@@ -185,15 +191,27 @@ public partial class Category_AddCategory : System.Web.UI.Page
             {
                 IsActive = 1;
             }
+
+            if (chkIsDefault.Checked)
+            {
+                IsDefault = 1;
+            }
+            
             DateTime dt = DateTime.Now;
 
             if (BtnSave.Text.Equals("Update"))
             {
+                if (IsDefault == 1)
+                {
+                    string updateQry = " UPDATE [Category] SET IsDefault = 0 ";
+                    dbc.ExecuteQuery(updateQry);
+                }
                 string id = Request.QueryString["id"].ToString();
                 if (fileName != "")
                 {
-                    string[] para1 = { txtCategoryName.Text, txtDescription.Text, IsActive.ToString(), fileName, dt.ToString(),userId, id, txtSequence.Text };
-                    string query = "UPDATE [Category] SET [CategoryName]=@1,[CategoryDescription]=@2,[IsActive]=@3,[CategoryImage]=@4,[ModifiedOn]=@5,[ModifiedBy]=@6,[sequence]=@8 where [CategoryID]=@7";
+                   
+                    string[] para1 = { txtCategoryName.Text, txtDescription.Text, IsActive.ToString(), fileName, dt.ToString(),userId, id, txtSequence.Text, IsDefault.ToString() };
+                    string query = "UPDATE [Category] SET [CategoryName]=@1,[CategoryDescription]=@2,[IsActive]=@3,[CategoryImage]=@4,[ModifiedOn]=@5,[ModifiedBy]=@6,[sequence]=@8, [IsDefault]=@9 where [CategoryID]=@7";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     if (v1 > 0)
                     {
@@ -203,9 +221,10 @@ public partial class Category_AddCategory : System.Web.UI.Page
                 }
                 else if (fileName == "")
                 {
-                    string[] para1 = { txtCategoryName.Text, txtDescription.Text,  IsActive.ToString(), dt.ToString(), userId, id, txtSequence.Text };
 
-                    string query = "UPDATE [Category] SET [CategoryName]=@1,[CategoryDescription]=@2,[IsActive]=@3,[ModifiedOn]=@4,[ModifiedBy]=@5,[sequence]=@7 where [CategoryID]=@6";
+                    string[] para1 = { txtCategoryName.Text, txtDescription.Text,  IsActive.ToString(), dt.ToString(), userId, id, txtSequence.Text, IsDefault.ToString() };
+
+                    string query = "UPDATE [Category] SET [CategoryName]=@1,[CategoryDescription]=@2,[IsActive]=@3,[ModifiedOn]=@4,[ModifiedBy]=@5,[sequence]=@7, [IsDefault]=@8 where [CategoryID]=@6";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     if (v1 > 0)
                     {
@@ -220,7 +239,12 @@ public partial class Category_AddCategory : System.Web.UI.Page
             }
             else
             {
-                string query = "INSERT INTO [dbo].[Category] ([CategoryName] ,[CategoryDescription],[CategoryImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[sequence]) VALUES ('" + txtCategoryName.Text.ToString().Replace("'", "''") + "','" + txtDescription.Text.ToString().Replace("'", "''") + "','" + fileName + "'," + IsActive + ",0,'" + dt.ToString() + "'," + userId + ","+txtSequence.Text+")";
+                if (IsDefault == 1)
+                {
+                    string updateQry = " UPDATE [Category] SET IsDefault = 0 ";
+                    dbc.ExecuteQuery(updateQry);
+                }
+                string query = "INSERT INTO [dbo].[Category] ([CategoryName] ,[CategoryDescription],[CategoryImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[sequence],[IsDefault]) VALUES ('" + txtCategoryName.Text.ToString().Replace("'", "''") + "','" + txtDescription.Text.ToString().Replace("'", "''") + "','" + fileName + "'," + IsActive + ",0,'" + dt.ToString() + "'," + userId + ","+txtSequence.Text+","+IsDefault+")";
                 int VAL = dbc.ExecuteQuery(query);
 
                 if (VAL > 0)

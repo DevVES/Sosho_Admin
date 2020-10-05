@@ -89,7 +89,7 @@
 
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <a href="UploadHomepageBanner.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" target="_blank">Add</a>
+                        <a href="UploadBanner.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" target="_blank">Add</a>
                     </div>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                         <asp:TemplateField>
                             <ItemTemplate>
                                 <asp:HyperLink ID="lnkEdit"
-                                    NavigateUrl='<%# String.Format("~/Banner/UploadHomepageBanner.aspx?Id={0}&TypeId={1}", Eval("Id"), Eval("TypeId")) %>'
+                                    NavigateUrl='<%# String.Format("~/Banner/UploadBanner.aspx?Id={0}&TypeId={1}", Eval("Id"), Eval("TypeId")) %>'
                                     Text="EDIT" runat="server" />
                             </ItemTemplate>
                         </asp:TemplateField>

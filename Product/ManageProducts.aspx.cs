@@ -20,6 +20,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
         
         try
         {
+            
             lblmsg.Text = "";
             if (!IsPostBack)
             {
@@ -48,6 +49,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 dtgrpProduct.Columns.Add("grpIsQtyFreeze", typeof(string));
                 dtgrpProduct.Columns.Add("grpisBestBuy", typeof(string));
                 dtgrpProduct.Columns.Add("grpFreezeQty", typeof(string));
+
 
                 string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 order by Sequence asc";
                 DataTable dtcategory = dbc.GetDataTable(categoryqry);
@@ -126,12 +128,16 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 if (id != null && !id.Equals(""))
                 {
                     BtnSave.Text = "Update";
+
+                    //ddlSubCategoryName.Items.Clear();
+                    
+
                     ImageData();
                     DataTable dt1;
                     if (IsAdmin == "True")
-                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[IsApproved] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id);
+                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[IsApproved],[SubCategoryId],[RejectedReason] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id);
                     else
-                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[IsApproved] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id + " and JurisdictionId=" + sJurisdictionId);
+                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[IsApproved],[SubCategoryId],[RejectedReason] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id + " and JurisdictionId=" + sJurisdictionId);
 
                     if (dt1.Rows.Count > 0)
                     {
@@ -156,6 +162,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         cknotes.Text = dt1.Rows[0]["Note"].ToString();
                         txtMRP.Text = dt1.Rows[0]["ProductMRP"].ToString();
                         txtDisplayOrder.Text = dt1.Rows[0]["DisplayOrder"].ToString();
+                        txtRejectedReason.Text = dt1.Rows[0]["RejectedReason"].ToString();
                         string IsQuantity = dt1.Rows[0]["IsQtyFreeze"].ToString();
                         if (IsQuantity == "True")
                         {
@@ -219,6 +226,13 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         string enddate = dt1.Rows[0]["EndDate"].ToString();
 
                         ddlCategoryName.SelectedValue = dt1.Rows[0]["CategoryID"].ToString();
+                        string subcategoryqry = "SELECT Id,SubCategory FROM tblSubCategory where isnull(IsDeleted,0)=0 AND CategoryId = '" + ddlCategoryName.SelectedValue + "' order by Sequence asc";
+                        DataTable dtsubcategory = dbc.GetDataTable(subcategoryqry);
+                        ddlSubCategoryName.DataSource = dtsubcategory;
+                        ddlSubCategoryName.DataTextField = "SubCategory";
+                        ddlSubCategoryName.DataValueField = "Id";
+                        ddlSubCategoryName.DataBind();
+                        ddlSubCategoryName.SelectedValue = dt1.Rows[0]["SubCategoryID"].ToString();
                         ddlProductType.SelectedValue = dt1.Rows[0]["ProductTemplateID"].ToString();
                         txtProductBanner.Text = dt1.Rows[0]["ProductBanner"].ToString();
                         txtRecommended.Text = dt1.Rows[0]["Recommended"].ToString();
@@ -376,9 +390,11 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             string displayorder = txtDisplayOrder.Text.ToString();
 
             string categoryId = ddlCategoryName.SelectedValue.ToString();
+            string subcategoryId = ddlSubCategoryName.SelectedValue.ToString();
             string ProductTemplateID = ddlProductType.SelectedValue.ToString();
             string ProductBanner = txtProductBanner.Text.ToString();
             string Recommended = txtRecommended.Text.ToString();
+            string rejectedReason = txtRejectedReason.Text.ToString();
             DateTime dtCreatedon = DateTime.Now;
 
             string spDiscountType = "", spDiscount = "", spSoshoPrice = "", spmrp = "";
@@ -554,7 +570,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                     }
 
                     string[] para1 = { productname, gstid1.ToString(), unit, unitname.ToString(), FROM1, TO1, IsActive.ToString(), metatag, metadisc, price, offer, Buywith1, Buywith5, shiprate, key, notes, "0", dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), vdolink, fileName_OG, fulldescription, id1 };
-                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[OGImage]=@20,[ProductDiscription]=@21,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping ="+IsFreeShipping+ ",IsFixedShipping = "+IsFixedShipping+" where [Id]=@22";
+                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[OGImage]=@20,[ProductDiscription]=@21,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping ="+IsFreeShipping+ ",IsFixedShipping = "+IsFixedShipping+", SubCategoryId = "+subcategoryId+ ", RejectedReason = '"+rejectedReason+"' where [Id]=@22";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     // int imgorder = 0;
                     if (v1 > 0)
@@ -605,7 +621,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         isqty = "0"; ;
                     }
 
-                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[OGImage]=@20,[ProductDiscription]=@21,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + " where [Id]=@22";
+                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[OGImage]=@20,[ProductDiscription]=@21,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + ",SubCategoryId = "+subcategoryId+ ",RejectedReason = '"+rejectedReason+"' where [Id]=@22";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     if (v1 > 0)
                     {
@@ -626,7 +642,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
                     string[] para1 = { productname, gstid1.ToString(), unit, unitname.ToString(), FROM1, TO1, IsActive.ToString(), metatag, metadisc, price, offer, Buywith1, Buywith5, shiprate, key, notes, "0", dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), vdolink, fulldescription, id1 };
 
-                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + " where [Id]=@21";
+                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + ",SubCategoryId="+subcategoryId+ ",RejectedReason='"+rejectedReason+"' where [Id]=@21";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     // int imgorder = 0;
                     if (v1 > 0)
@@ -671,7 +687,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
                     string[] para1 = { productname, gstid1.ToString(), unit, unitname.ToString(), FROM1, TO1, IsActive.ToString(), metatag, metadisc, price, offer, Buywith1, Buywith5, shiprate, key, notes, "0", dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), vdolink, fulldescription, id1 };
 
-                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + " where [Id]=@21";
+                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + ", SubCategoryId = "+subcategoryId+ ",RejectedReason='"+rejectedReason+"' where [Id]=@21";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     if (v1 > 0)
                     {
@@ -704,7 +720,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                     {
                                         isqty = "0"; ;
                                     }
-                                    string querym = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg],IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType],[Discount],[SoshoPrice],[MaxQty],[MinQty],[JurisdictionID],[ApproverID],[IsFreeShipping],[IsFixedShipping]) VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + txtMRP.Text + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + categoryId + "," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + sJurisdictionId + "," + userId + ","+IsFreeShipping+","+IsFixedShipping+")";
+                                    string querym = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg],IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType],[Discount],[SoshoPrice],[MaxQty],[MinQty],[JurisdictionID],[ApproverID],[IsFreeShipping],[IsFixedShipping],[SubCategoryId],RejectedReason) VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + txtMRP.Text + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + categoryId + "," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + sJurisdictionId + "," + userId + ","+IsFreeShipping+","+IsFixedShipping+","+subcategoryId+","+rejectedReason+")";
                                     int VAL = dbc.ExecuteQuery(querym);
                                 }
                             }
@@ -713,16 +729,16 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                 //Insert Product
 
 
-                                if (chkIsQuantityFreez.Checked == true)
-                                {
-                                    isqty = "1";
-                                }
-                                else
-                                {
-                                    isqty = "0"; ;
-                                }
-                                string querym = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg],IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType],[Discount],[SoshoPrice],[MaxQty],[MinQty],[JurisdictionID],[ApproverID],[IsFreeShipping],[IsFixedShipping]) VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + txtMRP.Text + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + categoryId + "," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + sJurisdictionId + "," + userId + ","+IsFreeShipping+","+IsFixedShipping+")";
-                                int VAL = dbc.ExecuteQuery(querym);
+                                //if (chkIsQuantityFreez.Checked == true)
+                                //{
+                                //    isqty = "1";
+                                //}
+                                //else
+                                //{
+                                //    isqty = "0"; ;
+                                //}
+                                //string querym = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg],IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType],[Discount],[SoshoPrice],[MaxQty],[MinQty],[JurisdictionID],[ApproverID],[IsFreeShipping],[IsFixedShipping],SubCategoryId) VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + txtMRP.Text + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + categoryId + "," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + sJurisdictionId + "," + userId + ","+IsFreeShipping+","+IsFixedShipping+","+subcategoryId+")";
+                                //int VAL = dbc.ExecuteQuery(querym);
                             }
                         }
                         string strUnitId = "", strImage = "", strisOutOfStock = "", strisSelected = "", strPackingType = "", strisBestBuy = "";
@@ -865,15 +881,15 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''"), vdolink.Replace("'", "''"),fileName_OG.Replace("'", "''")
                         ,fulldescription.Replace("'", "''"),"Hardik Just bought!",solditems,spmrp,showmrpmsg.ToString(),isqty,displayorder,categoryId,ProductTemplateID,
                         ProductBanner,Recommended,dtCreatedon.ToString(),userId,IsApproved.ToString(),spDiscountType.ToString(),spDiscount.ToString(),spSoshoPrice.ToString(),
-                        iMaxQty.ToString() ,iMinQty.ToString(),IsProductDescription.ToString(), sJurisdictionId , IsFreeShipping.ToString(), IsFixedShipping.ToString() };
+                        iMaxQty.ToString() ,iMinQty.ToString(),IsProductDescription.ToString(), sJurisdictionId , IsFreeShipping.ToString(), IsFixedShipping.ToString(), subcategoryId, rejectedReason };
                         //string query = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg],IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType],[Discount],[SoshoPrice],[MaxQty],[MinQty],[IsProductDescription],[JurisdictionId],[IsFreeShipping],[IsFixedShipping]) VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + spmrp + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + categoryId + "," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + IsProductDescription + "," + sJurisdictionId + "," + IsFreeShipping + "," + IsFixedShipping + ")";
                         string query = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc]," +
                                         " [Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note]," + 
                                         " [IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg], " + 
-                                        " IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType]," + 
-                                        " [Discount],[SoshoPrice],[MaxQty],[MinQty],[IsProductDescription],[JurisdictionId],[IsFreeShipping],[IsFixedShipping]) " +
+                                        " IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType]," +
+                                        " [Discount],[SoshoPrice],[MaxQty],[MinQty],[IsProductDescription],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],SubCategoryId,RejectedReason) " +
                                         "VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,@18,@19,@20,@21,@22,@23,@24,@25,@26,@27,@28,@29,@30,@31,@32, " +
-                                        " @33,@34,@35,@36,@37,@38,@39,@40,@41,@42,@43,@44); SELECT SCOPE_IDENTITY();";
+                                        " @33,@34,@35,@36,@37,@38,@39,@40,@41,@42,@43,@44,@45,@46); SELECT SCOPE_IDENTITY();";
                         //VAL = dbc.ExecuteQuery(query);
                         VAL = dbc.ExecuteQueryWithParamsId(query, para2);
                         //UPDATE productMasterId in Product table
@@ -988,7 +1004,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 }
                 else
                 {
-                    string query = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg],IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType],[Discount],[SoshoPrice],[MaxQty],[MinQty],[IsProductDescription],[JurisdictionId],[IsFreeShipping],[IsFixedShipping]) VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + spmrp + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + categoryId + "," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + IsProductDescription + "," + sCreatedJurisdictionId + "," + IsFreeShipping + "," + IsFixedShipping + ")";
+                    string query = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg],IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType],[Discount],[SoshoPrice],[MaxQty],[MinQty],[IsProductDescription],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[SubCategoryId],[RejectedReason]) VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + spmrp + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + categoryId + "," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + IsProductDescription + "," + sCreatedJurisdictionId + "," + IsFreeShipping + "," + IsFixedShipping + ","+subcategoryId+","+rejectedReason+")";
                     VAL = dbc.ExecuteQuery(query);
 
                     dt = dbc.GetDataTable("select Id from [Product] where [Name] ='" + productname + "' Order by Id desc");
@@ -2020,6 +2036,18 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             txtFreezeQty.Enabled = false;
 
     }
+
+    protected void OnSelectedCategoryChanged(object sender, EventArgs e)
+    {
+        ddlSubCategoryName.Items.Clear();
+        string subcategoryqry = "SELECT Id,SubCategory FROM tblSubCategory where isnull(IsDeleted,0)=0 AND CategoryId = '" + ddlCategoryName.SelectedValue + "' order by Sequence asc";
+        DataTable dtsubcategory = dbc.GetDataTable(subcategoryqry);
+        ddlSubCategoryName.DataSource = dtsubcategory;
+        ddlSubCategoryName.DataTextField = "SubCategory";
+        ddlSubCategoryName.DataValueField = "Id";
+        ddlSubCategoryName.DataBind();
+    }
+
     //protected void OnDicountTypeSelectedChanged(object sender, EventArgs e)
     //{
     //    Decimal total = 0;

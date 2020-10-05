@@ -121,34 +121,6 @@
                                 </div>
                             </div>
                         </div>
-                        <%--<div class="row pad-bottom">
-                            <div class="col-md-12">
-                                <div class="col-md-3 pad">
-                                    <asp:Label ID="lblLink" runat="server" Text="Link"></asp:Label><span style="color: red">*</span>
-                                </div>
-                                <div class="col-md-9 pad">
-                                    <asp:TextBox ID="txtLink" runat="server" CssClass="form-control" Width="40%"> </asp:TextBox>
-                                    <asp:RegularExpressionValidator ID="regUrl" runat="server" ControlToValidate="txtLink" ValidationExpression="(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,4}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?$" Text="Enter a valid URL" />
-                                </div>
-                            </div>
-                        </div>--%>
-
-                        <%--<div class="row pad-bottom">
-                            <div class="col-md-12">
-                                 <div class="col-md-3 pad">
-                                <asp:Label ID="lblAction" runat="server" Text="Action"></asp:Label>
-                                     </div>
-                            
-                            <div class="col-md-7 pad">
-                                <asp:DropDownList ID="ddlintermedicateAction" runat="server" class="form-control" Width="40%" AppendDataBoundItems="true">
-                                    <asp:ListItem Text="Select Action Name" Value=""></asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                            <div class="col-md-2 pad">
-                                <span id="spnintermediateAction" style="color: #d9534f; display: none;">This field is required</span>
-                            </div>
-                                </div>
-                        </div>--%>
 
                         <div class="row pad-bottom">
                             <div class="col-md-12">
@@ -282,17 +254,14 @@
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="Label2" runat="server" Text="Type"></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="lblBannerType" runat="server" Text="Type"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:DropDownList ID="ddlintermediateType" runat="server" class="form-control" Width="40%">
-                                        <%--<asp:ListItem Value="">Select Banner Type</asp:ListItem>
-                                        <asp:ListItem Value="1">Top Banner</asp:ListItem>
-                                        <asp:ListItem Value="2">Second Banner</asp:ListItem>--%>
+                                    <asp:DropDownList ID="ddlBannerType" runat="server" class="form-control" Width="40%">
                                     </asp:DropDownList>
                                 </div>
                                 <div class="col-md-2 pad">
-                                    <span id="spnintermediateType" style="color: #d9534f; display: none;">This field is required</span>
+                                    <span id="spnBannerType" style="color: #d9534f; display: none;">This field is required</span>
                                 </div>
                             </div>
                         </div>
@@ -522,6 +491,7 @@
             <script type="text/javascript">
 
                                             function previewFile() {
+                                                debugger
                                                 var preview = document.querySelector('#<%=productimg.ClientID %>');
                     var file = document.querySelector('#<%=FileUpload1.ClientID %>').files[0];
                     var reader = new FileReader();
@@ -554,7 +524,7 @@
 
                 $('#ContentPlaceHolder1_BtnintermediateSave').click(function () {
                     var flag = true;
-                    var typeval = $("#ContentPlaceHolder1_ddlintermediateType").val();
+                    var typeval = $("#ContentPlaceHolder1_ddlBannerType").val();
                     var titleval = $("#ContentPlaceHolder1_txtintermediateTitle").val();
                     var Alttextval = $("#ContentPlaceHolder1_txtintermediateAltText").val();
                     var linkval = $("#ContentPlaceHolder1_txtintermediateLink").val();
@@ -562,7 +532,7 @@
                     var Categoryval = $("#ContentPlaceHolder1_ddlintermedicateCategory").val();
                     var Productval = $("#ContentPlaceHolder1_ddlintermedicateProduct").val();
                     if (typeval == "") {
-                        $("#spnintermediateType").css('display', 'block');
+                        $("#spnBannerType").css('display', 'block');
                         flag = false;
                     }
                     if (titleval == "") {
