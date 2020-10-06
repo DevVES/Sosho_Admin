@@ -109,6 +109,8 @@
                         <a href="#notes" aria-controls="notes" role="tab" data-toggle="tab" title="NOTES">NOTES</a></li>
                     <li>
                         <a href="#images" aria-controls="images" role="tab" data-toggle="tab" title="IMAGES">IMAGES</a></li>
+                    <li>
+                        <a href="#category" aria-controls="category" role="tab" data-toggle="tab" title="CATEGORY">CATEGORY</a></li>
                 </ul>
 
                 <div class="tab-content table-responsive" style="padding-top: 20px">
@@ -135,7 +137,7 @@
                                     <asp:Label ID="lblCategoryName" runat="server" Text="Category Name"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:DropDownList ID="ddlCategoryName" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true" OnSelectedIndexChanged="OnSelectedCategoryChanged"  AutoPostBack = "true">
+                                    <asp:DropDownList ID="ddlCategoryName" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true" OnSelectedIndexChanged="OnSelectedCategoryChanged" AutoPostBack="true">
                                         <asp:ListItem Text="Select Category Name" Value=""></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
@@ -145,7 +147,7 @@
                             </div>
 
                         </div>
-                         <div class="row pad-bottom">
+                        <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
                                     <asp:Label ID="lblSubCategoryName" runat="server" Text="SubCategory Name"></asp:Label><span style="color: red">*</span>
@@ -376,7 +378,7 @@
                                 </div>
                                 <div class="col-md-7 pad">
                                     <%--<input id="chkIsFixedShipping" name="isActive" type="checkbox" value="valactive" runat="server" AutoPostBack="true" OnCheckedChanged="ChckedChanged" />--%>
-                                    <asp:CheckBox ID="chkIsFixedShipping" runat="server" AutoPostBack="true" OnCheckedChanged="ChckedChanged" /> 
+                                    <asp:CheckBox ID="chkIsFixedShipping" runat="server" AutoPostBack="true" OnCheckedChanged="ChckedChanged" />
 
                                 </div>
                             </div>
@@ -388,7 +390,7 @@
                                     <asp:Label ID="lblFixedShipRate" runat="server" Text="FixedShipRate"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:TextBox ID="txtFixedShipRate" runat="server" CssClass="form-control" Width="40%" onkeypress="return isNumber(event)" Text="0"  placeholder="FixedShipRate"> </asp:TextBox>
+                                    <asp:TextBox ID="txtFixedShipRate" runat="server" CssClass="form-control" Width="40%" onkeypress="return isNumber(event)" Text="0" placeholder="FixedShipRate"> </asp:TextBox>
                                 </div>
                             </div>
                         </div>
@@ -679,7 +681,7 @@
                                 </div>
                             </div>
                         </div>
-                          <div class="row pad-bottom">
+                        <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
                                     <asp:Label ID="lblgrpIsBestBuy" runat="server" Text="Is Best Buy"></asp:Label>
@@ -689,13 +691,13 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="row pad-bottom">
+                        <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="Isquantityfreez" runat="server" Text="IsQuantityFreez"  ></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="Isquantityfreez" runat="server" Text="IsQuantityFreez"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:CheckBox ID="chkIsQuantityFreez" runat="server" AutoPostBack="true" OnCheckedChanged="FreezeQtyChckedChanged" /> 
+                                    <asp:CheckBox ID="chkIsQuantityFreez" runat="server" AutoPostBack="true" OnCheckedChanged="FreezeQtyChckedChanged" />
                                 </div>
                             </div>
                         </div>
@@ -749,45 +751,13 @@
                         </div>
                         <div class="row pad-bottom">
                             <div class="col-md-12">
-                                <%--<asp:GridView ID="grdgProduct" runat="server" AutoGenerateColumns="false" EmptyDataText="No records has been added." class="table table-bordered table-hover" rules="all" role="grid" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" Width="95%" CellPadding="10" CellSpacing="5" >
-
+                                <asp:GridView ID="grdgProduct" runat="server" AutoGenerateColumns="false"
+                                    AllowPaging="true" OnRowEditing="OnRow_Editing" Width="99%">
+                                    <PagerStyle ForeColor="#8C4510"
+                                        HorizontalAlign="Center"></PagerStyle>
+                                    <HeaderStyle ForeColor="White" Font-Bold="True"
+                                        BackColor="#A55129"></HeaderStyle>
                                     <Columns>
-                                        <asp:TemplateField HeaderText="Unit Name">
-                                            <ItemTemplate>
-                                                <asp:HiddenField ID="HiddenFieldgrpUnitId" runat="server" Value='<%# Bind("grpUnitId") %>' />
-                                                <asp:HiddenField ID="HiddenFieldgrpImage" runat="server" Value='<%# Bind("grpImage") %>' />
-                                                <asp:HiddenField ID="HiddenFieldgrpisOutOfStock" runat="server" Value='<%# Bind("grpisOutOfStock") %>' />
-                                                <asp:HiddenField ID="HiddenFieldgrpisSelected" runat="server" Value='<%# Bind("grpisSelected") %>' />
-                                                <asp:Label ID="lblname" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "grpUnitName")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:BoundField HeaderText="Unit" DataField="grpUnit" />
-                                        <asp:BoundField HeaderText="MRP" DataField="grpMrp" />
-                                        <asp:BoundField HeaderText="Discount Type" DataField="grpDiscountType" />
-                                        <asp:BoundField HeaderText="Discount" DataField="grpDiscount" />
-                                        <asp:BoundField HeaderText="Sosho Price" DataField="grpSoshoPrice" />
-                                        <asp:BoundField HeaderText="Packing Type" DataField="grpPackingType" />
-                                        <asp:BoundField HeaderText="Is Selected" DataField="grpisSelected" />
-                                       <asp:TemplateField>
-            <ItemTemplate>
-                 <asp:HyperLink ID="lnkEdit" 
-                     navigateurl='<%# String.Format("~/Product/ManageProducts.aspx?Id={0}&grpId={1}", Eval("Id"), Eval("grpId")) %>'
-                    Text="EDIT" Visible='<%# Eval("Status").ToString() == "Update" %>'
-                    runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-                                      
-                                    </Columns>
-                                </asp:GridView>--%>
-                                
-
-                                <asp:GridView ID="grdgProduct" runat="server"  AutoGenerateColumns="false" 
-                                    AllowPaging="true" OnRowEditing="OnRow_Editing" Width="99%"    >
-                                    <PagerStyle ForeColor="#8C4510" 
-          HorizontalAlign="Center"></PagerStyle>
-        <HeaderStyle ForeColor="White" Font-Bold="True" 
-          BackColor="#A55129"></HeaderStyle>
-                                          <Columns>
                                         <asp:TemplateField HeaderText="Unit Name">
                                             <ItemTemplate>
                                                 <asp:HiddenField ID="HiddenFieldgrpUnitId" runat="server" Value='<%# Bind("grpUnitId") %>' />
@@ -810,17 +780,17 @@
                                         <asp:BoundField HeaderText="Sosho Price" DataField="grpSoshoPrice" />
                                         <asp:BoundField HeaderText="Packing Type" DataField="grpPackingType" />
                                         <asp:BoundField HeaderText="Is Selected" DataField="grpisSelected" />
-                                       
-                                      <asp:TemplateField>
-        <ItemTemplate>
-            <asp:LinkButton Text="Edit" runat="server" CommandName="Edit" CausesValidation="false" />
-        </ItemTemplate>
-        <EditItemTemplate>
-            <asp:LinkButton Text="Update" runat="server" OnClick="OnUpdate" CausesValidation="false" />
-            <asp:LinkButton Text="Cancel" runat="server" OnClick="OnCancel" CausesValidation="false" />
-        </EditItemTemplate>
-    </asp:TemplateField>
-                                              <%-- <asp:TemplateField>
+
+                                        <asp:TemplateField>
+                                            <ItemTemplate>
+                                                <asp:LinkButton Text="Edit" runat="server" CommandName="Edit" CausesValidation="false" />
+                                            </ItemTemplate>
+                                            <EditItemTemplate>
+                                                <asp:LinkButton Text="Update" runat="server" OnClick="OnUpdate" CausesValidation="false" />
+                                                <asp:LinkButton Text="Cancel" runat="server" OnClick="OnCancel" CausesValidation="false" />
+                                            </EditItemTemplate>
+                                        </asp:TemplateField>
+                                        <%-- <asp:TemplateField>
             <ItemTemplate>
                  <asp:HyperLink ID="lnkEdit" 
                      navigateurl='<%# String.Format("~/Product/ManageProducts.aspx?Id={0}&grpId={1}", Eval("Id"), Eval("grpId")) %>'
@@ -830,7 +800,7 @@
                                                    </asp:TemplateField>--%>
                                     </Columns>
                                 </asp:GridView>
-    
+
                             </div>
                         </div>
                     </div>
@@ -878,21 +848,21 @@
                             </div>
                         </div>
                         <script type="text/javascript">
-                                function previewFile1() {
-                                    var preview2 = document.querySelector('#<%=productimg1.ClientID %>');
-                                var file2 = document.querySelector('#<%=FileUpload2.ClientID %>').files[0];
-                                var reader2 = new FileReader();
+                                            function previewFile1() {
+                                                var preview2 = document.querySelector('#<%=productimg1.ClientID %>');
+                                                var file2 = document.querySelector('#<%=FileUpload2.ClientID %>').files[0];
+                                                var reader2 = new FileReader();
 
-                                reader2.onloadend = function () {
-                                    preview2.src = reader2.result;
-                                }
+                                                reader2.onloadend = function () {
+                                                    preview2.src = reader2.result;
+                                                }
 
-                                if (file2) {
-                                    reader2.readAsDataURL(file2);
-                                } else {
-                                    preview2.src = "";
-                                }
-                                }
+                                                if (file2) {
+                                                    reader2.readAsDataURL(file2);
+                                                } else {
+                                                    preview2.src = "";
+                                                }
+                                            }
 
                         </script>
 
@@ -948,7 +918,7 @@
                                     <asp:Label ID="Label2" runat="server" Text="Discount Type"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:DropDownList ID="ddlDiscountType" runat="server" class="form-control" Width="40%" >
+                                    <asp:DropDownList ID="ddlDiscountType" runat="server" class="form-control" Width="40%">
                                         <asp:ListItem Value="">Select Discount Type</asp:ListItem>
                                         <asp:ListItem Value="%">%</asp:ListItem>
                                         <asp:ListItem Value="Fixed">Fixed</asp:ListItem>
@@ -978,7 +948,7 @@
                                     <asp:Label ID="Label4" runat="server" Text="Sosho Price"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:TextBox ID="txtSoshoPrice" runat="server" CssClass="form-control" Width="40%" placeholder="Sosho Price" > </asp:TextBox>
+                                    <asp:TextBox ID="txtSoshoPrice" runat="server" CssClass="form-control" Width="40%" placeholder="Sosho Price"> </asp:TextBox>
                                 </div>
                                 <div class="col-md-2 pad">
                                     <span id="spnSoshoPrice" style="color: #d9534f; display: none;">This field is required</span>
@@ -1031,9 +1001,9 @@
                                 </div>
                             </div>
                         </div>
-                       
 
-                        
+
+
 
                     </div>
 
@@ -1173,22 +1143,98 @@
 
                         </div>
                         <script type="text/javascript">
-                            function previewFile() {
-                                var preview3 = document.querySelector('#<%=productimg.ClientID %>');
-                                var file3 = document.querySelector('#<%=FileUploadMainImages.ClientID %>').files[0];
-                                var reader3 = new FileReader();
+                                            function previewFile() {
+                                                var preview3 = document.querySelector('#<%=productimg.ClientID %>');
+                                    var file3 = document.querySelector('#<%=FileUploadMainImages.ClientID %>').files[0];
+                                    var reader3 = new FileReader();
 
-                                reader3.onloadend = function () {
-                                    preview3.src = reader3.result;
-                                }
+                                    reader3.onloadend = function () {
+                                        preview3.src = reader3.result;
+                                    }
 
-                                if (file3) {
-                                    reader3.readAsDataURL(file3);
-                                } else {
-                                    preview3.src = "";
-                                }
-                            }
+                                    if (file3) {
+                                        reader3.readAsDataURL(file3);
+                                    } else {
+                                        preview3.src = "";
+                                    }
+                                            }
                         </script>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="category">
+                        <div class="col-md-12">
+                            <div class="row pad-bottom">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblLinkCategoryName" runat="server" Text="Category Name"></asp:Label><span style="color: red">*</span>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <asp:DropDownList ID="ddlLinkCategoryName" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true" OnSelectedIndexChanged="OnSelectedLinkCategoryChanged" AutoPostBack="true">
+                                        <asp:ListItem Text="Select Category Name" Value=""></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-md-2 pad">
+                                    <span id="spnLinkCategoryName" style="color: #d9534f; display: none;">This field is required</span>
+                                </div>
+                            </div>
+                            <div class="row pad-bottom">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblLinkSubCategoryName" runat="server" Text="SubCategory Name"></asp:Label><span style="color: red">*</span>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <asp:DropDownList ID="ddlLinkSubCategoryName" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true">
+                                        <asp:ListItem Text="Select SubCategory Name" Value=""></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-md-2 pad">
+                                    <span id="spnLinkSubCategoryName" style="color: #d9534f; display: none;">This field is required</span>
+                                </div>
+                        </div>
+                        </div>
+   <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                </div>
+                                <div class="col-md-9 pad">
+                                    <asp:Button ID="btnCategoryAdd" runat="server" Text="Add" CssClass="btn btn-block btn-info" Width="120 px" title="Add" OnClick="BtnCategoryAdd_Click" OnClientClick="return Validate()" />
+                                    <%--<asp:Button ID="btnCategoryUpdate" runat="server" Text="Update" CssClass="btn btn-block btn-info" Width="120 px" title="Update" OnClick="BtnCategoryUpdate_Click" Visible="false" OnClientClick="return Validate()" />--%>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <asp:GridView ID="grdProductCategory" runat="server" AutoGenerateColumns="false"
+                                    AllowPaging="true" OnRowEditing="OnRowCategory_Editing" Width="99%">
+                                    <PagerStyle ForeColor="#8C4510"
+                                        HorizontalAlign="Center"></PagerStyle>
+                                    <HeaderStyle ForeColor="White" Font-Bold="True"
+                                        BackColor="#A55129"></HeaderStyle>
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="No" >
+                                            <ItemTemplate>
+                                                <asp:Label ID="lblSrNo" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "lnkSrNo")%>'></asp:Label>
+                                                <asp:HiddenField ID="HiddenFieldlinkCategoryId" runat="server" Value='<%# Bind("hdnlinkCategoryId") %>' />
+                                                <asp:HiddenField ID="HiddenFieldlinkSubCategoryId" runat="server" Value='<%# Bind("hdnlinkSubCategoryId") %>' />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:BoundField HeaderText="Category" DataField="linkProdCategory" />
+                                        <asp:BoundField HeaderText="SubCategory" DataField="linkProdSubCategory" />
+                                        
+                                        <asp:TemplateField>
+                                            <ItemTemplate>
+                                                <asp:LinkButton Text="Edit" runat="server" CommandName="Edit" CausesValidation="false" />
+                                            </ItemTemplate>
+                                            <EditItemTemplate>
+                                                <%--<asp:LinkButton Text="Update" runat="server" OnClick="OnUpdate" CausesValidation="false" />--%>
+                                                <asp:LinkButton Text="Cancel" runat="server" OnClick="OnCancel" CausesValidation="false" />
+                                            </EditItemTemplate>
+                                        </asp:TemplateField>
+                                       
+                                    </Columns>
+                                </asp:GridView>
+
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -1196,63 +1242,63 @@
 
 
             <script type="text/javascript" lang="javascript">
-                            function validatenumerics(key) {
-                                //getting key code of pressed key
-                                var keycode = (key.which) ? key.which : key.keyCode;
-                                //comparing pressed keycodes
+                                function validatenumerics(key) {
+                                    //getting key code of pressed key
+                                    var keycode = (key.which) ? key.which : key.keyCode;
+                                    //comparing pressed keycodes
 
-                                if (keycode > 31 && (keycode < 48 || keycode > 57)) {
-                                    alert(" You can enter only characters 0 to 9 ");
-                                    return false;
+                                    if (keycode > 31 && (keycode < 48 || keycode > 57)) {
+                                        alert(" You can enter only characters 0 to 9 ");
+                                        return false;
+                                    }
+                                    else return true;
+
+
                                 }
-                                else return true;
-
-
+            </script>
+            <script>
+                            var today = new Date();
+                            var dd = today.getDate();
+                            var mm = today.getMonth() + 1; //January is 0!
+                            var yyyy = today.getFullYear();
+                            if (dd < 10) {
+                                dd = '0' + dd
                             }
-            </script>
-            <script>
-                var today = new Date();
-                var dd = today.getDate();
-                var mm = today.getMonth() + 1; //January is 0!
-                var yyyy = today.getFullYear();
-                if (dd < 10) {
-                    dd = '0' + dd
-                }
-                if (mm < 10) {
-                    mm = '0' + mm
-                }
-                today = dd + '-' + mm + '-' + yyyy;
-                $('#txtdt').val(today);
-                $('#txtdt').datepicker({
-                    format: 'dd-mm-yyyy',
-                    autoclose: true
-                });
-                $(".timepicker").timepicker({
-                    showInputs: false
-                });
+                            if (mm < 10) {
+                                mm = '0' + mm
+                            }
+                            today = dd + '-' + mm + '-' + yyyy;
+                            $('#txtdt').val(today);
+                            $('#txtdt').datepicker({
+                                format: 'dd-mm-yyyy',
+                                autoclose: true
+                            });
+                            $(".timepicker").timepicker({
+                                showInputs: false
+                            });
             </script>
 
 
             <script>
-                var today = new Date();
-                var dd = today.getDate();
-                var mm = today.getMonth() + 1; //January is 0!
-                var yyyy = today.getFullYear();
-                if (dd < 10) {
-                    dd = '0' + dd
-                }
-                if (mm < 10) {
-                    mm = '0' + mm
-                }
-                today = dd + '-' + mm + '-' + yyyy;
-                $('#txtdt1').val(today);
-                $('#txtdt1').datepicker({
-                    format: 'dd-mm-yyyy',
-                    autoclose: true
-                });
-                $(".timepicker").timepicker({
-                    showInputs: false
-                });
+                            var today = new Date();
+                            var dd = today.getDate();
+                            var mm = today.getMonth() + 1; //January is 0!
+                            var yyyy = today.getFullYear();
+                            if (dd < 10) {
+                                dd = '0' + dd
+                            }
+                            if (mm < 10) {
+                                mm = '0' + mm
+                            }
+                            today = dd + '-' + mm + '-' + yyyy;
+                            $('#txtdt1').val(today);
+                            $('#txtdt1').datepicker({
+                                format: 'dd-mm-yyyy',
+                                autoclose: true
+                            });
+                            $(".timepicker").timepicker({
+                                showInputs: false
+                            });
 
 
             </script>
@@ -1305,7 +1351,7 @@
                     //}
                 });
 
-               $("#ContentPlaceHolder1_ddlDiscountType").change(function () {
+                $("#ContentPlaceHolder1_ddlDiscountType").change(function () {
                     debugger
                     var end = this.value;
                     alert(end);
@@ -1330,7 +1376,7 @@
                         $("#spnDiscountType").css('display', 'block');
                     }
                 });
-               
+
                 $('#ContentPlaceHolder1_txtgrpSoshoPrice').focusout(function (event) {
                     debugger
                     var total = 0;
@@ -1580,9 +1626,9 @@
                 });
 
 
-                
 
-                
+
+
 
                 function CalulatePSoshoPrice() {
                     $(".calculatediscount").each(function () {

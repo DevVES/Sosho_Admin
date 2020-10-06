@@ -84,11 +84,7 @@
                 </div>
                 
 
-                <div class="col-md-3 col-sm-6 col-xs-12">
-
-                    <asp:Button ID="Button2" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" />
-
-                </div>
+                
 
             </div>
 
@@ -99,12 +95,23 @@
                             </asp:DropDownList>
                         </div>
                     </div>
+                 <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <asp:DropDownList ID="ddlSubCategoryName" runat="server" class="form-control" OnSelectedIndexChanged = "OnSelectedIndexSubCategoryChanged" AutoPostBack = "true">
+                            </asp:DropDownList>
+                        </div>
+                    </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <asp:DropDownList ID="ddlProduct" runat="server" class="form-control">
                             </asp:DropDownList>
                         </div>
                     </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+
+                    <asp:Button ID="Button2" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" />
+
+                </div>
                 </div>
 
             <div style="width: 100%;" class="table-responsive">

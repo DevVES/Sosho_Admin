@@ -14,17 +14,18 @@ public partial class Product_ManageProducts : System.Web.UI.Page
     dbConnection dbc = new dbConnection();
     string id = "", grpFileName = "", MainFileName = "";
     static DataTable dtgrpProduct;
+    static DataTable dtProductCategory;
     public static int _lastIndex = -1;
+    public static int _lastIndexCategory = -1;
     protected void Page_Load(object sender, EventArgs e)
     {
-        
         try
         {
-            
             lblmsg.Text = "";
             if (!IsPostBack)
             {
                 _lastIndex = -1;
+                _lastIndexCategory = -1;
                 id = Request.QueryString["Id"];
                 string grpId = Request.QueryString["grpId"];
                 txtFixedShipRate.Enabled = false;
@@ -50,13 +51,23 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 dtgrpProduct.Columns.Add("grpisBestBuy", typeof(string));
                 dtgrpProduct.Columns.Add("grpFreezeQty", typeof(string));
 
-
+                dtProductCategory = new DataTable("CATEGORY");
+                dtProductCategory.Columns.Add("hdnlinkCategoryId", typeof(string));
+                dtProductCategory.Columns.Add("linkProdCategory", typeof(string));
+                dtProductCategory.Columns.Add("hdnlinkSubCategoryId", typeof(string));
+                dtProductCategory.Columns.Add("linkProdSubCategory", typeof(string));
+                
                 string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 order by Sequence asc";
                 DataTable dtcategory = dbc.GetDataTable(categoryqry);
                 ddlCategoryName.DataSource = dtcategory;
                 ddlCategoryName.DataTextField = "CategoryName";
                 ddlCategoryName.DataValueField = "CategoryId";
                 ddlCategoryName.DataBind();
+
+                ddlLinkCategoryName.DataSource = dtcategory;
+                ddlLinkCategoryName.DataTextField = "CategoryName";
+                ddlLinkCategoryName.DataValueField = "CategoryId";
+                ddlLinkCategoryName.DataBind();
 
                 string producttype = "Select Id,Name From ProductTemplate order by Id asc";
                 DataTable dtproducttype = dbc.GetDataTable(producttype);
@@ -233,6 +244,12 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         ddlSubCategoryName.DataValueField = "Id";
                         ddlSubCategoryName.DataBind();
                         ddlSubCategoryName.SelectedValue = dt1.Rows[0]["SubCategoryID"].ToString();
+                        ddlLinkSubCategoryName.DataSource = dtsubcategory;
+                        ddlLinkSubCategoryName.DataTextField = "SubCategory";
+                        ddlLinkSubCategoryName.DataValueField = "Id";
+                        ddlLinkSubCategoryName.DataBind();
+                        ddlLinkSubCategoryName.SelectedValue = dt1.Rows[0]["SubCategoryID"].ToString();
+
                         ddlProductType.SelectedValue = dt1.Rows[0]["ProductTemplateID"].ToString();
                         txtProductBanner.Text = dt1.Rows[0]["ProductBanner"].ToString();
                         txtRecommended.Text = dt1.Rows[0]["Recommended"].ToString();
@@ -282,6 +299,15 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             ViewState["dt"] = dtProductAttribute;
                             grdgProduct.DataSource = dtProductAttribute;
                             grdgProduct.DataBind();
+
+                        }
+
+                        DataTable dtProductCategoryLink = dbc.GetDataTable("Select PL.CategoryId AS hdnlinkCategoryId, C.CategoryName AS linkProdCategory, PL.SubCategoryId AS hdnlinkSubCategoryId, S.SubCategory AS linkProdSubCategory FROM tblCategoryProductLink PL LEFT JOIN Category C ON C.CategoryID = PL.CategoryId LEFT JOIN tblSubCategory S ON S.Id = PL.SubCategoryId where PL.IsDeleted=0 and PL.ProductId=" + id);
+                        if (dtProductCategoryLink.Rows.Count > 0)
+                        {
+                            ViewState["dtProductCategory"] = dtProductCategoryLink;
+                            grdProductCategory.DataSource = dtProductCategoryLink;
+                            grdProductCategory.DataBind();
 
                         }
                     }
@@ -513,7 +539,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                     FileUpload2.SaveAs(path_OG + "/" + imgnamenew_OG);
                     fileName_OG = imgnamenew_OG;
                 }
-
                 else
                 {
                     sweetMessage("", "OG Image Size should be 10KB to 150KB", "warning");
@@ -724,22 +749,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                     int VAL = dbc.ExecuteQuery(querym);
                                 }
                             }
-                            else
-                            {
-                                //Insert Product
-
-
-                                //if (chkIsQuantityFreez.Checked == true)
-                                //{
-                                //    isqty = "1";
-                                //}
-                                //else
-                                //{
-                                //    isqty = "0"; ;
-                                //}
-                                //string querym = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg],IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType],[Discount],[SoshoPrice],[MaxQty],[MinQty],[JurisdictionID],[ApproverID],[IsFreeShipping],[IsFixedShipping],SubCategoryId) VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + txtMRP.Text + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + categoryId + "," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + sJurisdictionId + "," + userId + ","+IsFreeShipping+","+IsFixedShipping+","+subcategoryId+")";
-                                //int VAL = dbc.ExecuteQuery(querym);
-                            }
+                            
                         }
                         string strUnitId = "", strImage = "", strisOutOfStock = "", strisSelected = "", strPackingType = "", strisBestBuy = "";
                         string MinQty = "", isQtyFreezeVal = "", FreezeQty = "";
@@ -752,17 +762,11 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         string delProductAttribute = " Delete FROM [dbo].[Product_ProductAttribute_Mapping]  where Productid=" + Convert.ToInt32(id1);
                         dbc.ExecuteQuery(delProductAttribute);
 
+                        string delProductCategory = " Delete FROM [dbo].[tblcategoryproductlink]  where Productid=" + Convert.ToInt32(id1);
+                        dbc.ExecuteQuery(delProductCategory);
+
                         foreach (GridViewRow g1 in grdgProduct.Rows)
                         {
-                            //var resultselected = (from GridViewRow msgRow in grdgProduct.Rows
-                            //                      where strisSelected == ((HiddenField)msgRow.FindControl("HiddenFieldgrpisSelected")).Value
-                            //                      select new { msgRow }).ToList();
-
-                            //var resultbestbuy = (from GridViewRow msgRow in grdgProduct.Rows
-                            //                     where strisBestBuy == ((HiddenField)msgRow.FindControl("HiddenFieldIsBestBuy")).Value
-                            //                     select new { msgRow }).ToList();
-
-
                             HiddenField hdnMinQty = (HiddenField)g1.FindControl("HiddenFieldMinQty");
                             MinQty = hdnMinQty.Value;
                             HiddenField hdnMaxQty = (HiddenField)g1.FindControl("HiddenFieldMaxQty");
@@ -843,6 +847,17 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id1 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + ","+ isQtyFreezeVal + ","+ strisBestBuy + ","+ FreezeQty + ")";
                             int VALatt = dbc.ExecuteQuery(ProductAttrqry);
                         }
+
+                        foreach (GridViewRow g2 in grdProductCategory.Rows)
+                        {
+                            HiddenField hdnLinkCategoryId = (HiddenField)g2.FindControl("HiddenFieldlinkCategoryId");
+                            string linkCategoryId = hdnLinkCategoryId.Value;
+                            HiddenField hdnLinkSubCategoryId = (HiddenField)g2.FindControl("HiddenFieldlinkSubCategoryId");
+                            string linkSubCategoryId = hdnLinkSubCategoryId.Value;
+
+                            string ProductCategoryqry = "INSERT INTO [dbo].[tblCategoryProductLink] ([ProductId],[CategoryId],[SubCategoryId],[IsActive],[IsDeleted],[CreatedDate],[CreatedBy]) VALUES (" + id1 + ",'" + linkCategoryId + "'," + linkSubCategoryId + ",1,0,'" + dtCreatedon.ToString() + "'," + userId + ")";
+                            dbc.ExecuteQuery(ProductCategoryqry);
+                        }
                         sweetMessage("", "Product Updated Successfully", "success");
                         Response.Redirect("ProductList.aspx");
                     }
@@ -890,7 +905,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                         " [Discount],[SoshoPrice],[MaxQty],[MinQty],[IsProductDescription],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],SubCategoryId,RejectedReason) " +
                                         "VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,@18,@19,@20,@21,@22,@23,@24,@25,@26,@27,@28,@29,@30,@31,@32, " +
                                         " @33,@34,@35,@36,@37,@38,@39,@40,@41,@42,@43,@44,@45,@46); SELECT SCOPE_IDENTITY();";
-                        //VAL = dbc.ExecuteQuery(query);
+                        
                         VAL = dbc.ExecuteQueryWithParamsId(query, para2);
                         //UPDATE productMasterId in Product table
                         string UpdateQry = " UPDATE [dbo].[Product]  SET ProductMasterId = " + ProductMasterId + " WHERE id = " + VAL;
@@ -904,7 +919,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         if (dt != null && dt.Rows.Count > 0)
                         {
                             id11 = dt.Rows[0]["Id"].ToString();
-
                         }
 
                         int imgorder = 0;
@@ -912,23 +926,14 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         {
                             imgorder++;
                             string[] para1 = { id11, filenamearray[i], "0", imgorder.ToString(), dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss") };
-
                             string query1 = "INSERT INTO [dbo].[ProductImages]([ProductId],[ImageFileName],[IsDeleted],[DisplayOrder],[Doc],[Dom]) VALUES (@1,@2,@3,@4,@5,@6)";
                             int v1 = dbc.ExecuteQueryWithParams(query1, para1);
                         }
 
-
                         //Product Attribute Mapping Save
                         string strUnitId = "", strImage = "", strisOutOfStock = "", strisSelected = "", strPackingType = "", strisBestBuy = "";
                         string MinQty = "", isQtyFreezeVal = "", MaxQty = "", FreezeQty = "";
-                        //var resultselected = (from GridViewRow msgRow in grdgProduct.Rows
-                        //                      where strisSelected == ((HiddenField)msgRow.FindControl("HiddenFieldgrpisSelected")).Value
-                        //                      select new { msgRow }).ToList();
-
-                        //var resultbestbuy = (from GridViewRow msgRow in grdgProduct.Rows
-                        //                     where strisBestBuy == ((HiddenField)msgRow.FindControl("HiddenFieldIsBestBuy")).Value
-                        //                     select new { msgRow }).ToList();
-
+                        
                         foreach (GridViewRow g1 in grdgProduct.Rows)
                         {
                             HiddenField hdnMinQty = (HiddenField)g1.FindControl("HiddenFieldMinQty");
@@ -953,36 +958,22 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             strImage = hdnImage.Value;
                             HiddenField hdnisOutOfStock = (HiddenField)g1.FindControl("HiddenFieldgrpisOutOfStock");
                             strisOutOfStock = hdnisOutOfStock.Value;
-                            //if (resultselected.Count == 0 && strisSelected == "0")
-                            //{
-                            //    strisSelected = "1";
-                            //}
-                            //else
-                            //{
-                                HiddenField hdnisSelected = (HiddenField)g1.FindControl("HiddenFieldgrpisSelected");
-                                strisSelected = hdnisSelected.Value;
-                                if (strisSelected == "True")
-                                    strisSelected = "1";
-                                else
-                                    strisSelected = "0";
-                            //}
-
-                            //if (resultbestbuy.Count == 0 && strisBestBuy == "0")
-                            //{
-                            //    strisBestBuy = "1";
-                            //}
-                            //else
-                            //{
-                                HiddenField hdnisBestBuy = (HiddenField)g1.FindControl("HiddenFieldIsBestBuy");
-                                strisBestBuy = hdnisBestBuy.Value;
-                                if (strisBestBuy == "True")
-                                    strisBestBuy = "1";
-                                else
-                                    strisBestBuy = "0";
-                           // }
-
+                            
+                            HiddenField hdnisSelected = (HiddenField)g1.FindControl("HiddenFieldgrpisSelected");
+                            strisSelected = hdnisSelected.Value;
+                            if (strisSelected == "True")
+                                strisSelected = "1";
+                            else
+                                strisSelected = "0";
+                            
+                            HiddenField hdnisBestBuy = (HiddenField)g1.FindControl("HiddenFieldIsBestBuy");
+                            strisBestBuy = hdnisBestBuy.Value;
+                            if (strisBestBuy == "True")
+                                strisBestBuy = "1";
+                            else
+                                strisBestBuy = "0";
+                           
                             Label name = (Label)g1.FindControl("lblname");
-
                             strPackingType = g1.Cells[6].Text;
                             if (!string.IsNullOrEmpty(strPackingType))
                             {
@@ -999,7 +990,16 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id11 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+","+ FreezeQty + ")";
                             int VALatt = dbc.ExecuteQuery(ProductAttrqry);
                         }
-                       
+                        foreach (GridViewRow g2 in grdProductCategory.Rows)
+                        {
+                            HiddenField hdnLinkCategoryId = (HiddenField)g2.FindControl("HiddenFieldlinkCategoryId");
+                            string linkCategoryId = hdnLinkCategoryId.Value;
+                            HiddenField hdnLinkSubCategoryId = (HiddenField)g2.FindControl("HiddenFieldlinkSubCategoryId");
+                            string linkSubCategoryId = hdnLinkSubCategoryId.Value;
+
+                            string ProductCategoryqry = "INSERT INTO [dbo].[tblCategoryProductLink] ([ProductId],[CategoryId],[SubCategoryId],[IsActive],[IsDeleted],[CreatedDate],[CreatedBy]) VALUES (" + id11 + ",'" + linkCategoryId + "'," + linkSubCategoryId + ",1,0,'" + dtCreatedon.ToString() + "'," + userId + ")";
+                            dbc.ExecuteQuery(ProductCategoryqry);
+                        }
                     }
                 }
                 else
@@ -1024,18 +1024,10 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         int v1 = dbc.ExecuteQueryWithParams(query1, para1);
                     }
 
-
                     //Product Attribute Mapping Save
                     string strUnitId = "", strImage = "", strisOutOfStock = "", strisSelected = "", strPackingType = "", strisBestBuy = "";
                     string MinQty = "", isQtyFreezeVal = "", MaxQty = "", FreezeQty="";
-                    //var resultselected = (from GridViewRow msgRow in grdgProduct.Rows
-                    //                      where strisSelected == ((HiddenField)msgRow.FindControl("HiddenFieldgrpisSelected")).Value
-                    //                      select new { msgRow }).ToList();
-
-                    //var resultbestbuy = (from GridViewRow msgRow in grdgProduct.Rows
-                    //                     where strisBestBuy == ((HiddenField)msgRow.FindControl("HiddenFieldIsBestBuy")).Value
-                    //                     select new { msgRow }).ToList();
-
+                    
                     foreach (GridViewRow g1 in grdgProduct.Rows)
                     {
                         HiddenField hdnMinQty = (HiddenField)g1.FindControl("HiddenFieldMinQty");
@@ -1044,14 +1036,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         MaxQty = hdnMaxQty.Value;
                         HiddenField hdnisQtyFreeze = (HiddenField)g1.FindControl("HiddenFieldIsQtyFreeze");
                         isQtyFreezeVal = hdnisQtyFreeze.Value;
-                        //if (isQtyFreezeVal == "True")
-                        //{
-                        //    isQtyFreezeVal = "1";
-                        //}
-                        //else
-                        //{
-                        //    isQtyFreezeVal = "0";
-                        //}
+                        
                         HiddenField hdnFreezeQty = (HiddenField)g1.FindControl("HiddenFieldFreezeQty");
                         FreezeQty = hdnFreezeQty.Value;
                         HiddenField hdnUnitId = (HiddenField)g1.FindControl("HiddenFieldgrpUnitId");
@@ -1060,34 +1045,20 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         strImage = hdnImage.Value;
                         HiddenField hdnisOutOfStock = (HiddenField)g1.FindControl("HiddenFieldgrpisOutOfStock");
                         strisOutOfStock = hdnisOutOfStock.Value;
-                        //if (resultselected.Count == 0 && strisSelected == "0")
-                        //{
-                        //    strisSelected = "1";
-                        //}
-                        //else
-                        //{
-                            HiddenField hdnisSelected = (HiddenField)g1.FindControl("HiddenFieldgrpisSelected");
-                            strisSelected = hdnisSelected.Value;
-                            if (strisSelected == "True")
-                                strisSelected = "1";
-                            else
-                                strisSelected = "0";
-                       // }
-
-                        //if (resultbestbuy.Count == 0 && strisBestBuy == "0")
-                        //{
-                        //    strisBestBuy = "1";
-                        //}
-                        //else
-                        //{
-                            HiddenField hdnisBestBuy = (HiddenField)g1.FindControl("HiddenFieldIsBestBuy");
-                            strisBestBuy = hdnisBestBuy.Value;
-                            if (strisBestBuy == "True")
-                                strisBestBuy = "1";
-                            else
-                                strisBestBuy = "0";
-                        //}
-
+                        
+                        HiddenField hdnisSelected = (HiddenField)g1.FindControl("HiddenFieldgrpisSelected");
+                        strisSelected = hdnisSelected.Value;
+                        if (strisSelected == "True")
+                            strisSelected = "1";
+                        else
+                            strisSelected = "0";
+                        HiddenField hdnisBestBuy = (HiddenField)g1.FindControl("HiddenFieldIsBestBuy");
+                        strisBestBuy = hdnisBestBuy.Value;
+                        if (strisBestBuy == "True")
+                            strisBestBuy = "1";
+                        else
+                            strisBestBuy = "0";
+                       
                         Label name = (Label)g1.FindControl("lblname");
 
                         strPackingType = g1.Cells[6].Text;
@@ -1106,7 +1077,17 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id11 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+","+ FreezeQty + ")";
                         int VALatt = dbc.ExecuteQuery(ProductAttrqry);
                     }
-                    
+                    foreach (GridViewRow g2 in grdProductCategory.Rows)
+                    {
+                        HiddenField hdnLinkCategoryId = (HiddenField)g2.FindControl("HiddenFieldlinkCategoryId");
+                        string linkCategoryId = hdnLinkCategoryId.Value;
+                        HiddenField hdnLinkSubCategoryId = (HiddenField)g2.FindControl("HiddenFieldlinkSubCategoryId");
+                        string linkSubCategoryId = hdnLinkSubCategoryId.Value;
+
+                        string ProductCategoryqry = "INSERT INTO [dbo].[tblCategoryProductLink] ([ProductId],[CategoryId],[SubCategoryId],[IsActive],[IsDeleted],[CreatedDate],[CreatedBy]) VALUES (" + id11 + ",'" + linkCategoryId + "'," + linkSubCategoryId + ",1,0,'" + dtCreatedon.ToString() + "'," + userId + ")";
+                        dbc.ExecuteQuery(ProductCategoryqry);
+                    }
+
                 }
                 if (VAL > 0)
                 {
@@ -1606,12 +1587,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
     {
         try
         {
-            //if (_lastIndex > -1)
-            //{
-            //    DataRow dr = dtgrpProduct.Rows[_lastIndex];
-            //    dr.Delete();
-            //}
-
             string[] validFileTypes = { "png", "jpg", "jpeg" };
             Stream fs = FileUploadgrpImages.PostedFile.InputStream;
             BinaryReader br = new BinaryReader(fs);
@@ -1778,6 +1753,50 @@ public partial class Product_ManageProducts : System.Web.UI.Page
         }
     }
 
+    protected void BtnCategoryAdd_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            if (_lastIndexCategory > -1)
+            {
+                dtProductCategory.Rows[_lastIndexCategory]["hdnlinkCategoryId"] = ddlLinkCategoryName.SelectedValue.ToString();
+                dtProductCategory.Rows[_lastIndexCategory]["linkProdCategory"] = ddlLinkCategoryName.SelectedItem.ToString();
+                dtProductCategory.Rows[_lastIndexCategory]["hdnlinkSubCategoryId"] = ddlLinkSubCategoryName.SelectedValue.ToString();
+                dtProductCategory.Rows[_lastIndexCategory]["linkProdSubCategory"] = ddlLinkSubCategoryName.SelectedItem.ToString();
+            }
+            else
+            {
+                dtProductCategory.Rows.Add(
+                     ddlLinkCategoryName.SelectedValue.ToString()
+                     ,ddlLinkCategoryName.SelectedItem.Text
+                     , ddlLinkSubCategoryName.SelectedValue.ToString()
+                     ,ddlLinkSubCategoryName.SelectedItem.Text
+                    );
+
+                DataTable dtProductCategory1 = ViewState["dtProductCategory"] as DataTable;
+                if (dtProductCategory1 != null)
+                {
+                    dtProductCategory1 = ViewState["dtProductCategory"] as DataTable;
+                    foreach (DataRow row in dtProductCategory1.Rows)
+                    {
+
+                        dtProductCategory.Rows.Add(
+                            row["hdnlinkCategoryId"]
+                         ,row["linkProdCategory"].ToString()
+                        , row["hdnlinkSubCategoryId"]
+                        , row["linkProdSubCategory"]
+                    );
+                    }
+                }
+            }
+            BindProductCategoryData();
+
+        }
+        catch (Exception aa)
+        {
+            sweetMessage("", "Please Try Again!!", "warning");
+        }
+    }
     protected void OnUpdate(object sender, EventArgs e)
     {
         int isQtyFreeze = 0;
@@ -1874,6 +1893,30 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
     }
 
+    protected void OnRowCategory_Editing(object sender, GridViewEditEventArgs e)
+    {
+        e.NewEditIndex = e.NewEditIndex;
+        grdProductCategory.EditIndex = e.NewEditIndex;
+        BindProductCategoryData();
+
+        _lastIndexCategory = e.NewEditIndex;
+        
+        //Bind data to the GridView control.
+        if (dtProductCategory.Rows.Count == 0)
+        {
+            dtProductCategory = ViewState["dtProductCategory"] as DataTable;
+        }
+        if (_lastIndexCategory >= 0)
+        {
+            
+            ddlLinkCategoryName.SelectedValue = dtProductCategory.Rows[_lastIndexCategory]["hdnlinkCategoryId"].ToString();
+            ddlLinkSubCategoryName.SelectedValue = dtProductCategory.Rows[_lastIndexCategory]["hdnlinkSubCategoryId"].ToString();
+            
+            btnCategoryAdd.Text = "Update";
+        }
+
+    }
+
     public void BindgrpProductData()
     {
         if (dtgrpProduct.Rows.Count > 0)
@@ -1886,6 +1929,20 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
         }
         grdgProduct.DataBind();
+    }
+
+    public void BindProductCategoryData()
+    {
+        if (dtProductCategory.Rows.Count > 0)
+        {
+            grdProductCategory.DataSource = dtProductCategory;
+        }
+        else
+        {
+            grdProductCategory.DataSource = ViewState["dtProductCategory"];
+
+        }
+        grdProductCategory.DataBind();
     }
 
     protected void BtnRemoveImage_Click(object sender, EventArgs e)
@@ -2048,6 +2105,16 @@ public partial class Product_ManageProducts : System.Web.UI.Page
         ddlSubCategoryName.DataBind();
     }
 
+    protected void OnSelectedLinkCategoryChanged(object sender, EventArgs e)
+    {
+        ddlLinkSubCategoryName.Items.Clear();
+        string subcategoryqry = "SELECT Id,SubCategory FROM tblSubCategory where isnull(IsDeleted,0)=0 AND CategoryId = '" + ddlLinkCategoryName.SelectedValue + "' order by Sequence asc";
+        DataTable dtsubcategory = dbc.GetDataTable(subcategoryqry);
+        ddlLinkSubCategoryName.DataSource = dtsubcategory;
+        ddlLinkSubCategoryName.DataTextField = "SubCategory";
+        ddlLinkSubCategoryName.DataValueField = "Id";
+        ddlLinkSubCategoryName.DataBind();
+    }
     //protected void OnDicountTypeSelectedChanged(object sender, EventArgs e)
     //{
     //    Decimal total = 0;

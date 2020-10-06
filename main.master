@@ -158,7 +158,7 @@
                                     <i class="fa fa-flag  text-yellow" aria-hidden="true"></i><span>Banner</span> <i class="fa fa-angle-left pull-right"></i></a>
                                 <ul class="treeview-menu">
                                     <li id="liAddhouse"><a class="myABC" href="/Banner/HomePageBannerList.aspx"><i class="fa fa-circle-o"></i>Banner List</a></li>
-                                    <li id="litimeslot"><a class="myABC" href="/Banner/UploadHomepageBanner.aspx"><i class="fa fa-circle-o"></i>Upload Banner</a></li>
+                                    <li id="litimeslot"><a class="myABC" href="/Banner/UploadBanner.aspx"><i class="fa fa-circle-o"></i>Upload Banner</a></li>
                                 </ul>
 
                             </li>

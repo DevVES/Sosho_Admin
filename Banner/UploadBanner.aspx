@@ -22,10 +22,21 @@
                 min-height: 100vh;
             }
         </style>
+            <style>
+        .select2-container .select2-selection--single {
+            height: 34px;
+        }
 
+        .block {
+            height: 150px;
+            width: 200px;
+            border: 1px solid aliceblue;
+            overflow-y: scroll;
+        }
+    </style>
         <section class="content" style="">
             <div class="row">
-                <a href="HomePageBannerList.aspx" class="btn btn-block btn-success pull-right" width="30%" target="_blank">Back To List</a>
+                <a href="HomePageBannerList.aspx" class="btn btn-block btn-success pull-right" width="30%">Back To List</a>
             </div>
 
             <div id="Tabs" role="tabpanel">
@@ -107,7 +118,7 @@
                         <div class="row pad-bottom" id="dvbasicCategory" runat="server">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="lblbasicCategory" runat="server" Text="Category" Visible="false"></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="lblbasicCategory" runat="server" Text="Action Category" Visible="false"></asp:Label><span style="color: red">*</span>
                                 </div>
 
                                 <div class="col-md-7 pad">
@@ -232,6 +243,23 @@
                                     <asp:Button ID="Button1" runat="server" Text="Remove Image" OnClick="Button1_Click" CssClass="btn btn-block btn-danger" Width="120 px" />
                                     <%--<asp:Image ID="img" Width="202px" Height="90px" runat="server" />--%>
                                     <%--<asp:FileUpload ID="fileupload12"  OnDataBinding="fileupload12_DataBinding"  OnInit="FileUploadControl_Init" runat="server" accept=".png,.jpg,.jpeg" />--%>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row pad-bottom" id="divCategorySelection" runat="server">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblCategory" runat="server" Text="Category"></asp:Label>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <div class="block">
+                                        <asp:CheckBoxList runat="server" ID="chklstCategory" RepeatLayout="Table">
+                                        </asp:CheckBoxList>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 pad">
+                                    <span id="spnCategory" style="color: #d9534f; display: none;">Please check at least one checkbox</span>
                                 </div>
                             </div>
                         </div>

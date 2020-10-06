@@ -89,7 +89,7 @@
 
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <a href="UploadBanner.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" target="_blank">Add</a>
+                        <a href="UploadBanner.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px">Add</a>
                     </div>
                 </div>
             </div>

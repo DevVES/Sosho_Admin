@@ -33,7 +33,19 @@ public partial class Product_ProductList : System.Web.UI.Page
                 ddlCategoryName.DataValueField = "CategoryId";
                 ddlCategoryName.DataBind();
 
-                string productQry = "SELECT Id,Name FROM Product where isnull(IsActive,0)=1  AND CategoryId = '" + ddlCategoryName.SelectedValue + "' order by Id asc";
+                string SubCategoryQry = "SELECT Id,SubCategory FROM tblSubCategory where isnull(IsActive,0)=1  AND CategoryId = '" + ddlCategoryName.SelectedValue + "' order by Id asc";
+                DataTable dtSubCategory = new DataTable();
+                dtSubCategory = dbc.GetDataTable(SubCategoryQry);
+                dtSubCategory.Rows.Add("0", "Select Product");
+                DataView dvSubCategory = dtSubCategory.DefaultView;
+                dvSubCategory.Sort = "Id asc";
+                DataTable sortedSubCategoryDT = dvSubCategory.ToTable();
+                ddlSubCategoryName.DataSource = sortedSubCategoryDT;
+                ddlSubCategoryName.DataTextField = "SubCategory";
+                ddlSubCategoryName.DataValueField = "Id";
+                ddlSubCategoryName.DataBind();
+
+                string productQry = "SELECT Id,Name FROM Product where isnull(IsActive,0)=1 AND CategoryId = '" + ddlCategoryName.SelectedValue + "' AND SubCategoryId = '" + ddlSubCategoryName.SelectedValue + "' order by Id asc";
                 DataTable dtproduct = new DataTable();
                 dtproduct = dbc.GetDataTable(productQry);
                 dtproduct.Rows.Add("0", "Select Product");
@@ -90,6 +102,22 @@ public partial class Product_ProductList : System.Web.UI.Page
 
     protected void OnSelectedIndexChanged(object sender, EventArgs e)
     {
+        ddlSubCategoryName.Items.Clear();
+        string SubCategoryQry = "SELECT Id,SubCategory FROM tblSubCategory where isnull(IsActive,0)=1  AND CategoryId = '" + ddlCategoryName.SelectedValue + "' order by Id asc";
+        DataTable dtSubCategory = new DataTable();
+        dtSubCategory = dbc.GetDataTable(SubCategoryQry);
+        dtSubCategory.Rows.Add("0", "Select Product");
+        DataView dvSubCategory = dtSubCategory.DefaultView;
+        dvSubCategory.Sort = "Id asc";
+        DataTable sortedSubCategoryDT = dvSubCategory.ToTable();
+        ddlSubCategoryName.DataSource = sortedSubCategoryDT;
+        ddlSubCategoryName.DataTextField = "SubCategory";
+        ddlSubCategoryName.DataValueField = "Id";
+        ddlSubCategoryName.DataBind();
+    }
+
+    protected void OnSelectedIndexSubCategoryChanged(object sender, EventArgs e)
+    {
         ddlProduct.Items.Clear();
         string productQry = "SELECT Id,Name FROM Product where isnull(IsActive,0)=1  AND CategoryId = '" + ddlCategoryName.SelectedValue + "' order by Id asc";
         DataTable dtproduct = new DataTable();
@@ -102,6 +130,7 @@ public partial class Product_ProductList : System.Web.UI.Page
         ddlProduct.DataTextField = "Name";
         ddlProduct.DataValueField = "Id";
         ddlProduct.DataBind();
+        
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
