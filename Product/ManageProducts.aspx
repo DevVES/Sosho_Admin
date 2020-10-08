@@ -110,7 +110,7 @@
                     <li>
                         <a href="#images" aria-controls="images" role="tab" data-toggle="tab" title="IMAGES">IMAGES</a></li>
                     <li>
-                        <a href="#category" aria-controls="category" role="tab" data-toggle="tab" title="CATEGORY">CATEGORY</a></li>
+                        <a href="#category" aria-controls="category" role="tab" data-toggle="tab" title="CATEGORY">ASSIGN CATEGORY</a></li>
                 </ul>
 
                 <div class="tab-content table-responsive" style="padding-top: 20px">
@@ -131,7 +131,7 @@
                             </div>
                         </div>
 
-                        <div class="row pad-bottom">
+                        <%--<div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
                                     <asp:Label ID="lblCategoryName" runat="server" Text="Category Name"></asp:Label><span style="color: red">*</span>
@@ -161,7 +161,7 @@
                                     <span id="spnSubCategoryName" style="color: #d9534f; display: none;">This field is required</span>
                                 </div>
                             </div>
-                        </div>
+                        </div>--%>
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -1001,12 +1001,7 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
                     </div>
-
 
                     <div role="tabpanel" class="tab-pane" id="notes">
 
@@ -1052,35 +1047,14 @@
 
                                 <br />
                                 <asp:Button ID="bannerremoveImage" runat="server" Text="Remove Image" OnClick="bannerremoveImage_Click1" CssClass="btn btn-block btn-danger" Width="120 px" />
-                                <%-- <asp:Button ID="bannerremoveImage" runat="server" Text="Remove Image" OnClick="bannerremoveImage_Click" CssClass="btn btn-block btn-danger" Width="120 px" />--%>
                                 <asp:Label ID="lblResult" runat="server" />
-                                <%--<asp:Image ID="img" Width="202px" Height="90px" runat="server" />--%>
-                                <%--<asp:FileUpload ID="fileupload12"  OnDataBinding="fileupload12_DataBinding"  OnInit="FileUploadControl_Init" runat="server" accept=".png,.jpg,.jpeg" />--%>
                             </div>
                         </div>
                         <div class="row pad-bottom">
-
-
                             <div class="col-md-12">
-
-
                                 <asp:GridView runat="server" ID="gvImage" OnRowDataBound="gvImage_RowDataBound" AutoGenerateColumns="false" AllowPaging="True" OnRowCancelingEdit="gvImage_RowCancelingEdit" OnRowCommand="gvImage_RowCommand" DataKeyNames="ImageId" OnRowEditing="gvImage_RowEditing" OnRowUpdating="gvImage_RowUpdating" OnRowDeleting="gvImage_RowDeleting" class="table table-bordered table-hover" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" Caption="<b><u>UPLOADED IMAGES</u></b>" CaptionAlign="Top" autopostback="false">
-
                                     <Columns>
-                                        <%--<asp:TemplateField HeaderStyle-Width="16%">
-                                            <ItemTemplate>
-
-
-                                                <asp:Button ID="btn_Edit" runat="server" CssClass="btn btn-success" Text="Edit" CommandName="Edit" />
-                                                <asp:Button ID="LkB11" runat="server" CssClass="btn btn-success" Text="Delete" CommandName="Delete" />
-                                              
-                                            </ItemTemplate>
-                                            <EditItemTemplate>
-                                                <asp:Button ID="btn_Update" runat="server" Text="Update" CommandName="Update" />
-                                                <asp:Button ID="btn_Cancel" runat="server" Text="Cancel" CommandName="Cancel" />
-                                            </EditItemTemplate>
-                                        </asp:TemplateField>--%>
-
+                                        
                                         <asp:CommandField ShowEditButton="true" HeaderStyle-Width="8%" ControlStyle-CssClass="btn btn-success" />
                                         <asp:CommandField ShowDeleteButton="true" HeaderStyle-Width="8%" ControlStyle-CssClass="btn btn-danger" />
                                         <asp:TemplateField HeaderText="ImageId" HeaderStyle-Width="100px">
@@ -1117,28 +1091,8 @@
                                                 <asp:TextBox ID="txt_ImageDisplayOrder" runat="server" Text='<%# Eval("ImageDisplayOrder") %>'></asp:TextBox>
                                             </EditItemTemplate>
                                         </asp:TemplateField>
-
-
-                                        <%--<asp:HyperLinkField HeaderText="Edit" HeaderStyle-Width="8%" DataNavigateUrlFields="ImageId" DataNavigateUrlFormatString="~/Product/ManageProducts.aspx?DimgId={0}" Target="_blank" Text="Delete" />--%>
-
-
-                                        <%--                                        <asp:TemplateField HeaderStyle-Width="8%">
-                                            <ItemTemplate>
-                                                
-                                                <asp:LinkButton ID="LkB1" runat="server" CssClass="btn btn-success" CommandName="Edit" CommandArgument='<%# Eval("ImageId") %>'>Edit</asp:LinkButton>
-                                            </ItemTemplate>
-
-                                        </asp:TemplateField>
-
-                                        <asp:TemplateField HeaderStyle-Width="8%">
-                                            <ItemTemplate>
-                                                <asp:LinkButton runat="server" ID="LkB11" CommandName="Delete" CssClass="btn btn-danger" CommandArgument='<%# Eval("ImageId") %>'> Delete
-                                                </asp:LinkButton>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>--%>
                                     </Columns>
                                 </asp:GridView>
-
                             </div>
 
                         </div>
@@ -1189,6 +1143,7 @@
                                     <span id="spnLinkSubCategoryName" style="color: #d9534f; display: none;">This field is required</span>
                                 </div>
                         </div>
+                            <span id="spnAddProductCategory" style="color: #d9534f; display: none;">Please add atleast one category.</span>
                         </div>
    <div class="row pad-bottom">
                             <div class="col-md-12">
@@ -1517,7 +1472,7 @@
                     var flag = true;
                     var IsAdminval = $("#ContentPlaceHolder1_hdnIsAdmin").val();
                     var pnameval = $("#ContentPlaceHolder1_txtpname").val();
-                    var CategoryNameval = $("#ContentPlaceHolder1_ddlCategoryName").val();
+                   // var CategoryNameval = $("#ContentPlaceHolder1_ddlCategoryName").val();
                     var ProductTypeval = $("#ContentPlaceHolder1_ddlProductType").val();
                     var videolinkval = $("#ContentPlaceHolder1_txtvdo").val();
                     var soldtimeval = $("#ContentPlaceHolder1_txtNoOfSoldItems").val();
@@ -1536,15 +1491,21 @@
                     var isApprovedval = $("#ContentPlaceHolder1_ChkIsApproved").prop('checked');
                     var Inchargechecked = $("#ContentPlaceHolder1_chklstJurisdictionIncharge input[type='checkbox']:checked").length > 0;
                     var rejectedreasonval = $("#ContentPlaceHolder1_txtRejectedReason").val();
-
+                    var gridRowCount = $("[id*=grdProductCategory] tr").length;
+                    debugger
+                    if (gridRowCount == 0) {
+                        $("#spnAddProductCategory").css({ 'display': 'block','text-align':'right'});
+                        flag = false;
+                        
+                    }
                     if (pnameval == "") {
                         $("#spnpname").css('display', 'block');
                         flag = false;
                     }
-                    if (CategoryNameval == "") {
-                        $("#spnCategoryName").css('display', 'block');
-                        flag = false;
-                    }
+                    //if (CategoryNameval == "") {
+                    //    $("#spnCategoryName").css('display', 'block');
+                    //    flag = false;
+                    //}
                     if (ProductTypeval == "") {
                         $("#spnProductType").css('display', 'block');
                         flag = false;
