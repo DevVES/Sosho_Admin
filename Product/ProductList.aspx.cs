@@ -36,7 +36,7 @@ public partial class Product_ProductList : System.Web.UI.Page
                 string SubCategoryQry = "SELECT Id,SubCategory FROM tblSubCategory where isnull(IsActive,0)=1  AND CategoryId = '" + ddlCategoryName.SelectedValue + "' order by Id asc";
                 DataTable dtSubCategory = new DataTable();
                 dtSubCategory = dbc.GetDataTable(SubCategoryQry);
-                dtSubCategory.Rows.Add("0", "Select Product");
+                dtSubCategory.Rows.Add("0", "Select SubCategory");
                 DataView dvSubCategory = dtSubCategory.DefaultView;
                 dvSubCategory.Sort = "Id asc";
                 DataTable sortedSubCategoryDT = dvSubCategory.ToTable();
@@ -106,7 +106,7 @@ public partial class Product_ProductList : System.Web.UI.Page
         string SubCategoryQry = "SELECT Id,SubCategory FROM tblSubCategory where isnull(IsActive,0)=1  AND CategoryId = '" + ddlCategoryName.SelectedValue + "' order by Id asc";
         DataTable dtSubCategory = new DataTable();
         dtSubCategory = dbc.GetDataTable(SubCategoryQry);
-        dtSubCategory.Rows.Add("0", "Select Product");
+        dtSubCategory.Rows.Add("0", "Select SubCategory");
         DataView dvSubCategory = dtSubCategory.DefaultView;
         dvSubCategory.Sort = "Id asc";
         DataTable sortedSubCategoryDT = dvSubCategory.ToTable();

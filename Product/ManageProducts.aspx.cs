@@ -146,9 +146,9 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                     ImageData();
                     DataTable dt1;
                     if (IsAdmin == "True")
-                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[IsApproved],[SubCategoryId],[RejectedReason] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id);
+                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[IsApproved],[SubCategoryId],[RejectedReason],[IsProductDescription] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id);
                     else
-                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[IsApproved],[SubCategoryId],[RejectedReason] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id + " and JurisdictionId=" + sJurisdictionId);
+                        dt1 = dbc.GetDataTable("SELECT  [Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[sold],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],ProductMRP,IsQtyFreeze,DisplayOrder,[CategoryID],[ProductTemplateID],[ProductBanner],[Recommended],[Createdby],[DiscountType],[Discount],[SoshoPrice],[MinQty],[MaxQty],[JurisdictionId],[IsFreeShipping],[IsFixedShipping],[IsApproved],[SubCategoryId],[RejectedReason],[IsProductDescription] FROM [dbo].[Product] where IsDeleted=0  and Id=" + id + " and JurisdictionId=" + sJurisdictionId);
 
                     if (dt1.Rows.Count > 0)
                     {
@@ -215,6 +215,16 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         else
                         {
                             ChkIsApproved.Checked = false;
+                        }
+
+                        string IsProdDescription = dt1.Rows[0]["IsProductDescription"].ToString();
+                        if (IsProdDescription == "True")
+                        {
+                            chkIsProductDescription.Checked = true;
+                        }
+                        else
+                        {
+                            chkIsProductDescription.Checked = false;
                         }
                         string SoldTime = txtNoOfSoldItems.Text.ToString();
                         string solditems = "Sold " + SoldTime + " Times";
@@ -417,6 +427,10 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
             string categoryId = ddlCategoryName.SelectedValue.ToString();
             string subcategoryId = ddlSubCategoryName.SelectedValue.ToString();
+            if(subcategoryId == "")
+            {
+                subcategoryId = "0";
+            }
             string ProductTemplateID = ddlProductType.SelectedValue.ToString();
             string ProductBanner = txtProductBanner.Text.ToString();
             string Recommended = txtRecommended.Text.ToString();
@@ -595,7 +609,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                     }
 
                     string[] para1 = { productname, gstid1.ToString(), unit, unitname.ToString(), FROM1, TO1, IsActive.ToString(), metatag, metadisc, price, offer, Buywith1, Buywith5, shiprate, key, notes, "0", dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), vdolink, fileName_OG, fulldescription, id1 };
-                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[OGImage]=@20,[ProductDiscription]=@21,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping ="+IsFreeShipping+ ",IsFixedShipping = "+IsFixedShipping+", SubCategoryId = "+subcategoryId+ ", RejectedReason = '"+rejectedReason+"' where [Id]=@22";
+                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[OGImage]=@20,[ProductDiscription]=@21,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping ="+IsFreeShipping+ ",IsFixedShipping = "+IsFixedShipping+", SubCategoryId = "+subcategoryId+ ", RejectedReason = '"+rejectedReason+ "',IsProductDescription = "+IsProductDescription.ToString()+" where [Id]=@22";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     // int imgorder = 0;
                     if (v1 > 0)
@@ -667,7 +681,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
                     string[] para1 = { productname, gstid1.ToString(), unit, unitname.ToString(), FROM1, TO1, IsActive.ToString(), metatag, metadisc, price, offer, Buywith1, Buywith5, shiprate, key, notes, "0", dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), vdolink, fulldescription, id1 };
 
-                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + ",SubCategoryId="+subcategoryId+ ",RejectedReason='"+rejectedReason+"' where [Id]=@21";
+                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + ",SubCategoryId="+subcategoryId+ ",RejectedReason='"+rejectedReason+ "',IsProductDescription="+ IsProductDescription .ToString()+ " where [Id]=@21";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     // int imgorder = 0;
                     if (v1 > 0)
@@ -712,7 +726,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
                     string[] para1 = { productname, gstid1.ToString(), unit, unitname.ToString(), FROM1, TO1, IsActive.ToString(), metatag, metadisc, price, offer, Buywith1, Buywith5, shiprate, key, notes, "0", dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), vdolink, fulldescription, id1 };
 
-                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + ", SubCategoryId = "+subcategoryId+ ",RejectedReason='"+rejectedReason+"' where [Id]=@21";
+                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",CategoryId=" + categoryId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + ", SubCategoryId = "+subcategoryId+ ",RejectedReason='"+rejectedReason+ "',IsProductDescription="+ IsProductDescription.ToString() + " where [Id]=@21";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     if (v1 > 0)
                     {

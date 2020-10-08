@@ -150,8 +150,19 @@
                             <li class="header">MAIN NAVIGATION</li>
 
                             <li runat="server" id="li112" class="treeview">
-                                <a href="/Home.aspx">
-                                    <i class="fa fa-dashboard  text-yellow" aria-hidden="true"></i><span>Dashbord</span> <i class="fa fa-angle-left pull-right"></i></a></li>
+                               <%-- <a href="/Home.aspx">
+                                    <i class="fa fa-dashboard  text-yellow" aria-hidden="true"></i><span>Dashbord</span> <i class="fa fa-circle-o"></a>
+
+                            <a href="/Home.aspx">
+                                    <i class="fa fa-dashboard  text-yellow" aria-hidden="true"></i><span>Wallet Transaction Dashbord</span> <i class="fa fa-circle-o"></a>--%>
+                                <a href="#">
+                                    <i class="fa fa-dashboard  text-yellow" aria-hidden="true"></i><span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li id="liDashboard"><a class="myABC" href="/Home.aspx"><i class="fa fa-circle-o"></i>Dashbord</a></li>
+                                    <li id="liWalletDashboard"><a class="myABC" href="/Wallet/WalletHistoryDashboard.aspx"><i class="fa fa-circle-o"></i>Wallet Transaction</a></li>
+                                </ul>
+
+                            </li>
                             <li runat="server" id="li1" class="treeview">
 
                                 <a href="#">

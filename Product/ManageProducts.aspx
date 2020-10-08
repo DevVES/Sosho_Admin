@@ -1210,14 +1210,15 @@
                                     <HeaderStyle ForeColor="White" Font-Bold="True"
                                         BackColor="#A55129"></HeaderStyle>
                                     <Columns>
-                                        <asp:TemplateField HeaderText="No" >
+                                        <asp:TemplateField HeaderText="Category" >
                                             <ItemTemplate>
-                                                <asp:Label ID="lblSrNo" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "lnkSrNo")%>'></asp:Label>
+                                                
                                                 <asp:HiddenField ID="HiddenFieldlinkCategoryId" runat="server" Value='<%# Bind("hdnlinkCategoryId") %>' />
                                                 <asp:HiddenField ID="HiddenFieldlinkSubCategoryId" runat="server" Value='<%# Bind("hdnlinkSubCategoryId") %>' />
+                                                <asp:Label ID="lblCategory" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "linkProdCategory")%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
-                                        <asp:BoundField HeaderText="Category" DataField="linkProdCategory" />
+                                        <%--<asp:BoundField HeaderText="Category" DataField="linkProdCategory" />--%>
                                         <asp:BoundField HeaderText="SubCategory" DataField="linkProdSubCategory" />
                                         
                                         <asp:TemplateField>
