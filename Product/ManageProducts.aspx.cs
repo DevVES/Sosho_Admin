@@ -106,8 +106,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 //ckkey.Text = "<li>Anti-ageing &amp; skin whitening properties</li><li>Gives a shiny glow</li><li>For all types of skin</li><li>UV filter protects the skin from damaging effects of the sun</li>";
 
                 //cknotes.Text = "<ul><li style=\"box-sizing: border-box; color: rgb(116, 115, 115); font-size: 18px;\"><p><span style=\"color:#000000;\"><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\">The more friends buy this product within offer period, the higher discount for everyone. Discount balance amount will be credited to your original mode of payment.</span></span></span></p></li><li style=\"box-sizing: border-box; color: rgb(116, 115, 115); font-size: 18px;\"><p><span style=\"color:#000000;\"><span style=\"font-size:12px;\"><span style=\"font-family:arial,helvetica,sans-serif;\">If less or no friends buy, the pending balance amount will be collected at time of delivery.</span></span></span></p></li></ul>";
-
-
                 string IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
                 string sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
                 if (IsAdmin == "True")
@@ -785,6 +783,9 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         string delProductCategory = " Delete FROM [dbo].[tblcategoryproductlink]  where Productid=" + Convert.ToInt32(id1);
                         dbc.ExecuteQuery(delProductCategory);
 
+                        decimal selectedSoshoPrice = 0;
+                        decimal selectedDiscount = 0;
+                        decimal selectedMRP = 0;
                         foreach (GridViewRow g1 in grdgProduct.Rows)
                         {
                             HiddenField hdnMinQty = (HiddenField)g1.FindControl("HiddenFieldMinQty");
@@ -822,33 +823,25 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                 strisOutOfStock = "1";
                             }
                             
-                            //if (resultselected.Count == 0 && strisSelected == "0")
-                            //{
-                            //    strisSelected = "1";
-                            //}
-                            //else
-                            //{
-                                HiddenField hdnisSelected = (HiddenField)g1.FindControl("HiddenFieldgrpisSelected");
-                                strisSelected = hdnisSelected.Value;
-                                if (strisSelected == "True")
-                                    strisSelected = "1";
-                                else
-                                    strisSelected = "0";
-                            //}
-
-                            //if (resultbestbuy.Count == 0 && strisBestBuy == "0")
-                            //{
-                            //    strisBestBuy = "1";
-                            //}
-                            //else
-                            //{
-                                HiddenField hdnisBestBuy = (HiddenField)g1.FindControl("HiddenFieldIsBestBuy");
-                                strisBestBuy = hdnisBestBuy.Value;
-                                if (strisBestBuy == "True")
-                                    strisBestBuy = "1";
-                                else
-                                    strisBestBuy = "0";
-                            //}
+                            HiddenField hdnisSelected = (HiddenField)g1.FindControl("HiddenFieldgrpisSelected");
+                            strisSelected = hdnisSelected.Value;
+                            if (strisSelected == "True")
+                            {
+                                strisSelected = "1";
+                                selectedSoshoPrice = Convert.ToDecimal(g1.Cells[5].Text);
+                                selectedDiscount = Convert.ToDecimal(g1.Cells[4].Text);
+                                selectedMRP = Convert.ToDecimal(g1.Cells[2].Text);
+                            }
+                            else
+                            {
+                                strisSelected = "0";
+                            }
+                            HiddenField hdnisBestBuy = (HiddenField)g1.FindControl("HiddenFieldIsBestBuy");
+                            strisBestBuy = hdnisBestBuy.Value;
+                            if (strisBestBuy == "True")
+                                strisBestBuy = "1";
+                            else
+                                strisBestBuy = "0";
 
                             Label name = (Label)g1.FindControl("lblname");
 
@@ -867,6 +860,9 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id1 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + ","+ isQtyFreezeVal + ","+ strisBestBuy + ","+ FreezeQty + ")";
                             int VALatt = dbc.ExecuteQuery(ProductAttrqry);
                         }
+                        string updateProductPrice = "UPDATE Product SET SoshoPrice = " + selectedSoshoPrice + ", MRP = "+ selectedMRP +
+                                                   ",Discount = " +selectedDiscount+ " Where id=" + Convert.ToInt32(id1);
+                        dbc.ExecuteQuery(updateProductPrice);
 
                         foreach (GridViewRow g2 in grdProductCategory.Rows)
                         {
@@ -953,7 +949,10 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         //Product Attribute Mapping Save
                         string strUnitId = "", strImage = "", strisOutOfStock = "", strisSelected = "", strPackingType = "", strisBestBuy = "";
                         string MinQty = "", isQtyFreezeVal = "", MaxQty = "", FreezeQty = "";
-                        
+
+                        decimal selectedSoshoPrice = 0;
+                        decimal selectedDiscount = 0;
+                        decimal selectedMRP = 0;
                         foreach (GridViewRow g1 in grdgProduct.Rows)
                         {
                             HiddenField hdnMinQty = (HiddenField)g1.FindControl("HiddenFieldMinQty");
@@ -978,14 +977,19 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             strImage = hdnImage.Value;
                             HiddenField hdnisOutOfStock = (HiddenField)g1.FindControl("HiddenFieldgrpisOutOfStock");
                             strisOutOfStock = hdnisOutOfStock.Value;
-                            
+
                             HiddenField hdnisSelected = (HiddenField)g1.FindControl("HiddenFieldgrpisSelected");
                             strisSelected = hdnisSelected.Value;
                             if (strisSelected == "True")
+                            {
                                 strisSelected = "1";
-                            else
-                                strisSelected = "0";
-                            
+                                selectedSoshoPrice = Convert.ToDecimal(g1.Cells[5].Text);
+                                selectedDiscount = Convert.ToDecimal(g1.Cells[4].Text);
+                                selectedMRP = Convert.ToDecimal(g1.Cells[2].Text);
+                            }
+                            else { 
+                            strisSelected = "0";
+                        }
                             HiddenField hdnisBestBuy = (HiddenField)g1.FindControl("HiddenFieldIsBestBuy");
                             strisBestBuy = hdnisBestBuy.Value;
                             if (strisBestBuy == "True")
@@ -1010,6 +1014,10 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id11 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+","+ FreezeQty + ")";
                             int VALatt = dbc.ExecuteQuery(ProductAttrqry);
                         }
+                        string updateProductPrice = "UPDATE Product SET SoshoPrice = " + selectedSoshoPrice + ", MRP = " + selectedMRP +
+                                                   ",Discount = " + selectedDiscount + " Where id=" + Convert.ToInt32(id11);
+                        dbc.ExecuteQuery(updateProductPrice);
+
                         foreach (GridViewRow g2 in grdProductCategory.Rows)
                         {
                             HiddenField hdnLinkCategoryId = (HiddenField)g2.FindControl("HiddenFieldlinkCategoryId");
@@ -1066,7 +1074,10 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                     //Product Attribute Mapping Save
                     string strUnitId = "", strImage = "", strisOutOfStock = "", strisSelected = "", strPackingType = "", strisBestBuy = "";
                     string MinQty = "", isQtyFreezeVal = "", MaxQty = "", FreezeQty="";
-                    
+
+                    decimal selectedSoshoPrice = 0;
+                    decimal selectedDiscount = 0;
+                    decimal selectedMRP = 0;
                     foreach (GridViewRow g1 in grdgProduct.Rows)
                     {
                         HiddenField hdnMinQty = (HiddenField)g1.FindControl("HiddenFieldMinQty");
@@ -1075,7 +1086,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         MaxQty = hdnMaxQty.Value;
                         HiddenField hdnisQtyFreeze = (HiddenField)g1.FindControl("HiddenFieldIsQtyFreeze");
                         isQtyFreezeVal = hdnisQtyFreeze.Value;
-                        
+
                         HiddenField hdnFreezeQty = (HiddenField)g1.FindControl("HiddenFieldFreezeQty");
                         FreezeQty = hdnFreezeQty.Value;
                         HiddenField hdnUnitId = (HiddenField)g1.FindControl("HiddenFieldgrpUnitId");
@@ -1084,13 +1095,19 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         strImage = hdnImage.Value;
                         HiddenField hdnisOutOfStock = (HiddenField)g1.FindControl("HiddenFieldgrpisOutOfStock");
                         strisOutOfStock = hdnisOutOfStock.Value;
-                        
+
                         HiddenField hdnisSelected = (HiddenField)g1.FindControl("HiddenFieldgrpisSelected");
                         strisSelected = hdnisSelected.Value;
                         if (strisSelected == "True")
+                        {
                             strisSelected = "1";
-                        else
-                            strisSelected = "0";
+                            selectedSoshoPrice = Convert.ToDecimal(g1.Cells[5].Text);
+                            selectedDiscount = Convert.ToDecimal(g1.Cells[4].Text);
+                            selectedMRP = Convert.ToDecimal(g1.Cells[2].Text);
+                        }
+                        else { 
+                        strisSelected = "0";
+                    }
                         HiddenField hdnisBestBuy = (HiddenField)g1.FindControl("HiddenFieldIsBestBuy");
                         strisBestBuy = hdnisBestBuy.Value;
                         if (strisBestBuy == "True")
@@ -1116,6 +1133,9 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id11 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+","+ FreezeQty + ")";
                         int VALatt = dbc.ExecuteQuery(ProductAttrqry);
                     }
+                    string updateProductPrice = "UPDATE Product SET SoshoPrice = " + selectedSoshoPrice + ", MRP = " + selectedMRP +
+                                                   ",Discount = " + selectedDiscount + " Where id=" + Convert.ToInt32(id11);
+                    dbc.ExecuteQuery(updateProductPrice);
                     foreach (GridViewRow g2 in grdProductCategory.Rows)
                     {
                         HiddenField hdnLinkCategoryId = (HiddenField)g2.FindControl("HiddenFieldlinkCategoryId");

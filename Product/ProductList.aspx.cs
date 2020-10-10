@@ -77,7 +77,14 @@ public partial class Product_ProductList : System.Web.UI.Page
         int categoryId = Convert.ToInt32(ddlCategoryName.SelectedValue);
         int productId = Convert.ToInt32(ddlProduct.SelectedValue);
         //string query = "SELECT [Id],[Name],[StartDate],[EndDate],[IsActive],[Mrp] as MRP,[Offer] as Offer,[BuyWith1FriendExtraDiscount] as BuyWith1Friend,[BuyWith5FriendExtraDiscount] as BuyWith5Friend FROM [SalebhaiOnePage_Staging].[dbo].[Product] where IsDeleted=0  and DOC>='" + txtdt.Text + " 00:00:00' and DOC<='" + txtdt1.Text + " 23:59:59' order by EndDate desc ";
-        string query = "SELECT [Id],[Name],[StartDate],[EndDate],[IsActive],[Mrp] as MRP,[Offer] as Offer,[BuyWith1FriendExtraDiscount] as BuyWith1Friend,[BuyWith5FriendExtraDiscount] as BuyWith5Friend FROM [dbo].[Product] where IsDeleted=0 and IsApproved = 1 and convert(date,DOC,103)>='" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + "' and convert(date,DOC,103)<='" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + "'";
+        string query = "SELECT P.[Id],P.[Name],P.[StartDate],P.[EndDate],P.[IsActive],P.[Mrp] as MRP,P.[Offer] as Offer, " +
+                       " P.[BuyWith1FriendExtraDiscount] as BuyWith1Friend, P.[BuyWith5FriendExtraDiscount] as BuyWith5Friend, PT.Name AS ProductType  " + 
+                       " FROM [dbo].[Product] P " +
+                       " LEFT JOIN ProductTemplate PT ON PT.Id = P.ProductTemplateID " +
+                       " where IsDeleted=0 " + 
+                       " and IsApproved = 1 and convert(date,DOC,103)>='" + 
+                       StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + "' and convert(date,DOC,103)<='"
+                       + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + "'";
         if (IsAdmin == "False")
         {
             query += " and JurisdictionId=" + sJurisdictionId;

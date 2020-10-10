@@ -124,11 +124,11 @@
                         </asp:TemplateField>--%>
 
                         <asp:BoundField HeaderText="Name" DataField="Name" />
-                        <asp:BoundField HeaderText="MRP" DataField="MRP" />
-                        <asp:BoundField HeaderText="Offer" DataField="Offer" />
+                        <asp:BoundField HeaderText="Product Type" DataField="ProductType" />
+                        <%--<asp:BoundField HeaderText="Offer" DataField="Offer" />
                         <asp:BoundField HeaderText="BuyWith1FriendPrice" DataField="BuyWith1Friend" />
                         <asp:BoundField HeaderText="BuyWith5FriendPrice" DataField="BuyWith5Friend" />
-                        <asp:BoundField HeaderText="IsActive" DataField="IsActive" />
+                        --%><asp:BoundField HeaderText="IsActive" DataField="IsActive" />
                         <asp:BoundField HeaderText="StartDate" DataField="StartDate" />
                         <asp:BoundField HeaderText="EndDate" DataField="EndDate" />
 
