@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data;
 using System.Web.UI.WebControls;
 using WebApplication1;
@@ -8,6 +9,9 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
     dbConnection dbc = new dbConnection();
     string id = "";
     static DataTable dtcustomerlist;
+    private readonly string _walletType = ConfigurationManager.AppSettings["WalletType"].ToString();
+    private readonly string _couponcodetype = ConfigurationManager.AppSettings["CouponCodeType"].ToString();
+    private readonly string _discountType = ConfigurationManager.AppSettings["DiscountType"].ToString();
     protected void Page_Load(object sender, EventArgs e)
     {
         dtcustomerlist = new DataTable("customerlist");
@@ -22,7 +26,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
         dtcustomerlist.Columns.Add("Pincode", typeof(string));
         
         var offertype = ddlOfferType.SelectedValue;
-        if (offertype == "1")
+        if (offertype == _walletType)
         {
             txtWalletAmount.Visible = true;
             lblWalletAmount.Visible = true;
@@ -30,7 +34,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             lblcouponcode.Visible = false;
             btnGenerate.Visible = false;
         }
-        else if(offertype == "3")
+        else if(offertype == _couponcodetype || offertype == _discountType)
         {
             txtcouponcode.Visible = true;
             lblcouponcode.Visible = true;
@@ -38,7 +42,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             txtWalletAmount.Visible = false;
             lblWalletAmount.Visible = false;
         }
-        else if (offertype == "2" )
+        else 
         {
             txtWalletAmount.Visible = false;
             lblWalletAmount.Visible = false;
@@ -82,7 +86,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                     txtcouponcode.Text = dt1.Rows[0]["coupon_code"].ToString();
                     ddlOfferType.SelectedValue = dt1.Rows[0]["offer_id"].ToString().TrimEnd();
                     offertype = ddlOfferType.SelectedValue;
-                    if (offertype == "1")
+                    if (offertype == _walletType)
                     {
                         txtWalletAmount.Visible = true;
                         lblWalletAmount.Visible = true;
@@ -90,7 +94,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                         lblcouponcode.Visible = false;
                         btnGenerate.Visible = false;
                     }
-                    else if (offertype == "3")
+                    else if (offertype == _couponcodetype || offertype == _discountType)
                     {
                         txtcouponcode.Visible = true;
                         lblcouponcode.Visible = true;
@@ -98,7 +102,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                         txtWalletAmount.Visible = false;
                         lblWalletAmount.Visible = false;
                     }
-                    else if (offertype == "2")
+                    else 
                     {
                         txtWalletAmount.Visible = false;
                         lblWalletAmount.Visible = false;
@@ -477,5 +481,35 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
         {
             e.Row.TableSection = TableRowSection.TableHeader;
         }
+    }
+
+    protected void OnSelectedOfferTypeChanged(object sender, EventArgs e)
+    {
+        var offertype = ddlOfferType.SelectedValue;
+        if (offertype == _walletType)
+        {
+            txtWalletAmount.Visible = true;
+            lblWalletAmount.Visible = true;
+            txtcouponcode.Visible = false;
+            lblcouponcode.Visible = false;
+            btnGenerate.Visible = false;
+        }
+        else if (offertype == _couponcodetype || offertype == _discountType)
+        {
+            txtcouponcode.Visible = true;
+            lblcouponcode.Visible = true;
+            btnGenerate.Visible = true;
+            txtWalletAmount.Visible = false;
+            lblWalletAmount.Visible = false;
+        }
+        else
+        {
+            txtWalletAmount.Visible = false;
+            lblWalletAmount.Visible = false;
+            txtcouponcode.Visible = false;
+            lblcouponcode.Visible = false;
+            btnGenerate.Visible = false;
+        }
+
     }
 }

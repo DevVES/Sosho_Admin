@@ -110,7 +110,7 @@
                                     <asp:Label ID="lblOfferType" runat="server" Text="Offer Type"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:DropDownList ID="ddlOfferType" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true">
+                                    <asp:DropDownList ID="ddlOfferType" runat="server" Width="290px" class="form-control" AppendDataBoundItems="true" OnSelectedIndexChanged="OnSelectedOfferTypeChanged" AutoPostBack="true">
                                         <asp:ListItem Text="Select Offer Type" Value=""></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
@@ -527,23 +527,23 @@
 
                 });
 
-                $("#ContentPlaceHolder1_ddlOfferType").change(function () {
-                    var offertype = $("#ContentPlaceHolder1_ddlOfferType").val();
-                    $("#ContentPlaceHolder1_txtWalletAmount").hide();
-                    $("#ContentPlaceHolder1_lblWalletAmount").hide();
-                    $("#ContentPlaceHolder1_txtcouponcode").hide();
-                    $("#ContentPlaceHolder1_lblcouponcode").hide();
-                    $("#ContentPlaceHolder1_btnGenerate").hide();
-                    if (offertype == "1") {
-                        $("#ContentPlaceHolder1_txtWalletAmount").show();
-                        $("#ContentPlaceHolder1_lblWalletAmount").show();
-                    }
-                    if (offertype == "3") {
-                        $("#ContentPlaceHolder1_txtcouponcode").show();
-                        $("#ContentPlaceHolder1_lblcouponcode").show();
-                        $("#ContentPlaceHolder1_btnGenerate").show();
-                    }
-                });
+                //$("#ContentPlaceHolder1_ddlOfferType").change(function () {
+                //    var offertype = $("#ContentPlaceHolder1_ddlOfferType").val();
+                //    $("#ContentPlaceHolder1_txtWalletAmount").hide();
+                //    $("#ContentPlaceHolder1_lblWalletAmount").hide();
+                //    $("#ContentPlaceHolder1_txtcouponcode").hide();
+                //    $("#ContentPlaceHolder1_lblcouponcode").hide();
+                //    $("#ContentPlaceHolder1_btnGenerate").hide();
+                //    if (offertype == "1") {
+                //        $("#ContentPlaceHolder1_txtWalletAmount").show();
+                //        $("#ContentPlaceHolder1_lblWalletAmount").show();
+                //    }
+                //    if (offertype == "3") {
+                //        $("#ContentPlaceHolder1_txtcouponcode").show();
+                //        $("#ContentPlaceHolder1_lblcouponcode").show();
+                //        $("#ContentPlaceHolder1_btnGenerate").show();
+                //    }
+                //});
 
             </script>
         </section>
