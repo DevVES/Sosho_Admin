@@ -197,7 +197,7 @@
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="lblLocation" runat="server" Text="Location"></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="lblLocation" runat="server" Text="Area"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
                                     <asp:DropDownList class="form-control" runat="server" ID="ddlArea" Width="290px" OnSelectedIndexChanged="OnLocationSelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
@@ -210,7 +210,7 @@
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
-                                    <asp:Label ID="lblArea" runat="server" Text="Area"></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="lblArea" runat="server" Text="Building"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
                                     <div class="block" style="width:290px;">

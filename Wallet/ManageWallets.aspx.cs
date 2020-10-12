@@ -59,7 +59,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             chkisactive.Checked = false;
             CustomerDataList();
 
-            string offertypeqry = "SELECT offer_id,offer_name FROM tblOfferTypes where isnull(is_deleted,0)=0 order by offer_id asc";
+            string offertypeqry = "SELECT offer_id,offer_name FROM tblOfferTypes where isnull(is_deleted,0)=0 AND ISNULL(is_active,0) = 1 order by offer_id asc";
              DataTable dtoffer = dbc.GetDataTable(offertypeqry);
             ddlOfferType.DataSource = dtoffer;
             ddlOfferType.DataTextField = "offer_name";
@@ -175,6 +175,25 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                         chkisactive.Checked = false;
                     }
                 }
+
+                //DataTable dtCustomer = dbc.GetDataTable("SELECT C.Id FROM Customer C INNER JOIN [tblWalletCustomerLink] CL on CL.customer_id=C.Id  where CL.wallet_id=" + id);
+                //if (dtCustomer.Rows.Count > 0)
+                //{
+
+                //    foreach (GridViewRow row in gvcustomerlist.Rows)
+                //    {
+                //        if (row.RowType == DataControlRowType.DataRow)
+                //        {
+                //            CheckBox chkRow = (row.Cells[0].FindControl("chkRow") as CheckBox);
+                //            if (chkRow.Checked)
+                //            {
+                //                string name = row.Cells[1].Text;
+                //                string country = (row.Cells[2].FindControl("lblCountry") as Label).Text;
+                //                //dt.Rows.Add(name, country);
+                //            }
+                //        }
+                //    }
+                //}
             }
 
         }
