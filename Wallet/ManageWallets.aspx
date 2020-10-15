@@ -8,8 +8,6 @@
     <script src="../../plugins/datepicker/bootstrap-datepicker.js"></script>
     <script src="../../plugins/timepicker/bootstrap-timepicker.min.js"></script>
 
-
-
     <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css" />
     <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
@@ -356,21 +354,18 @@
                     </div>
 
                     <div role="tabpanel" class="tab-pane" id="customerlist">
-                        <div style="width: 100%;" class="table-responsive">
-                            
-<asp:Button Text="Search" runat="server" OnClick="Search" style="float:right;" />
-                            <asp:TextBox ID="txtSearch" runat="server" style="float:right;"></asp:TextBox>
-                            <%--<asp:TextBox ID="txtSearch" runat="server" OnTextChanged="Search" AutoPostBack="true" style="float:right;" ></asp:TextBox>--%>
-                            <asp:GridView ID="gvcustomerlist" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover"
+                        <div class="table-responsive">
+                            <asp:GridView ID="gvcustomerlist" runat="server"  AutoGenerateColumns="False" class="table table-bordered table-hover"
                                 rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8"
+                                OnRowDataBound="gvcustomerlist_RowDataBound" OnRowCommand="gvcustomerlist_RowCommand" 
                                 HeaderStyle-HorizontalAlign="Center" Caption="<b><u>CUSTOMER LIST</u></b>" CaptionAlign="Top">
-                                <%--OnRowDataBound="gvcustomerlist_RowDataBound" OnRowCommand="gvcustomerlist_RowCommand" EnableViewState="False"--%>
+                               
                                 <Columns>
                                     <asp:TemplateField>
                                         <ItemTemplate>
-                                            <asp:CheckBox HeaderText="Apply" ID="Apply" runat="server" />
+                                           <asp:CheckBox HeaderText="Apply" ID="Apply" runat="server" Checked ='<%# Convert.ToBoolean (Eval("Apply")) %>'  />
                                             <asp:HiddenField ID="HiddenFieldCustomerId" runat="server" Value='<%# Bind("Id") %>' />
-
+                                             
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:BoundField HeaderText="Mobile" DataField="Mobile" ItemStyle-Width="150" />
@@ -526,25 +521,6 @@
                     }
 
                 });
-
-                //$("#ContentPlaceHolder1_ddlOfferType").change(function () {
-                //    var offertype = $("#ContentPlaceHolder1_ddlOfferType").val();
-                //    $("#ContentPlaceHolder1_txtWalletAmount").hide();
-                //    $("#ContentPlaceHolder1_lblWalletAmount").hide();
-                //    $("#ContentPlaceHolder1_txtcouponcode").hide();
-                //    $("#ContentPlaceHolder1_lblcouponcode").hide();
-                //    $("#ContentPlaceHolder1_btnGenerate").hide();
-                //    if (offertype == "1") {
-                //        $("#ContentPlaceHolder1_txtWalletAmount").show();
-                //        $("#ContentPlaceHolder1_lblWalletAmount").show();
-                //    }
-                //    if (offertype == "3") {
-                //        $("#ContentPlaceHolder1_txtcouponcode").show();
-                //        $("#ContentPlaceHolder1_lblcouponcode").show();
-                //        $("#ContentPlaceHolder1_btnGenerate").show();
-                //    }
-                //});
-
             </script>
         </section>
     </div>

@@ -139,8 +139,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                     BtnSave.Text = "Update";
 
                     //ddlSubCategoryName.Items.Clear();
-                    
-
                     ImageData();
                     DataTable dt1;
                     if (IsAdmin == "True")
@@ -187,7 +185,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         if(IsFreeShipping == "True")
                         {
                             chkIsFreeShipping.Checked = true;
-
                         }
                         else
                         {

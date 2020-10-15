@@ -24,7 +24,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
         dtcustomerlist.Columns.Add("Sex", typeof(string));
         dtcustomerlist.Columns.Add("Address", typeof(string));
         dtcustomerlist.Columns.Add("Pincode", typeof(string));
-        
+
         var offertype = ddlOfferType.SelectedValue;
         if (offertype == _walletType)
         {
@@ -34,7 +34,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             lblcouponcode.Visible = false;
             btnGenerate.Visible = false;
         }
-        else if(offertype == _couponcodetype || offertype == _discountType)
+        else if (offertype == _couponcodetype || offertype == _discountType)
         {
             txtcouponcode.Visible = true;
             lblcouponcode.Visible = true;
@@ -42,7 +42,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             txtWalletAmount.Visible = false;
             lblWalletAmount.Visible = false;
         }
-        else 
+        else
         {
             txtWalletAmount.Visible = false;
             lblWalletAmount.Visible = false;
@@ -50,7 +50,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             lblcouponcode.Visible = false;
             btnGenerate.Visible = false;
         }
-        
+
         if (!IsPostBack)
         {
             id = Request.QueryString["Id"];
@@ -60,7 +60,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             CustomerDataList();
 
             string offertypeqry = "SELECT offer_id,offer_name FROM tblOfferTypes where isnull(is_deleted,0)=0 AND ISNULL(is_active,0) = 1 order by offer_id asc";
-             DataTable dtoffer = dbc.GetDataTable(offertypeqry);
+            DataTable dtoffer = dbc.GetDataTable(offertypeqry);
             ddlOfferType.DataSource = dtoffer;
             ddlOfferType.DataTextField = "offer_name";
             ddlOfferType.DataValueField = "offer_id";
@@ -69,15 +69,56 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             if (id != null && !id.Equals(""))
             {
                 BtnSave.Text = "Update";
-                
-                DataTable dtcustomertbl = dbc.GetDataTable("SELECT Id, Mobile,FirstName,LastName,Email,Sex,Address,PinCode  FROM [dbo].[Customer]");
+
+                DataTable dtcustomertbl = dbc.GetDataTable("SELECT (SELECT  CASE WHEN COUNT(*) > 0 then 'true' else 'false' end AS APPLY FROM Customer C INNER JOIN tblWalletCustomerLink WL ON WL.customer_id = C.Id WHERE WL.wallet_id = 2 AND C.Id = Customer.Id) AS Apply, Customer.Id, Mobile,FirstName,LastName,Email,Sex,Address,PinCode FROM[dbo].[Customer] Order by 1 desc");
+                //DataTable dtCustWalletLink = dbc.GetDataTable("select distinct customer_id from  tblWalletCustomerLink where ISNULL(is_active,0) = 1 AND wallet_id=" + id);
                 if (dtcustomertbl.Rows.Count > 0)
                 {
+                    
                     ViewState["dt"] = dtcustomertbl;
                     gvcustomerlist.DataSource = dtcustomertbl;
                     gvcustomerlist.DataBind();
+                    //if (dtCustWalletLink.Rows.Count > 0)
+                    //{
+                    //       //foreach (DataRow row in dtCustWalletLink.Rows)
+                    //        //{
+                    //        //    string custid = row["customer_id"].ToString();
+                    //        //    if (dtcustomertbl.Rows[i]["Id"].ToString() == custid)
+                    //        //    {
+                    //        //        dtcustomertbl.Rows[i]["Apply"] = true;
+                    //        //        gvcustomerlist.Rows[i].FindControl("Apply").Checked = true;
+                    //        //        //CheckBox chk = row.Fi("Apply");
+                    //        //        //chk.Checked = true;
+                    //        //    }
+                    //        //}
+
+                    //        foreach (GridViewRow gRow in gvcustomerlist.Rows)
+                    //        {
+                    //        //string custid = gRow.Cells[i].Text;
+                    //        for (int i = 0; i < dtcustomertbl.Rows.Count; i++)
+                    //        {
+
+                    //            if ("6240" == dtcustomertbl.Rows[i]["Id"].ToString())
+                    //            {
+                    //                CheckBox cBox = (CheckBox)gRow.FindControl("Apply");
+                    //                dtcustomertbl.Rows[i]["Apply"] = true;
+                    //                cBox.Checked = true;
+                    //                break;
+                    //            }
+                    //        }
+                    //        }
+
+                    //        //    for (int j = 0; j < dtCustWalletLink.Rows.Count; j++)
+                    //        //{
+                    //        //    if (dtcustomertbl.Rows[i]["Id"].ToString() == dtCustWalletLink.Rows[j]["customer_id"].ToString())
+                    //        //    {
+
+                    //        //    }
+                    //        //}
+                    //}
+                    
                 }
-                ddlOfferType.Enabled = false;
+               ddlOfferType.Enabled = false;
                 DataTable dt1;
                 dt1 = dbc.GetDataTable("SELECT  [campaign_name],[offer_id],[wallet_amount],[coupon_code],[is_applicable_first_order],[is_apply_all_customer],[per_type],[per_amount],[min_order_amount],[start_date],[end_date],[is_active],[terms] FROM [dbo].[WalletMaster] where ISNULL(is_deleted,0)=0  and wallet_id=" + id);
                 if (dt1.Rows.Count > 0)
@@ -102,7 +143,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                         txtWalletAmount.Visible = false;
                         lblWalletAmount.Visible = false;
                     }
-                    else 
+                    else
                     {
                         txtWalletAmount.Visible = false;
                         lblWalletAmount.Visible = false;
@@ -120,7 +161,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                     {
                         chkIsFirstOrderApplicable.Checked = false;
                     }
-                  
+
                     string IsApplyAllCust = dt1.Rows[0]["is_apply_all_customer"].ToString();
                     if (IsApplyAllCust == "True")
                     {
@@ -197,7 +238,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             }
 
         }
-    }    
+    }
 
     private void CustomerDataList()
     {
@@ -209,12 +250,12 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
         String[] StrPart1 = to.Split('/');
 
         string IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
-        string searchtext = txtSearch.Text.Trim();
-        string query = "SELECT [Id],[Mobile],[FirstName],[LastName],[Email],[Sex],[Address],[CityId],[StateId],[Pincode] FROM [dbo].[Customer] ";
-        if (!string.IsNullOrEmpty(searchtext))
-        {
-            query += " WHERE (Mobile LIKE '%"+ searchtext + "%' OR FirstName LIKE '%" + searchtext + "%' OR LastName LIKE '%" + searchtext + "%' OR Email LIKE '%" + searchtext + "%')";
-        }
+        //string searchtext = txtSearch.Text.Trim();
+        string query = "SELECT 'false' AS Apply,[Id],[Mobile],[FirstName],[LastName],[Email],[Sex],[Address],[CityId],[StateId],[Pincode] FROM [dbo].[Customer] ";
+        //if (!string.IsNullOrEmpty(searchtext))
+        //{
+        //    query += " WHERE (Mobile LIKE '%"+ searchtext + "%' OR FirstName LIKE '%" + searchtext + "%' OR LastName LIKE '%" + searchtext + "%' OR Email LIKE '%" + searchtext + "%')";
+        //}
         query += " order by Id desc ";
 
         DataTable dtcustomerlist = dbc.GetDataTable(query);
@@ -265,7 +306,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             string couponcode = txtcouponcode.Text.ToString();
             if (!string.IsNullOrEmpty(couponcode))
             {
-                string couponcodecount = "Select Count(wallet_id) AS IdCount FROM  [dbo].[WalletMaster] Where coupon_code = '" + couponcode +"'";
+                string couponcodecount = "Select Count(wallet_id) AS IdCount FROM  [dbo].[WalletMaster] Where coupon_code = '" + couponcode + "'";
                 DataTable dtcouponcodecount = dbc.GetDataTable(couponcodecount);
                 if (Convert.ToInt32(dtcouponcodecount.Rows[0]["IdCount"]) > 0 && id1 == "0")
                 {
@@ -281,7 +322,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             if (lvalid)
             {
                 string userId = Request.Cookies["TUser"]["Id"].ToString();
-                
+
                 int IsActive = 0, IsFirstOrderApplicable = 0, IsApplyAllCustomer = 0;
 
                 string startdate = txtdt.Text.ToString();
@@ -298,7 +339,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                 string perValue = txtgrpTypeValue.Text.ToString();
                 string minOrderAmt = txtgrpMinOrderAmt.Text.ToString();
                 string walletAmt = txtWalletAmount.Text.ToString();
-                if (walletAmt  == "")
+                if (walletAmt == "")
                 {
                     walletAmt = "0";
                 }
@@ -345,7 +386,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                 if (BtnSave.Text.Equals("Update"))
                 {
                     string id = Request.QueryString["id"].ToString();
-                    string query = "UPDATE [dbo].[WalletMaster]  SET [campaign_name] = '" + campaignname + "',[offer_id]=" + offertype + ",[wallet_amount]=" + walletAmt + ",[coupon_code]='" + couponcode + "',[is_applicable_first_order]=" + IsFirstOrderApplicable + ",[is_apply_all_customer]=" + IsApplyAllCustomer + ",[per_type]='" + type + "',[per_amount]=" + perValue + ",[min_order_amount]=" + minOrderAmt + ",[start_date]='" + startdate + "',[end_date]='" + enddate + "',[is_active]=" + IsActive + ",[created_date]='" + dtCreatedon + "',[created_by]=" + userId + ", [terms]='"+ terms +"' where [wallet_id]=" + id;
+                    string query = "UPDATE [dbo].[WalletMaster]  SET [campaign_name] = '" + campaignname + "',[offer_id]=" + offertype + ",[wallet_amount]=" + walletAmt + ",[coupon_code]='" + couponcode + "',[is_applicable_first_order]=" + IsFirstOrderApplicable + ",[is_apply_all_customer]=" + IsApplyAllCustomer + ",[per_type]='" + type + "',[per_amount]=" + perValue + ",[min_order_amount]=" + minOrderAmt + ",[start_date]='" + startdate + "',[end_date]='" + enddate + "',[is_active]=" + IsActive + ",[created_date]='" + dtCreatedon + "',[created_by]=" + userId + ", [terms]='" + terms + "' where [wallet_id]=" + id;
                     int VAL = dbc.ExecuteQuery(query);
                     if (IsApplyAllCustomer == 1)
                     {
@@ -531,4 +572,11 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
         }
 
     }
+
+    protected void OnPageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        gvcustomerlist.PageIndex = e.NewPageIndex;
+        CustomerDataList();
+    }
+
 }
