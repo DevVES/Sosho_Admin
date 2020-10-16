@@ -358,7 +358,7 @@
                             <asp:GridView ID="gvcustomerlist" runat="server"  AutoGenerateColumns="False" class="table table-bordered table-hover"
                                 rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8"
                                 OnRowDataBound="gvcustomerlist_RowDataBound" OnRowCommand="gvcustomerlist_RowCommand" 
-                                HeaderStyle-HorizontalAlign="Center" Caption="<b><u>CUSTOMER LIST</u></b>" CaptionAlign="Top">
+                                HeaderStyle-HorizontalAlign="Center"  Caption="<b><u>CUSTOMER LIST</u></b>" CaptionAlign="Top">
                                
                                 <Columns>
                                     <asp:TemplateField>
@@ -377,7 +377,7 @@
                                     <asp:BoundField HeaderText="Pincode" DataField="Pincode" />
 
                                 </Columns>
-                                <HeaderStyle HorizontalAlign="Center" BackColor="#EDE8E8"></HeaderStyle>
+                                <%--<HeaderStyle HorizontalAlign="Center" BackColor="#EDE8E8"></HeaderStyle>--%>
                             </asp:GridView>
                         </div>
 
