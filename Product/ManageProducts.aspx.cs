@@ -137,8 +137,8 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 if (id != null && !id.Equals(""))
                 {
                     BtnSave.Text = "Update";
-
-                    //ddlSubCategoryName.Items.Clear();
+                    chklstJurisdictionIncharge.Enabled=false;
+                    //ddlSubCategoryName.Items.Clear(true
                     ImageData();
                     DataTable dt1;
                     if (IsAdmin == "True")

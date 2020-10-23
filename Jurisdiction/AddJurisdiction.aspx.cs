@@ -47,9 +47,9 @@ public partial class Jurisdiction_AddJurisdiction : System.Web.UI.Page
                     string query = "SELECT JM.JurisdictionID,JM.JurisdictionIncharge,JM.Contact,JM.EmalID,JM.StateId,JM.CityId,JM.Comments, " +
                                    " JM.IsActive, U.UserName,U.Password " + 
                                    " FROM JurisdictionMaster Jm " + 
-                                   " INNER JOIN StateMaster sm on JM.StateId = sm.Id " + 
-                                   " INNER JOIN CityMaster cm on JM.CityId = cm.Id " +
-                                   " INNER JOIN Users U on U.JurisdictionID = Jm.JurisdictionID " +
+                                   " LEFT JOIN StateMaster sm on JM.StateId = sm.Id " + 
+                                   " LEFT JOIN CityMaster cm on JM.CityId = cm.Id " +
+                                   " LEFT JOIN Users U on U.JurisdictionID = Jm.JurisdictionID " +
                                    " where isnull(Jm.IsDeleted,0)=0  and JM.JurisdictionID=" + id;
                     DataTable dtUpdate = dbc.GetDataTable(query);
                     if (dtUpdate.Rows.Count > 0)
@@ -73,7 +73,7 @@ public partial class Jurisdiction_AddJurisdiction : System.Web.UI.Page
                         txtConfirmPassword.Attributes["value"] = dtUpdate.Rows[0]["Password"].ToString();
                     }
 
-                    PinCodeqry = "Select Distinct Zipcode from Zipcode Where zipcode not in ( SELECT PinCodeID FROM JurisdictionDetail where IsActive = 1 AND JurisdictionID not in("+id+"))";
+                    PinCodeqry = "Select Distinct Zipcode from Zipcode Where zipcode  in ( SELECT PinCodeID FROM JurisdictionDetail where IsActive = 1 AND JurisdictionID  in("+id+"))";
                     dtPincode = dbc.GetDataTable(PinCodeqry);
                     chklstPincode.DataSource = dtPincode;
                     chklstPincode.DataTextField = "zipcode";
