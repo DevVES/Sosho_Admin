@@ -133,7 +133,7 @@
                         <asp:BoundField HeaderText="EndDate" DataField="EndDate" />
 
 
-                        <asp:HyperLinkField DataNavigateUrlFields="Id" ControlStyle-CssClass="red" HeaderText="EDIT" Target="_blank" DataNavigateUrlFormatString="~/Product/ManageProducts.aspx?Id={0}" Text="Edit" />
+                        <asp:HyperLinkField DataNavigateUrlFields="Id" ControlStyle-CssClass="red" HeaderText="EDIT" DataNavigateUrlFormatString="~/Product/ManageProducts.aspx?Id={0}" Text="Edit" />
 
                     </Columns>
                     <HeaderStyle HorizontalAlign="Center" BackColor="#EDE8E8"></HeaderStyle>

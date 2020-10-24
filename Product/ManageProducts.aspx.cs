@@ -367,9 +367,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             GrpImage.ImageUrl =  dtProductAttribute.Rows[0]["grpImage"].ToString();
                         }
                     }
-
                 }
-
             }
         }
         catch (Exception ee)
@@ -419,17 +417,15 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             string notes = cknotes.Text.ToString();
 
             string displayorder = txtDisplayOrder.Text.ToString();
-
-            //string categoryId = ddlCategoryName.SelectedValue.ToString();
-            //string subcategoryId = ddlSubCategoryName.SelectedValue.ToString();
-            //if(subcategoryId == "")
-            //{
-            //    subcategoryId = "0";
-            //}
             string ProductTemplateID = ddlProductType.SelectedValue.ToString();
             string ProductBanner = txtProductBanner.Text.ToString();
             string Recommended = txtRecommended.Text.ToString();
-            string rejectedReason = txtRejectedReason.Text.ToString();
+            string rejectedReason = "''";
+            if (!string.IsNullOrEmpty(txtRejectedReason.Text))
+            {
+                rejectedReason = Convert.ToString(txtRejectedReason.Text);
+            }
+                
             DateTime dtCreatedon = DateTime.Now;
 
             string spDiscountType = "", spDiscount = "", spSoshoPrice = "", spmrp = "";
@@ -502,7 +498,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                     }
                 }
 
-                // ImageData();
             }
 
             string[] validFileTypes_OG = { "png", "jpg", "jpeg" };
@@ -517,7 +512,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
             bool isValidFile_OG = false;
             string imgname_OG = "", imgnamenew_OG = "";
-            //  System.Drawing.Image img = System.Drawing.Image.FromStream(FileUpload2.PostedFile.InputStream);
 
             decimal size = Math.Round(((decimal)FileUpload2.PostedFile.ContentLength / (decimal)1024), 2);
 
@@ -678,7 +672,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
                     string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ",DiscountType='" + spDiscountType.ToString() + "',Discount=" + spDiscount.ToString() + ",SoshoPrice=" + spSoshoPrice.ToString() + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + ",RejectedReason='"+rejectedReason+ "',IsProductDescription="+ IsProductDescription .ToString()+ " where [Id]=@21";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
-                    // int imgorder = 0;
                     if (v1 > 0)
                     {
                         //product image update
@@ -721,7 +714,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
                     string[] para1 = { productname, gstid1.ToString(), unit, unitname.ToString(), FROM1, TO1, IsActive.ToString(), metatag, metadisc, price, offer, Buywith1, Buywith5, shiprate, key, notes, "0", dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), vdolink, fulldescription, id1 };
 
-                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + ",RejectedReason='"+rejectedReason+ "',IsProductDescription="+ IsProductDescription.ToString() + " where [Id]=@21";
+                    string query = "UPDATE [Product] SET [Name]=@1,[GSTTaxId]=@2,[Unit]=@3,[UnitId]=@4,[StartDate]=@5,[EndDate]=@6,[IsActive]=@7,[Metatags]=@8,[Metadesc]=@9,[Mrp]=@10,[Offer]=@11,[BuyWith1FriendExtraDiscount]=@12,[BuyWith5FriendExtraDiscount]=@13,[FixedShipRate]=@14,[KeyFeatures]=@15,[Note]=@16,[IsDeleted]=@17,[DOM]=@18,[VideoName]=@19,[ProductDiscription]=@20,ProductMRP='" + txtMRP.Text + "',IsQtyFreeze='" + isqty + "',sold='" + solditems + "',DisplayOrder='" + displayorder + "',ModifiedOn='" + dtCreatedon.ToString() + "',ModifiedBy=" + userId + ", Recommended = '" + Recommended + "', ShowMrpInMsg = " + showmrpmsg + ", ProductBanner = '" + ProductBanner + "', IsFreeShipping =" + IsFreeShipping + ",IsFixedShipping = " + IsFixedShipping + ",RejectedReason='"+rejectedReason+ "',IsProductDescription="+ IsProductDescription.ToString() + ", ISApproved = "+IsApproved+" where [Id]=@21";
                     int v1 = dbc.ExecuteQueryWithParams(query, para1);
                     if (v1 > 0)
                     {
@@ -737,15 +730,10 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                     //Update Product
                                     string queryup = "UPDATE [Product] SET [JurisdictionID] = " + sNCreatedJurisdictionId + ",[ApproverID]=" + userId + ",[IsApproved] = " + IsApproved + " where Id = " + id1;
                                     int v1up = dbc.ExecuteQuery(queryup);
-
-
                                 }
                                 else
                                 {
                                     //Insert Product
-
-
-
                                     if (chkIsQuantityFreez.Checked == true)
                                     {
                                         isqty = "1";
@@ -910,7 +898,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         ,fulldescription.Replace("'", "''"),"Hardik Just bought!",solditems,spmrp,showmrpmsg.ToString(),isqty,displayorder,ProductTemplateID,
                         ProductBanner,Recommended,dtCreatedon.ToString(),userId,IsApproved.ToString(),spDiscountType.ToString(),spDiscount.ToString(),spSoshoPrice.ToString(),
                         iMaxQty.ToString() ,iMinQty.ToString(),IsProductDescription.ToString(), sJurisdictionId , IsFreeShipping.ToString(), IsFixedShipping.ToString(), rejectedReason };
-                        //string query = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc],[Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note],[IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg],IsQtyFreeze,DisplayOrder,CategoryID,ProductTemplateID,ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType],[Discount],[SoshoPrice],[MaxQty],[MinQty],[IsProductDescription],[JurisdictionId],[IsFreeShipping],[IsFixedShipping]) VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + spmrp + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + categoryId + "," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + IsProductDescription + "," + sJurisdictionId + "," + IsFreeShipping + "," + IsFixedShipping + ")";
                         string query = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc]," +
                                         " [Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note]," + 
                                         " [IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg], " + 
@@ -1047,8 +1034,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                    displayorder + "'," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + 
                                    dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + 
                                    spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + 
-                                   IsProductDescription + "," + sCreatedJurisdictionId + "," + IsFreeShipping + "," + IsFixedShipping + 
-                                   ","+rejectedReason+")";
+                                   IsProductDescription + "," + sCreatedJurisdictionId + "," + IsFreeShipping + "," + IsFixedShipping + ","+ rejectedReason + ")";
                     VAL = dbc.ExecuteQuery(query);
 
                     dt = dbc.GetDataTable("select Id from [Product] where [Name] ='" + productname + "' Order by Id desc");
@@ -1170,12 +1156,9 @@ public partial class Product_ManageProducts : System.Web.UI.Page
     {
         try
         {
-
             string gst = txtgst1.Text.ToString();
             string gstval = txtvalue.Text.ToString();
-
             string[] para1 = { gst, gstval, "0", dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss") };
-
             string query = "INSERT INTO [dbo].[GstTaxCategory]([TaxName],[TaxValue],[IsDeleted],[DOM],[DOC]) VALUES (@1,@2,@3,@4,@5)";
             int v1 = dbc.ExecuteQueryWithParams(query, para1);
             if (v1 > 0)
@@ -1186,7 +1169,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 ddlgst.DataTextField = "Name";
                 ddlgst.DataValueField = "Id";
                 ddlgst.DataBind();
-
             }
             else
             {
@@ -1211,9 +1193,6 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             int v1 = dbc.ExecuteQueryWithParams(query, para1);
             if (v1 > 0)
             {
-                //sweetMessage("", "New UnitName Added Successfully", "success");
-
-
                 string unitnameqry = "select Id as Id,UnitName as Name from [UnitMaster] where Isdeleted=0 order by Id asc";
                 DataTable dtunitname = dbc.GetDataTable(unitnameqry);
                 ddlunitname.DataSource = dtunitname;
@@ -1272,14 +1251,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             {
                 string file_name = dtimage.Rows[i]["ImageName"].ToString();
                 string imgpath = "/ProductImage/" + file_name;
-
-                //DataRow dr1 = dtimage.NewRow();
-                //dr1[ImagePath] = imgpath;
-                //dtimage.Rows.Add(dr1.ItemArray);
-
                 dtimage.Rows[i]["Image"] = imgpath;
-                //Image1.ImageUrl = "../ProductImage/" + file_name;
-
             }
             // (e.Row.FindControl("Image1") as Image).ImageUrl = imageUrl;
             gvImage.DataSource = dtimage;

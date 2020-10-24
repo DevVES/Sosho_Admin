@@ -69,54 +69,12 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
             if (id != null && !id.Equals(""))
             {
                 BtnSave.Text = "Update";
-
                 DataTable dtcustomertbl = dbc.GetDataTable("SELECT (SELECT  CASE WHEN COUNT(*) > 0 then 'true' else 'false' end AS APPLY FROM Customer C INNER JOIN tblWalletCustomerLink WL ON WL.customer_id = C.Id WHERE WL.wallet_id = 2 AND C.Id = Customer.Id) AS Apply, Customer.Id, Mobile,FirstName,LastName,Email,Sex,Address,PinCode FROM[dbo].[Customer] Order by 1 desc");
-                //DataTable dtCustWalletLink = dbc.GetDataTable("select distinct customer_id from  tblWalletCustomerLink where ISNULL(is_active,0) = 1 AND wallet_id=" + id);
                 if (dtcustomertbl.Rows.Count > 0)
                 {
-                    
                     ViewState["dt"] = dtcustomertbl;
                     gvcustomerlist.DataSource = dtcustomertbl;
                     gvcustomerlist.DataBind();
-                    //if (dtCustWalletLink.Rows.Count > 0)
-                    //{
-                    //       //foreach (DataRow row in dtCustWalletLink.Rows)
-                    //        //{
-                    //        //    string custid = row["customer_id"].ToString();
-                    //        //    if (dtcustomertbl.Rows[i]["Id"].ToString() == custid)
-                    //        //    {
-                    //        //        dtcustomertbl.Rows[i]["Apply"] = true;
-                    //        //        gvcustomerlist.Rows[i].FindControl("Apply").Checked = true;
-                    //        //        //CheckBox chk = row.Fi("Apply");
-                    //        //        //chk.Checked = true;
-                    //        //    }
-                    //        //}
-
-                    //        foreach (GridViewRow gRow in gvcustomerlist.Rows)
-                    //        {
-                    //        //string custid = gRow.Cells[i].Text;
-                    //        for (int i = 0; i < dtcustomertbl.Rows.Count; i++)
-                    //        {
-
-                    //            if ("6240" == dtcustomertbl.Rows[i]["Id"].ToString())
-                    //            {
-                    //                CheckBox cBox = (CheckBox)gRow.FindControl("Apply");
-                    //                dtcustomertbl.Rows[i]["Apply"] = true;
-                    //                cBox.Checked = true;
-                    //                break;
-                    //            }
-                    //        }
-                    //        }
-
-                    //        //    for (int j = 0; j < dtCustWalletLink.Rows.Count; j++)
-                    //        //{
-                    //        //    if (dtcustomertbl.Rows[i]["Id"].ToString() == dtCustWalletLink.Rows[j]["customer_id"].ToString())
-                    //        //    {
-
-                    //        //    }
-                    //        //}
-                    //}
-                    
                 }
                ddlOfferType.Enabled = false;
                 DataTable dt1;
@@ -216,25 +174,6 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                         chkisactive.Checked = false;
                     }
                 }
-
-                //DataTable dtCustomer = dbc.GetDataTable("SELECT C.Id FROM Customer C INNER JOIN [tblWalletCustomerLink] CL on CL.customer_id=C.Id  where CL.wallet_id=" + id);
-                //if (dtCustomer.Rows.Count > 0)
-                //{
-
-                //    foreach (GridViewRow row in gvcustomerlist.Rows)
-                //    {
-                //        if (row.RowType == DataControlRowType.DataRow)
-                //        {
-                //            CheckBox chkRow = (row.Cells[0].FindControl("chkRow") as CheckBox);
-                //            if (chkRow.Checked)
-                //            {
-                //                string name = row.Cells[1].Text;
-                //                string country = (row.Cells[2].FindControl("lblCountry") as Label).Text;
-                //                //dt.Rows.Add(name, country);
-                //            }
-                //        }
-                //    }
-                //}
             }
 
         }
@@ -250,12 +189,7 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
         String[] StrPart1 = to.Split('/');
 
         string IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
-        //string searchtext = txtSearch.Text.Trim();
         string query = "SELECT 'false' AS Apply,[Id],[Mobile],[FirstName],[LastName],[Email],[Sex],[Address],[CityId],[StateId],[Pincode] FROM [dbo].[Customer] ";
-        //if (!string.IsNullOrEmpty(searchtext))
-        //{
-        //    query += " WHERE (Mobile LIKE '%"+ searchtext + "%' OR FirstName LIKE '%" + searchtext + "%' OR LastName LIKE '%" + searchtext + "%' OR Email LIKE '%" + searchtext + "%')";
-        //}
         query += " order by Id desc ";
 
         DataTable dtcustomerlist = dbc.GetDataTable(query);
@@ -465,7 +399,6 @@ public partial class Wallet_ManageWallets : System.Web.UI.Page
                                 if (offertype == "1")
                                 {
                                     string[] para3 = { VAL.ToString(), item.ItemArray[1].ToString(), linkVAL.ToString(), startdate, campaignname, walletAmt.ToString(), "", "", 0.ToString(), walletAmt.ToString(), IsActive.ToString(), dtCreatedon.ToString(), userId };
-                                    //string customerwallethistoryQuery = "INSERT INTO [dbo].[tblWalletCustomerHistory] ([wallet_id],[customer_id],[wallet_link_id],[Cr_date],[Cr_description],[Cr_amount],[Dr_date],[Dr_description],[Dr_amount],[balance],[is_active],[created_date],[created_by]) VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13) SELECT SCOPE_IDENTITY();";
                                     string customerwallethistoryQuery = "INSERT INTO [dbo].[tblWalletCustomerHistory] ([wallet_id],[customer_id],[wallet_link_id],[Cr_date],[Cr_description],[Cr_amount],[Dr_date],[Dr_description],[Dr_amount],[balance],[is_active],[created_date],[created_by]) VALUES (" + VAL.ToString() + ", " + item.ItemArray[1].ToString() + "," + linkVAL.ToString() + ", '" + startdate + "','" + campaignname + "'," + walletAmt.ToString() + ", '', '', 0, " + walletAmt.ToString() + "," + IsActive.ToString() + ",'" + dtCreatedon.ToString() + "'," + userId + ");";
                                     dbc.ExecuteQuery(customerwallethistoryQuery);
                                 }
