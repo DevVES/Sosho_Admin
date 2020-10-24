@@ -420,7 +420,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
             string ProductTemplateID = ddlProductType.SelectedValue.ToString();
             string ProductBanner = txtProductBanner.Text.ToString();
             string Recommended = txtRecommended.Text.ToString();
-            string rejectedReason = "''";
+            string rejectedReason = "";
             if (!string.IsNullOrEmpty(txtRejectedReason.Text))
             {
                 rejectedReason = Convert.ToString(txtRejectedReason.Text);
@@ -748,7 +748,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                                     " [JustBougth],[sold],ProductMRP,[ShowMrpInMsg],IsQtyFreeze,DisplayOrder,ProductTemplateID, " + 
                                                     " ProductBanner,Recommended,[CreatedOn],[CreatedBy],[IsApproved],[DiscountType],[Discount],[SoshoPrice],[MaxQty], " + 
                                                     " [MinQty],[JurisdictionID],[ApproverID],[IsFreeShipping],[IsFixedShipping],RejectedReason) " + 
-                                                    " VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + txtMRP.Text + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + sJurisdictionId + "," + userId + ","+IsFreeShipping+","+IsFixedShipping+","+rejectedReason+")";
+                                                    " VALUES ('" + productname.Replace("'", "''") + "','" + gstid1.ToString().Replace("'", "''") + "','" + unit.Replace("'", "''") + "','" + unitname.ToString().Replace("'", "''") + "','" + FROM1.Replace("'", "''") + "','" + TO1.Replace("'", "''") + "','" + IsActive + "','" + metatag.Replace("'", "''") + "','" + metadisc.Replace("'", "''") + "','" + price.Replace("'", "''") + "','" + offer.Replace("'", "''") + "','" + Buywith1.Replace("'", "''") + "','" + Buywith5.Replace("'", "''") + "','" + shiprate.Replace("'", "''") + "','" + key.Replace("'", "''") + "','" + notes.Replace("'", "''") + "',0,'" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''") + "','" + vdolink.Replace("'", "''") + "','" + fileName_OG.Replace("'", "''") + "','" + fulldescription.Replace("'", "''") + "','Hardik Just bought!','" + solditems + "','" + txtMRP.Text + "'," + showmrpmsg + ",'" + isqty + "','" + displayorder + "'," + ProductTemplateID + ",'" + ProductBanner + "','" + Recommended + "','" + dtCreatedon.ToString() + "'," + userId + "," + IsApproved + ",'" + spDiscountType.ToString() + "'," + spDiscount.ToString() + "," + spSoshoPrice.ToString() + "," + iMaxQty + "," + iMinQty + "," + sJurisdictionId + "," + userId + ","+IsFreeShipping+","+IsFixedShipping+",'"+rejectedReason+"')";
                                     int VAL = dbc.ExecuteQuery(querym);
                                 }
                             }
@@ -897,7 +897,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss").Replace("'", "''"), vdolink.Replace("'", "''"),fileName_OG.Replace("'", "''")
                         ,fulldescription.Replace("'", "''"),"Hardik Just bought!",solditems,spmrp,showmrpmsg.ToString(),isqty,displayorder,ProductTemplateID,
                         ProductBanner,Recommended,dtCreatedon.ToString(),userId,IsApproved.ToString(),spDiscountType.ToString(),spDiscount.ToString(),spSoshoPrice.ToString(),
-                        iMaxQty.ToString() ,iMinQty.ToString(),IsProductDescription.ToString(), sJurisdictionId , IsFreeShipping.ToString(), IsFixedShipping.ToString(), rejectedReason };
+                        iMaxQty.ToString() ,iMinQty.ToString(),IsProductDescription.ToString(), sJurisdictionId , IsFreeShipping.ToString(), IsFixedShipping.ToString(), rejectedReason.ToString().Replace("'", "''") };
                         string query = "INSERT INTO [dbo].[Product] ([Name],[GSTTaxId],[Unit],[UnitId],[StartDate],[EndDate],[IsActive],[Metatags],[Metadesc]," +
                                         " [Mrp],[Offer],[BuyWith1FriendExtraDiscount],[BuyWith5FriendExtraDiscount],[FixedShipRate],[KeyFeatures],[Note]," + 
                                         " [IsDeleted],[DOC],[DOM],[VideoName],[OGImage],[ProductDiscription],[JustBougth],[sold],ProductMRP,[ShowMrpInMsg], " + 
@@ -995,11 +995,11 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                 strPackingType = "";
                             }
 
-                            string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id11 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+","+ FreezeQty + ")";
+                            string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + VAL + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+","+ FreezeQty + ")";
                             int VALatt = dbc.ExecuteQuery(ProductAttrqry);
                         }
                         string updateProductPrice = "UPDATE Product SET SoshoPrice = " + selectedSoshoPrice + ", MRP = " + selectedMRP +
-                                                   ",Discount = " + selectedDiscount + " Where id=" + Convert.ToInt32(id11);
+                                                   ",Discount = " + selectedDiscount + " Where id=" + Convert.ToInt32(VAL);
                         dbc.ExecuteQuery(updateProductPrice);
 
                         foreach (GridViewRow g2 in grdProductCategory.Rows)
@@ -1009,7 +1009,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             HiddenField hdnLinkSubCategoryId = (HiddenField)g2.FindControl("HiddenFieldlinkSubCategoryId");
                             string linkSubCategoryId = hdnLinkSubCategoryId.Value;
 
-                            string ProductCategoryqry = "INSERT INTO [dbo].[tblCategoryProductLink] ([ProductId],[CategoryId],[SubCategoryId],[IsActive],[IsDeleted],[CreatedDate],[CreatedBy]) VALUES (" + id11 + ",'" + linkCategoryId + "'," + linkSubCategoryId + ",1,0,'" + dtCreatedon.ToString() + "'," + userId + ")";
+                            string ProductCategoryqry = "INSERT INTO [dbo].[tblCategoryProductLink] ([ProductId],[CategoryId],[SubCategoryId],[IsActive],[IsDeleted],[CreatedDate],[CreatedBy]) VALUES (" + VAL + ",'" + linkCategoryId + "'," + linkSubCategoryId + ",1,0,'" + dtCreatedon.ToString() + "'," + userId + ")";
                             dbc.ExecuteQuery(ProductCategoryqry);
                         }
                     }
