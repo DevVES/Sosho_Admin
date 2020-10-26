@@ -751,7 +751,7 @@
                         </div>
                         <div class="row pad-bottom">
                             <div class="col-md-12">
-                                <asp:GridView ID="grdgProduct" runat="server" AutoGenerateColumns="false"
+                                <asp:GridView  ID="grdgProduct" runat="server" AutoGenerateColumns="false"
                                     AllowPaging="true" OnRowEditing="OnRow_Editing" Width="99%">
                                     <PagerStyle ForeColor="#8C4510"
                                         HorizontalAlign="Center"></PagerStyle>
@@ -786,7 +786,7 @@
                                                 <asp:LinkButton Text="Edit" runat="server" CommandName="Edit" CausesValidation="false" />
                                             </ItemTemplate>
                                             <EditItemTemplate>
-                                                <asp:LinkButton Text="Update" runat="server" OnClick="OnUpdate" CausesValidation="false" />
+                                                <%--<asp:LinkButton Text="Update" runat="server" OnClick="OnUpdate" CausesValidation="false" />--%>
                                                 <asp:LinkButton Text="Cancel" runat="server" OnClick="OnCancel" CausesValidation="false" />
                                             </EditItemTemplate>
                                         </asp:TemplateField>
