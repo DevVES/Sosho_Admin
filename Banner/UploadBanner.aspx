@@ -138,7 +138,7 @@
                                 </div>
 
                                 <div class="col-md-7 pad">
-                                    <asp:DropDownList ID="ddlbasicProduct" runat="server" class="form-control" Width="40%" AppendDataBoundItems="true" Visible="false">
+                                    <asp:DropDownList ID="ddlbasicProduct" runat="server" class="form-control" Width="40%" AutoPostBack="true" AppendDataBoundItems="true" OnSelectedIndexChanged="OnSelectedProductChanged" Visible="false">
                                         <asp:ListItem Text="Select Product Name" Value=""></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>

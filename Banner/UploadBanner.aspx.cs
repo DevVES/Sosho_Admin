@@ -45,7 +45,7 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                 chklstCategory.DataValueField = "CategoryId";
                 chklstCategory.DataBind();
 
-                string productqry = "SELECT Id,Name FROM Product where isnull(IsDeleted,0)=0 order by Id asc";
+                string productqry = "SELECT Id,Name FROM Product where isnull(IsDeleted,0)=0 and isnull(ProductMasterId,0)=0 order by Id asc";
                 DataTable dtproduct = dbc.GetDataTable(productqry);
 
                 ddlbasicProduct.DataSource = dtproduct;
@@ -687,6 +687,13 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
 
     protected void OnSelectedBasicActionChanged(object sender, EventArgs e)
     {
+        string JurisdictionInchargeqry = "Select Distinct JurisdictionId,JurisdictionIncharge From JurisdictionMaster where IsActive = 1 order by JurisdictionId";
+        DataTable dtIncharge = dbc.GetDataTable(JurisdictionInchargeqry);
+        chklstBasicJurisdictionIncharge.DataSource = dtIncharge;
+        chklstBasicJurisdictionIncharge.DataTextField = "JurisdictionIncharge";
+        chklstBasicJurisdictionIncharge.DataValueField = "JurisdictionId";
+        chklstBasicJurisdictionIncharge.DataBind();
+
         ddlbasicCategory.Visible = false;
         lblbasicCategory.Visible = false;
 
@@ -720,5 +727,17 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
             lblbasicProduct.Visible = true;
             dvbasicProduct.Style.Add("display", "block");
         }
+    }
+
+    protected void OnSelectedProductChanged(object sender, EventArgs e)
+    {
+        string productid = ddlbasicProduct.SelectedValue;
+        string JurisdictionInchargeqry = "Select Distinct JurisdictionId,JurisdictionIncharge From JurisdictionMaster where IsActive = 1 and JurisdictionId IN (Select JurisdictionID from Product Where Id =" + productid + "OR ISNULL(ProductMasterId,0) =" + productid + ") order by JurisdictionId";
+        DataTable dtIncharge = dbc.GetDataTable(JurisdictionInchargeqry);
+        chklstBasicJurisdictionIncharge.DataSource = dtIncharge;
+        chklstBasicJurisdictionIncharge.DataTextField = "JurisdictionIncharge";
+        chklstBasicJurisdictionIncharge.DataValueField = "JurisdictionId";
+        chklstBasicJurisdictionIncharge.DataBind();
+
     }
 }
