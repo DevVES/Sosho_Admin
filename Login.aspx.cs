@@ -61,7 +61,7 @@ public partial class Login : System.Web.UI.Page
     protected void Button1_Click(object sender, EventArgs e)
     {
         WebApplication1.dbConnection bdc = new WebApplication1.dbConnection();
-        String Str = "SELECT [Name],[Id],[UserName],[Password],[IsAdmin],[UserType],[VendorID],[Deleted],WorkshopId,isnull(JurisdictionID,0) as JurisdictionID FROM [dbo].[Users] where [UserName]='" + txtId.Text.Replace("'", "''") + "' And [Password]='" + txtpass.Text.Replace("'", "''") + "' And Deleted = 0";
+        String Str = "SELECT [Name],[Id],[UserName],[Password],[IsAdmin],[UserType],[VendorID],[Deleted],WorkshopId,isnull(JurisdictionID,0) as JurisdictionID,isnull(DeliveryId,0) as DeliveryId FROM [dbo].[Users] where [UserName]='" + txtId.Text.Replace("'", "''") + "' And [Password]='" + txtpass.Text.Replace("'", "''") + "' And Deleted = 0";
         DataTable st = bdc.GetDataTable(Str);
         if (st.Rows.Count > 0)
         {
@@ -77,6 +77,7 @@ public partial class Login : System.Web.UI.Page
                 aCookie["IsAdmin"] = st.Rows[0]["IsAdmin"].ToString();
                 aCookie["JurisdictionID"] = st.Rows[0]["JurisdictionID"].ToString();
                 aCookie["UserType"] = st.Rows[0]["UserType"].ToString();
+                aCookie["DeliveryId"] = st.Rows[0]["DeliveryId"].ToString();
                 aCookie.Expires = DateTime.Now.AddHours(24);
 
                 Response.Cookies.Add(aCookie);

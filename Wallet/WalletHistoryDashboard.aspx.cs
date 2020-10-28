@@ -172,4 +172,36 @@ public partial class Wallet_WalletHistoryDashboard : System.Web.UI.Page
             ltrErr.Text = ee.Message;
         }
     }
+    protected void lnkProcess_Click(object sender, EventArgs e)
+    {
+        var fromdate = txtDate.Text;
+        var todate = txtDate1.Text;
+
+        Response.Redirect("WalletDashboardList.aspx?id=1&startDt=" + fromdate + "&endDt=" + todate);
+
+    }
+    protected void lnkInvoice_Click(object sender, EventArgs e)
+    {
+        var fromdate = txtDate.Text;
+        var todate = txtDate1.Text;
+
+        Response.Redirect("WalletDashboardList.aspx?id=2&startDt=" + fromdate + "&endDt=" + todate);
+
+    }
+    protected void lnkShipped_Click(object sender, EventArgs e)
+    {
+        var fromdate = txtDate.Text;
+        var todate = txtDate1.Text;
+
+        Response.Redirect("WalletDashboardList.aspx?id=3&startDt=" + fromdate + "&endDt=" + todate);
+
+    }
+    protected void lnkWalletSuccess_Click(object sender, EventArgs e)
+    {
+        var fromdate = txtDate.Text;
+        var todate = txtDate1.Text;
+
+        Response.Redirect("WalletDashboardList.aspx?id=4&startDt=" + fromdate + "&endDt=" + todate);
+
+    }
 }

@@ -92,9 +92,9 @@
                         <div class="icon">
                             <i class="fa fa-bar-chart" id="I1" runat="server"></i>
                         </div>
-                       <button class="small-box-footer" onclick="CreatedTransaction_Click()">More info <i class="fa fa-arrow-circle-right"></i></button>
+                       <%--<button class="small-box-footer" onclick="CreatedTransaction_Click()">More info <i class="fa fa-arrow-circle-right"></i></button>--%>
                        <%--<a href="WalletDashboardList.aspx?id=1" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>--%>
-                        <%--<asp:LinkButton class="small-box-footer" ID="lnkProcess" runat="server" OnClick="lnkProcess_Click">>More info <i class="fa fa-arrow-circle-right"></i></asp:LinkButton>--%>
+                        <asp:LinkButton class="small-box-footer" ID="lnkProcess" runat="server" OnClick="lnkProcess_Click">More info <i class="fa fa-arrow-circle-right"></i></asp:LinkButton>
                     </div>
                 </div>
                 <div class="col-lg-3 col-xs-6">
@@ -108,8 +108,8 @@
                         <div class="icon">
                             <i class="fa fa-print"></i>
                         </div>
-                      <a href="WalletDashboardList.aspx?id=2" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        <%--<asp:LinkButton class="small-box-footer" ID="lnkInvoice" runat="server" OnClick="lnkInvoice_Click">>More info <i class="fa fa-arrow-circle-right"></i></asp:LinkButton>--%>
+                      <%--<a href="WalletDashboardList.aspx?id=2" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>--%>
+                        <asp:LinkButton class="small-box-footer" ID="lnkInvoice" runat="server" OnClick="lnkInvoice_Click">More info <i class="fa fa-arrow-circle-right"></i></asp:LinkButton>
                     </div>
                 </div>
 
@@ -124,8 +124,8 @@
                         <div class="icon">
                             <i class="fa fa-shopping-bag"></i>
                         </div>
-                        <a href="WalletDashboardList.aspx?id=3" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        <%--<asp:LinkButton class="small-box-footer" ID="lnkShipped" runat="server" OnClick="lnkShipped_Click">>More info <i class="fa fa-arrow-circle-right"></i></asp:LinkButton>--%>
+                        <%--<a href="WalletDashboardList.aspx?id=3" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>--%>
+                        <asp:LinkButton class="small-box-footer" ID="lnkShipped" runat="server" OnClick="lnkShipped_Click">More info <i class="fa fa-arrow-circle-right"></i></asp:LinkButton>
 
                     </div>
                 </div>
@@ -140,8 +140,8 @@
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                     <a href="WalletDashboardList.aspx?id=4" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                        <%--<asp:LinkButton class="small-box-footer" ID="lnkDelivered" runat="server" OnClick="lnkWalletSuccess_Click">>More info <i class="fa fa-arrow-circle-right"></i></asp:LinkButton>--%>
+                     <%--<a href="WalletDashboardList.aspx?id=4" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>--%>
+                        <asp:LinkButton class="small-box-footer" ID="lnkDelivered" runat="server" OnClick="lnkWalletSuccess_Click">More info <i class="fa fa-arrow-circle-right"></i></asp:LinkButton>
                     </div>
                 </div>
                 <%--<div class="col-lg-3 col-xs-6">
@@ -318,40 +318,40 @@
 
             //For Timer
 
-            var data123 = $("#ContentPlaceHolder1_lblenddate").val();
+            //var data123 = $("#ContentPlaceHolder1_lblenddate").val();
 
 
-            var ddd = Date.parse(data123);
-            //var countDownDate = new Date("Oct 15, 2019 12:00:00").getTime();
-            var countDownDate = new Date(ddd).getTime()
+            //var ddd = Date.parse(data123);
+            ////var countDownDate = new Date("Oct 15, 2019 12:00:00").getTime();
+            //var countDownDate = new Date(ddd).getTime()
 
-            // Update the count down every 1 second
-            var x = setInterval(function () {
+            //// Update the count down every 1 second
+            //var x = setInterval(function () {
 
-                // Get today's date and time
-                var now = new Date().getTime();
+            //    // Get today's date and time
+            //    var now = new Date().getTime();
 
-                // Find the distance between now and the count down date
-                var distance = countDownDate - now;
+            //    // Find the distance between now and the count down date
+            //    var distance = countDownDate - now;
 
-                // Time calculations for days, hours, minutes and seconds
-                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            //    // Time calculations for days, hours, minutes and seconds
+            //    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            //    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            //    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            //    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                // Output the result in an element with id="demo"
-                //document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-                //+ minutes + "m " + seconds + "s ";
-                document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-                    + minutes + "m " + seconds + "s ";
+            //    // Output the result in an element with id="demo"
+            //    //document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+            //    //+ minutes + "m " + seconds + "s ";
+            //    document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+            //        + minutes + "m " + seconds + "s ";
 
-                // If the count down is over, write some text 
-                if (distance < 0) {
-                    clearInterval(x);
-                    document.getElementById("demo").innerHTML = "EXPIRED";
-                }
-            }, 1000);
+            //    // If the count down is over, write some text 
+            //    if (distance < 0) {
+            //        clearInterval(x);
+            //        document.getElementById("demo").innerHTML = "EXPIRED";
+            //    }
+            //}, 1000);
 
 
             //for Start Date End Date
@@ -522,9 +522,10 @@
 
 
         function CreatedTransaction_Click() {
+            debugger
             var txtdt = document.getElementById("<%=txtDate.ClientID%>").value;
             var txtdt1 = document.getElementById("<%=txtDate1.ClientID%>").value;
-            window.location.href = "WalletDashboardList.aspx?id=1&startDt=" + txtdt + "&endDt=" + txtdt1;
+            window.location = "WalletDashboardList.aspx?id=1&startDt=" + txtdt + "&endDt=" + txtdt1;
         }
     </script>
 

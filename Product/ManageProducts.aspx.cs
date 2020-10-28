@@ -1097,7 +1097,11 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             strisBestBuy = "1";
                         else
                             strisBestBuy = "0";
-                       
+                        if (strisOutOfStock == "True")
+                            strisOutOfStock = "1";
+                        else
+                            strisOutOfStock = "0";
+
                         Label name = (Label)g1.FindControl("lblname");
 
                         strPackingType = g1.Cells[6].Text;

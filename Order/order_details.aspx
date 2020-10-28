@@ -43,7 +43,7 @@
                         <h4>Order Details</h4>
                         <table>
                             <tr>
-                                <td colspan="1">Order Id</td>
+                                <td colspan="1">Order Id:</td>
                                 <td class="pleft" id="lblorderid" runat="server">102114</td>
                             </tr>
                             <tr>
@@ -51,15 +51,15 @@
                                 <td class="pleft" id="orderdatedid" runat="server">wednesday 5, 2019</td>
                             </tr>
                             <tr>
-                                <td colspan="1">Order MRP</td>
+                                <td colspan="1">Order MRP:</td>
                                 <td class="pleft" id="lblmrp" runat="server">Rs.450</td>
                             </tr>
                             <tr>
-                                <td colspan="1">Order Amount</td>
+                                <td colspan="1">Order Amount:</td>
                                 <td class="pleft" id="lbltotordeamt" runat="server">Rs.550</td>
                             </tr>
                             <tr>
-                                <td colspan="1">Order Status</td>
+                                <td colspan="1">Order Status:</td>
                                 <td class="pleft" id="lblstatus" runat="server"></td>
                             </tr>
                         </table>
@@ -85,26 +85,27 @@
             </div>
 
             <div class="col-md-12 ">
-               
-          <div class="box box-warning box-solid">
-            <div class="box-header with-border">
-              <h3 class="box-title">Customer Reffere List</h3>
 
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-              </div>
-              <!-- /.box-tools -->
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <asp:GridView ID="grd" CssClass="table table-hover table-responsive table-hover table-bordered" AllowSorting="True" Width="100%" runat="server" OnRowDataBound="grd_RowDataBound"></asp:GridView>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-                
-                
+<%--                <div class="box box-warning box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Customer Reffere List</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                        <!-- /.box-tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <asp:GridView ID="grd" CssClass="table table-hover table-responsive table-hover table-bordered" AllowSorting="True" Width="100%" runat="server" OnRowDataBound="grd_RowDataBound"></asp:GridView>
+                    </div>
+                    <!-- /.box-body -->
+                </div>--%>
+                <!-- /.box -->
+
+
 
 
             </div>

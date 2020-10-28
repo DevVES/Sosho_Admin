@@ -13,7 +13,7 @@ public partial class Home : System.Web.UI.Page
     //System.Data.DataTable dtorderfeed = new System.Data.DataTable();
     //System.Data.DataTable dtfeedbck = new System.Data.DataTable();
     string dtStart = "";
-    string dtEnd = "", IsAdmin = "", sJurisdictionId = "";
+    string dtEnd = "", IsAdmin = "", sJurisdictionId = "", UserType= string.Empty, DeliveryId = string.Empty;
     protected void Page_Load(object sender, EventArgs e)
     {
 
@@ -33,6 +33,8 @@ public partial class Home : System.Web.UI.Page
 
                 IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
                 sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
+                UserType = Request.Cookies["TUser"]["UserType"].ToString();
+                DeliveryId = Request.Cookies["TUser"]["DeliveryId"].ToString();
 
                 Date();
                 boxbind();
@@ -121,12 +123,24 @@ public partial class Home : System.Web.UI.Page
             string where = "";
             string where1 = "";
             string wherec = "";
+            string join = string.Empty;
             if (todate != null && fromdate != null && todate != "" && fromdate != "")
             {
                 //  dbc.InsertLogs("start find data 1");
                 where = " where   [Order].createdOnUtc <= '" + todate + " 23:59:59' and [Order].createdOnUtc >= '" + fromdate + " 00:00:00' ";
                 if (IsAdmin == "False")
-                    where += " and JurisdictionID=" + sJurisdictionId;
+                {
+                    if(UserType == "2")
+                    {
+                        where += " and JurisdictionID=" + sJurisdictionId;
+                    }else if (UserType == "3")
+                    {
+                        join = " Inner Join CustomerAddress ca ON ca.Id = [Order].AddressId ";
+                        where += " and ca.AreaId = (select distinct areaid from DeliveryDetail where DeliveryID =" + DeliveryId + ") and ca.BuildingId in (select BuildingId from DeliveryDetail where DeliveryID = " + DeliveryId + ")";
+
+                    }
+                }
+                    
 
                 where1 = " AND [Order].createdOnUtc <= '" + todate + " 23:59:59' and [Order].createdOnUtc >= '" + fromdate + " 00:00:00'";
 
@@ -135,8 +149,19 @@ public partial class Home : System.Web.UI.Page
             else
             {
                 where = " where   [Order].createdOnUtc <='" + dbc.getindiantime().ToString("dd/MMM/yyyy") + " 23:59:59' and [Order].createdOnUtc>='" + dbc.getindiantime().ToString("dd/MMM/yyyy") + " 00:00:00' ";
-                if(IsAdmin == "False")
-                    where += " and JurisdictionID=" + sJurisdictionId;
+                if (IsAdmin == "False")
+                {
+                    if (UserType == "2")
+                    {
+                        where += " and JurisdictionID=" + sJurisdictionId;
+                    }
+                    else if (UserType == "3")
+                    {
+                        join = " Inner Join CustomerAddress ca ON ca.Id = [Order].AddressId ";
+                        where += " and ca.AreaId = (select distinct areaid from DeliveryDetail where DeliveryID =" + DeliveryId + ") and ca.BuildingId in (select BuildingId from DeliveryDetail where DeliveryID = " + DeliveryId + ")";
+
+                    }
+                }
 
                 where1 = " AND [Order].createdOnUtc <= '" + dbc.getindiantime().ToString("dd/MMM/yyyy") + " 23:59:59' and [Order].createdOnUtc >= '" + dbc.getindiantime().ToString("dd/MMM/yyyy") + " 00:00:00'";
 
@@ -149,7 +174,7 @@ public partial class Home : System.Web.UI.Page
 
 
 
-            string qry = "Select  * from [Order] " + where;
+            string qry = "Select  * from [Order] " +join+ where;
             AlertMsg(qry);
             DataTable dt = dbc.GetDataTable(qry);
             dbc.InsertLogs(qry);
@@ -242,6 +267,12 @@ public partial class Home : System.Web.UI.Page
     {
         try
         {
+            dtStart = dbc.getindiantime().ToString("dd/MMM/yyyy");
+            dtEnd = dbc.getindiantime().ToString("dd/MMM/yyyy");
+            IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
+            sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
+            UserType = Request.Cookies["TUser"]["UserType"].ToString();
+            DeliveryId = Request.Cookies["TUser"]["DeliveryId"].ToString();
             boxbind();
         }
         catch (Exception ee)

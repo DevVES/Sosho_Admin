@@ -74,12 +74,12 @@
                                     <asp:BoundField DataField="cadd" HeaderText="Address" />
                                     <asp:BoundField DataField="Name" HeaderText="Product Name" />
                                     <asp:BoundField DataField="PaymentAmt" HeaderText="Payment Amount" />
-                                    <asp:BoundField DataField="Totalamt" HeaderText="Totoal Amount" />
+                                    <asp:BoundField DataField="Totalamt" HeaderText="Total Amount" />
                                     <asp:BoundField DataField="TotalQTY" HeaderText="Quantity" />
                                     <asp:BoundField DataField="Ex" HeaderText="Oder Status" />
-                                    <asp:BoundField DataField="DeliveryManAmt" HeaderText="DeliveryMan Receive Amount" />
-                                    <asp:BoundField DataField="FrenchiessAmt" HeaderText="Frenchies Receive Amount" />
-                                    <asp:BoundField DataField="AdminAmount" HeaderText="Admin Receive Amount" />
+                                    <asp:BoundField DataField="DeliveryManAmt" HeaderText="Delivery Man Received Amount" />
+                                    <asp:BoundField DataField="FrenchiessAmt" HeaderText="Franchisee Received Amount" />
+                                    <asp:BoundField DataField="AdminAmount" HeaderText="Sosho Received Amount" />
                                     <%-- <asp:HyperLinkField ControlStyle-CssClass="btn btn-social" DataNavigateUrlFields="ordid" Target="_blank" DataNavigateUrlFormatString="Order/order_details.aspx?Orderid={0}" HeaderText="Order Detail" Text="View"></asp:HyperLinkField>--%>
                                     <asp:TemplateField HeaderText="Deliverd">
                                         <ItemTemplate>

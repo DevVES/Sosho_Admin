@@ -53,31 +53,34 @@ public partial class OrderList : System.Web.UI.Page
         string qry = string.Empty;
         if (IsUserType == "3")
         {
-            int userId = Convert.ToInt32(Request.Cookies["TUser"]["Id"]);
+            int userId = Convert.ToInt32(Request.Cookies["TUser"]["DeliveryId"]);
             string areaQry = " SELECT * from DeliveryDetail where DeliveryID = " + userId;
             DataTable dtArea = dbc.GetDataTable(areaQry);
             if (dtArea.Rows.Count > 0)
             {
                 int iCtr = 0;
                 string areaIds = string.Empty;
+                string buildingIds = string.Empty;
                 foreach (DataRow item in dtArea.Rows)
                 {
                     if(iCtr > 0)
                     {
                         areaIds += ",";
+                        buildingIds += ",";
                     }
                     ++iCtr;
                     areaIds += item.ItemArray[4];
+                    buildingIds += item.ItemArray[3];
                 }
                 qry = "SELECT  Convert(varchar(17),[order].CreatedOnUtc,113) as CreatedOnUtc ,[Order].Id as ordid, " +
                      " isnull(Customer.FirstName,(Select CustomerAddress.FirstName from CustomerAddress " +
                      " where CustomerAddress.Id= [Order].AddressId)) as FirstName, [Order].AddressId,CustomerAddress.MobileNo  as Mobile, " +
-                     " CustomerAddress.Address AS cadd, [Order].OrderStatusId, OrderItem.Quantity * OrderItem.MrpPerUnit as  PaymentAmt, " +
+                     " (isnull(CustomerAddress.BuildingNo,'') + ' ' + isnull(bm.Building,'') + ' ' + isnull(zm.Area,'') + ' ' + isnull(CustomerAddress.LandMark,'') + ' ' + isnull(cm.CityName,'') + ' ' + isnull(convert(varchar(20),zm.zipcode),'') + ' ' + isnull(sm.StateName,'')) as cadd, [Order].OrderStatusId, OrderItem.Quantity * OrderItem.MrpPerUnit as  PaymentAmt, " +
                      " OrderItem.Quantity * OrderItem.MrpPerUnit AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, " +
                      " [Order].TotalGram, [Order].CustReedeemAmount, [Order].PaymentGatewayId, Product.Name, " +
                      " OrderStatus.Name AS Ex, AH.ReceiveAmount AS AdminAmount, FH.ReceiveAmount AS FrenchiessAmt, DH.ReceiveAmount AS DeliveryManAmt  " +
                      " FROM [Order] INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
-                     " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id " +
+                     " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id LEFT OUTER JOIN StateMaster sm on sm.Id = CustomerAddress.StateId LEFT OUTER JOIN CityMaster cm on cm.Id = CustomerAddress.CityId LEFT OUTER JOIN Zipcode zm on zm.Id = CustomerAddress.AreaId LEFT OUTER JOIN tblBuilding bm on bm.Id = CustomerAddress.BuildingId " +
                      " INNER JOIN OrderItem ON [Order].Id = OrderItem.OrderId " +
                      " INNER JOIN Product ON OrderItem.ProductId = Product.Id " +
                      " INNER JOIN OrderStatus ON [Order].OrderStatusId = OrderStatus.Id " +
@@ -85,7 +88,7 @@ public partial class OrderList : System.Web.UI.Page
                      " LEFT OUTER JOIN tblPaymentHistory FH ON FH.UserType = 2 AND FH.OrderId = [Order].Id " +
                      " LEFT OUTER JOIN tblPaymentHistory DH ON DH.UserType = 3 AND DH.OrderId = [Order].Id " +
                      " WHERE ([Order].CreatedOnUtc>='" + startdate.Value + " 00:00:00') AND ([Order].CreatedOnUtc<='" + enddate.Value + " 23:59:59') " +
-                     "  AND CustomerAddress.AreaId in("+areaIds+") " +
+                     "  AND CustomerAddress.AreaId in("+areaIds+ ") AND CustomerAddress.BuildingId in ("+ buildingIds + ")" +
                     " ORDER BY ordid DESC";
             }
         }
@@ -94,12 +97,12 @@ public partial class OrderList : System.Web.UI.Page
             qry = "SELECT  Convert(varchar(17),[order].CreatedOnUtc,113) as CreatedOnUtc ,[Order].Id as ordid, " +
                      " isnull(Customer.FirstName,(Select CustomerAddress.FirstName from CustomerAddress " +
                      " where CustomerAddress.Id= [Order].AddressId)) as FirstName, [Order].AddressId,CustomerAddress.MobileNo  as Mobile, " +
-                     " CustomerAddress.Address AS cadd, [Order].OrderStatusId, OrderItem.Quantity * OrderItem.MrpPerUnit as  PaymentAmt, " +
+                     " (isnull(CustomerAddress.BuildingNo,'') + ' ' + isnull(bm.Building,'') + ' ' + isnull(zm.Area,'') + ' ' + isnull(CustomerAddress.LandMark,'') + ' ' + isnull(cm.CityName,'') + ' ' + isnull(convert(varchar(20),zm.zipcode),'') + ' ' + isnull(sm.StateName,'')) as cadd, [Order].OrderStatusId, OrderItem.Quantity * OrderItem.MrpPerUnit as  PaymentAmt, " +
                      " OrderItem.Quantity * OrderItem.MrpPerUnit AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, " +
                      " [Order].TotalGram, [Order].CustReedeemAmount, [Order].PaymentGatewayId, Product.Name, " +
                      " OrderStatus.Name AS Ex, AH.ReceiveAmount AS AdminAmount, FH.ReceiveAmount AS FrenchiessAmt, DH.ReceiveAmount AS DeliveryManAmt " +
                      " FROM [Order] INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
-                     " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id " +
+                     " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id LEFT OUTER JOIN StateMaster sm on sm.Id = CustomerAddress.StateId LEFT OUTER JOIN CityMaster cm on cm.Id = CustomerAddress.CityId LEFT OUTER JOIN Zipcode zm on zm.Id = CustomerAddress.AreaId LEFT OUTER JOIN tblBuilding bm on bm.Id = CustomerAddress.BuildingId " +
                      " INNER JOIN OrderItem ON [Order].Id = OrderItem.OrderId " +
                      " INNER JOIN Product ON OrderItem.ProductId = Product.Id " +
                      " INNER JOIN OrderStatus ON [Order].OrderStatusId = OrderStatus.Id " +
@@ -159,11 +162,12 @@ public partial class OrderList : System.Web.UI.Page
                 ltr1.Text = "";
 
             }
-            if (hdn2.Value == "10")
-            {
+            //if (hdn2.Value == "10")
+            //{
                 DataTable dtchkExists = dbc.GetDataTable("SELECT TOP 1 ReceiveAmount FROM tblPaymentHistory Where OrderId=" + oid2.Value + " AND UserType = " + 3 + " Order By 1 DESC");
+            DataTable dtchkjuridictiondataExists = dbc.GetDataTable("SELECT TOP 1 ReceiveAmount FROM tblPaymentHistory Where OrderId=" + oid2.Value + " AND UserType = " + 2 + " Order By 1 DESC");
 
-                if (IsUserType == "3")
+            if (IsUserType == "3")
                 {
                     if (dtchkExists.Rows.Count > 0)
                     {
@@ -179,8 +183,8 @@ public partial class OrderList : System.Web.UI.Page
                 {
                     if (dtchkExists.Rows.Count > 0)
                     {
-                        DataTable dtchkjuridictiondataExists = dbc.GetDataTable("SELECT TOP 1 ReceiveAmount FROM tblPaymentHistory Where OrderId=" + oid2.Value + " AND UserType = " + IsUserType + " Order By 1 DESC");
-                        if (dtchkjuridictiondataExists.Rows.Count > 0)
+                    DataTable dtjuridictiondataExists = dbc.GetDataTable("SELECT TOP 1 ReceiveAmount FROM tblPaymentHistory Where OrderId=" + oid2.Value + " AND UserType = " + IsUserType + " Order By 1 DESC");
+                    if (dtjuridictiondataExists.Rows.Count > 0)
                         {
                             ltr2.Text = "<input type='button' id='can-" + oid2.Value + "' class='btn btn-success btn-sm'  value='Payment Received'  disabled />";
                         }
@@ -197,8 +201,10 @@ public partial class OrderList : System.Web.UI.Page
                 }
                 else if(IsUserType == "1")
                 {
+                if (dtchkExists.Rows.Count > 0 && dtchkjuridictiondataExists.Rows.Count > 0)
+                {
                     DataTable dtchkAdmindataExists = dbc.GetDataTable("SELECT TOP 1 ReceiveAmount FROM tblPaymentHistory Where OrderId=" + oid2.Value + " AND UserType = " + IsUserType + " Order By 1 DESC");
-                    if (dtchkAdmindataExists.Rows.Count > 0)
+                    if (dtchkAdmindataExists.Rows.Count == 0)
                     {
                         ltr2.Text = "<input type='button' id='can-" + oid2.Value + "' class='btn btn-success btn-sm' onclick='StatusUpdateModal(" + oid2.Value + ")' value='Payment Received' />";
                     }
@@ -207,13 +213,18 @@ public partial class OrderList : System.Web.UI.Page
                         ltr2.Text = "<input type='button' id='can-" + oid2.Value + "' class='btn btn-success btn-sm'  value='Payment Received'  disabled />";
                     }
                 }
+                else
+                {
+                    ltr2.Text = "<input type='button' id='can-" + oid2.Value + "' class='btn btn-success btn-sm'  value='Payment Received'  disabled />";
+                }
             }
+            //}
 
-            else
-            {
-                ltr2.Text = "";
+            //else
+            //{
+            //    ltr2.Text = "";
 
-            }
+            //}
         }
     }
     protected void grdGrn_RowDataBound(object sender, GridViewRowEventArgs e)

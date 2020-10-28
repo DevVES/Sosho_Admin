@@ -33,18 +33,30 @@ public partial class order_details : System.Web.UI.Page
 
                         if(dtfor!= null && dtfor.Rows.Count>0)
                         {
-                            grd.Caption = "Customer Reffere List";
-                            grd.DataSource = dtfor;
-                            grd.DataBind();
+                            //grd.Caption = "Customer Reffere List";
+                            //grd.DataSource = dtfor;
+                            //grd.DataBind();
                         }
-                        
-                        string addressstr = "select FirstName+' ' +LastName as CustName,Address,(select CityName from CityMaster where CityMaster.Id=CustomerAddress.CityId)as CityName,CustomerAddress.pincode,(select StateMaster.StateName from StateMaster where StateMaster.Id=CustomerAddress.StateId) as StateName,(select CountryMaster.CountryName from CountryMaster where CountryMaster.Id=CustomerAddress.CountryId)as CountryName,CustomerAddress.MobileNo from CustomerAddress where Id=(select AddressId from [Order] where id="+oid+") ";
+
+                        //string addressstr = "select FirstName+' ' +LastName as CustName,Address,(select CityName from CityMaster where CityMaster.Id=CustomerAddress.CityId)as CityName,CustomerAddress.pincode,(select StateMaster.StateName from StateMaster where StateMaster.Id=CustomerAddress.StateId) as StateName,(select CountryMaster.CountryName from CountryMaster where CountryMaster.Id=CustomerAddress.CountryId)as CountryName,CustomerAddress.MobileNo from CustomerAddress where Id=(select AddressId from [Order] where id="+oid+") ";
+                        string addressstr = "select " +
+                                            " FirstName + ' ' + LastName as CustName, " +
+                                            " isnull(ca.buildingno, '') + ' ' + (case isnull(bm.Building, '') when '' then '' else bm.Building + ', ' end) + isnull(zp.Area, '') + ' ' + (case isnull(ca.Landmark,'') when '' then '' else ' Landmark: ' + ca.Landmark end) as [Address], " +
+                                            " (select CityName from CityMaster where CityMaster.Id = ca.CityId) as CityName, " +
+                                            " ca.pincode, " +
+                                            " (select StateMaster.StateName from StateMaster where StateMaster.Id = ca.StateId) as StateName, " +
+                                            " (select CountryMaster.CountryName from CountryMaster where CountryMaster.Id = ca.CountryId) as CountryName, " +
+                                            " ca.MobileNo " +
+                                            " from CustomerAddress ca " +
+                                            " left outer join Zipcode zp on zp.id = ca.AreaId " +
+                                            " left outer join tblBuilding bm on bm.id = ca.BuildingId " +
+                                            " where ca.Id = (select AddressId from[Order] where id = " + oid + ") ";
                         DataTable dtdataa = dbc.GetDataTable(addressstr);
 
                         if(dtdataa !=null && dtdataa.Rows.Count>0)
                         {
                             lbladdname.InnerHtml = dtdataa.Rows[0]["CustName"].ToString();
-                            lbladd.InnerHtml = dtdataa.Rows[0]["Address"].ToString() + ", " + dtdataa.Rows[0]["CityName"] + "-" + dtdataa.Rows[0]["pincode"].ToString();
+                            lbladd.InnerHtml = dtdataa.Rows[0]["Address"].ToString() +  (dtdataa.Rows[0]["Address"].ToString().Trim()==""?"":", ") + dtdataa.Rows[0]["CityName"] + "-" + dtdataa.Rows[0]["pincode"].ToString();
                             lbladdstate.InnerHtml=dtdataa.Rows[0]["StateName"]+", "+dtdataa.Rows[0]["CountryName"];
                             lbladdmob.InnerHtml = dtdataa.Rows[0]["MobileNo"].ToString();
                          //   lblstatus.InnerHtml = dtdataa.Rows[0]["Ex"].ToString();
@@ -58,11 +70,11 @@ public partial class order_details : System.Web.UI.Page
 
                         if(dtorderdetails!=null && dtorderdetails.Rows.Count>0)
                         {
-                            lblorderid.InnerHtml = dtorderdetails.Rows[0]["oid"].ToString();
-                            orderdatedid.InnerHtml = dtorderdetails.Rows[0]["EndDate"].ToString();
-                            lblmrp.InnerHtml = dtorderdetails.Rows[0]["MRP"].ToString();
-                            lbltotordeamt.InnerHtml = dtorderdetails.Rows[0]["OrderTotal"].ToString();
-                            lblstatus.InnerHtml = dtorderdetails.Rows[0]["Ex"].ToString();
+                            lblorderid.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["oid"].ToString();
+                            orderdatedid.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["EndDate"].ToString();
+                            lblmrp.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["MRP"].ToString();
+                            lbltotordeamt.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["OrderTotal"].ToString();
+                            lblstatus.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["Ex"].ToString();
 
                             //lblqtyno.InnerHtml = dtorderdetails.Rows[0]["TotalQTY"].ToString();
                             //lblpayment.InnerHtml = dtorderdetails.Rows[0]["GatwayType"].ToString();

@@ -199,7 +199,7 @@
                                 <ul class="treeview-menu">
                                     <li id="liAddhouse1"><a class="myABC" href="/Product/ManageProducts.aspx"><i class="fa fa-circle-o"></i>Manage Products</a></li>
                                     <li id="litimeslot1"><a class="myABC" href="/Product/ProductList.aspx"><i class="fa fa-circle-o"></i>Product List</a></li>
-                                    <li id="liwhatsappmsg"><a class="myABC" href="/Product/WhatsappMsg.aspx"><i class="fa fa-circle-o"></i>Share WhatsApp Message</a></li>
+                                    <%--<li id="liwhatsappmsg"><a class="myABC" href="/Product/WhatsappMsg.aspx"><i class="fa fa-circle-o"></i>Share WhatsApp Message</a></li>--%>
                                     <li id="liSharemsg"><a class="myABC" href="/Product/ShareMessage.aspx"><i class="fa fa-circle-o"></i>Share Message</a></li>
                                     <li id="liApprovedProduct"><a class="myABC" href="/Product/ApprovedProductList.aspx"><i class="fa fa-circle-o"></i>Approve Product List</a></li>
                                 </ul>
@@ -619,6 +619,7 @@
                 $("#liwhatsappmsg").hide();
                 $("#lisharemsg").hide();
                 $("#liApprovedProduct").hide();
+                $("#liWalletDashboard").hide();
             }
             if (hiddenUserType == 3)
             {
@@ -636,6 +637,7 @@
                 $("#liwhatsappmsg").hide();
                 $("#lisharemsg").hide();
                 $("#liApprovedProduct").hide();
+                $("#liWalletDashboard").hide();
             }
         });
 
