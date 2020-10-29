@@ -82,40 +82,43 @@
                         <!-- /.input group -->
                     </div>
                 </div>
-                
 
-                
+
+
 
             </div>
 
             <div class="row">
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <asp:DropDownList ID="ddlCategoryName" runat="server" class="form-control" OnSelectedIndexChanged = "OnSelectedIndexChanged" AutoPostBack = "true">
-                            </asp:DropDownList>
-                        </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <asp:DropDownList ID="ddlCategoryName" runat="server" class="form-control" OnSelectedIndexChanged="OnSelectedIndexChanged" AutoPostBack="true">
+                        </asp:DropDownList>
                     </div>
-                 <div class="col-md-3 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <asp:DropDownList ID="ddlSubCategoryName" runat="server" class="form-control" OnSelectedIndexChanged = "OnSelectedIndexSubCategoryChanged" AutoPostBack = "true">
-                            </asp:DropDownList>
-                        </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <asp:DropDownList ID="ddlSubCategoryName" runat="server" class="form-control" OnSelectedIndexChanged="OnSelectedIndexSubCategoryChanged" AutoPostBack="true">
+                        </asp:DropDownList>
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                            <asp:DropDownList ID="ddlProduct" runat="server" class="form-control">
-                            </asp:DropDownList>
-                        </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <asp:DropDownList ID="ddlProduct" runat="server" class="form-control">
+                        </asp:DropDownList>
                     </div>
+                </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
 
                     <asp:Button ID="Button2" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" />
 
                 </div>
-                </div>
+            </div>
 
             <div style="width: 100%;" class="table-responsive">
-                <asp:GridView ID="gvproductlist" OnRowDataBound="gvproductlist_RowDataBound" OnRowCommand="gvproductlist_RowCommand" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" EnableViewState="False" Caption="<b><u>PRODUCT LIST</u></b>" CaptionAlign="Top">
+                <asp:GridView ID="gvproductlist" OnRowDataBound="gvproductlist_RowDataBound" OnRowCommand="gvproductlist_RowCommand"
+                    runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all"
+                    role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" 
+                    HeaderStyle-HorizontalAlign="Center" Caption="<b><u>PRODUCT LIST</u></b>" CaptionAlign="Top">
                     <Columns>
                         <%-- <asp:TemplateField HeaderText="OrderId" Visible="True">
                             <ItemTemplate>
@@ -134,12 +137,95 @@
 
 
                         <asp:HyperLinkField DataNavigateUrlFields="Id" ControlStyle-CssClass="red" HeaderText="EDIT" DataNavigateUrlFormatString="~/Product/ManageProducts.aspx?Id={0}" Text="Edit" />
-
+                        <%--<asp:HyperLinkField DataNavigateUrlFields="Id" ControlStyle-CssClass="red" HeaderText="Change Price" DataNavigateUrlFormatString="~/Product/ProductList.aspx?Id={0}" Text="Change Price" />--%>
+                        <%--    <asp:TemplateField>
+                            <ItemTemplate>
+                                <asp:Button Text="Change Price" ID="btnPopup"  runat="server" ControlStyle-CssClass="red" CommandName="Price" OnClientClick="return false;" />
+                            </ItemTemplate>
+                        </asp:TemplateField>--%>
+                        <asp:TemplateField HeaderText="">
+                            <ItemTemplate>
+                                <%--<input type="button" id="btnPopup"  runat="server"  />--%>
+                                <asp:LinkButton ID="btnPopup" CommandName="Price" runat="server" CommandArgument='<%#Eval("Id") %>'>Change Price</asp:LinkButton>
+                            </ItemTemplate>
+                        </asp:TemplateField>
                     </Columns>
                     <HeaderStyle HorizontalAlign="Center" BackColor="#EDE8E8"></HeaderStyle>
                 </asp:GridView>
             </div>
+            <!-- this is bootstrp modal popup -->
+            <div id="myModal" class="modal fade">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content" style="width: 120%;">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title">Variants Of 
+                                <label id="lblProdName" runat="server"></label>
+                            </h4>
+                        </div>
+                        <div class="modal-body" style="overflow-y: auto; max-height: 100%; margin-bottom: 20px;">
+                            <asp:Label ID="lblmessage" runat="server" ClientIDMode="Static"></asp:Label>
 
+                            <asp:GridView ID="grdgProduct" runat="server" AutoGenerateColumns="false" OnRowEditing="GridView1_RowEditing"
+                                AllowPaging="true" Width="99%">
+                                <PagerStyle ForeColor="#8C4510"
+                                    HorizontalAlign="Center"></PagerStyle>
+                                <HeaderStyle ForeColor="White" Font-Bold="True"
+                                    BackColor="#A55129"></HeaderStyle>
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Unit Name">
+                                        <ItemTemplate>
+                                            <asp:HiddenField ID="HiddenFieldgrpid" runat="server" Value='<%# Bind("grpId") %>' />
+                                            <asp:HiddenField ID="HiddenFieldgrpUnitId" runat="server" Value='<%# Bind("grpUnitId") %>' />
+                                            <asp:HiddenField ID="HiddenFieldgrpImage" runat="server" Value='<%# Bind("grpImage") %>' />
+                                            <asp:HiddenField ID="HiddenFieldgrpisOutOfStock" runat="server" Value='<%# Bind("grpisOutOfStock") %>' />
+                                            <asp:HiddenField ID="HiddenFieldgrpisSelected" runat="server" Value='<%# Bind("grpisSelected") %>' />
+                                            <asp:Label ID="lblname" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "grpUnitName")%>'></asp:Label>
+
+                                            <asp:HiddenField ID="HiddenFieldMinQty" runat="server" Value='<%# Bind("grpMinQty") %>' />
+                                            <asp:HiddenField ID="HiddenFieldMaxQty" runat="server" Value='<%# Bind("grpMaxQty") %>' />
+                                            <asp:HiddenField ID="HiddenFieldIsQtyFreeze" runat="server" Value='<%# Bind("grpIsQtyFreeze") %>' />
+                                            <asp:HiddenField ID="HiddenFieldIsBestBuy" runat="server" Value='<%# Bind("grpisBestBuy") %>' />
+                                            <asp:HiddenField ID="HiddenFieldFreezeQty" runat="server" Value='<%# Bind("grpFreezeQty") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:BoundField HeaderText="Unit" DataField="grpUnit" />
+                                    <asp:TemplateField HeaderText="MRP" ItemStyle-Width="120">
+                                        <ItemTemplate>
+                                            <asp:TextBox runat="server" ID="txtGrpMrp" Text='<%# Eval("grpMrp") %>' AutoPostBack="true" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <%-- <asp:BoundField HeaderText="MRP" DataField="grpMrp" />--%>
+                                    <asp:TemplateField HeaderText="DiscountType" ItemStyle-Width="120">
+                                        <ItemTemplate>
+                                            <asp:TextBox runat="server" ID="txtGrpDiscountType" Text='<%# Eval("grpDiscountType") %>' AutoPostBack="true" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <%--<asp:BoundField HeaderText="Discount Type" DataField="grpDiscountType" />--%>
+                                    <asp:BoundField HeaderText="Discount" DataField="grpDiscount" />
+                                    <asp:BoundField HeaderText="Sosho Price" DataField="grpSoshoPrice" />
+                                    <asp:BoundField HeaderText="Packing Type" DataField="grpPackingType" />
+                                    <%--<asp:BoundField HeaderText="Is Selected" DataField="grpisSelected" />--%>
+
+                                    <asp:TemplateField>
+                                        <ItemTemplate>
+                                            <asp:LinkButton Text="Edit" runat="server" CommandName="Edit" CausesValidation="false" />
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:LinkButton Text="Update" runat="server" OnClick="OnUpdate" CausesValidation="false" />
+
+                                        </EditItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end -->
             <script type="text/javascript">
                             $(document).ready(function () {
                                 $('#ContentPlaceHolder1_gvproductlist').DataTable({
@@ -154,11 +240,23 @@
                                     "autoWidth": false,
                                     "alwaysCloneTop": false,
                                 });
-                            });
+
+                                $("#txtGrpMrp").blur(function () {
+                                    alert("This input field has lost its focus.");
+                                });
+
+                });
+
+                            function openModal() {
+                                $('[id*=myModal').modal('show');
+                            } 
+
+
             </script>
 
         </section>
     </div>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphScripts" runat="Server">
 </asp:Content>
