@@ -1308,7 +1308,6 @@
                 });
 
                 $("#ContentPlaceHolder1_ddlDiscountType").change(function () {
-                    debugger
                     var end = this.value;
                     alert(end);
                     if (end != "") {
@@ -1334,7 +1333,6 @@
                 });
 
                 $('#ContentPlaceHolder1_txtgrpSoshoPrice').focusout(function (event) {
-                    debugger
                     var total = 0;
                     var grpDiscountTypeval = $("#ContentPlaceHolder1_ddlgrpDiscountType").val();
                     var grpMrpval = $("#ContentPlaceHolder1_txtgrpMRP").val();
@@ -1352,7 +1350,6 @@
                 });
 
                 $('#ContentPlaceHolder1_txtgrpMRP').focusout(function (event) {
-                    debugger
                     var total = 0;
                     var grpDiscountTypeval = $("#ContentPlaceHolder1_ddlgrpDiscountType").val();
                     var grpMrpval = $("#ContentPlaceHolder1_txtgrpMRP").val();
@@ -1492,7 +1489,6 @@
                     var Inchargechecked = $("#ContentPlaceHolder1_chklstJurisdictionIncharge input[type='checkbox']:checked").length > 0;
                     var rejectedreasonval = $("#ContentPlaceHolder1_txtRejectedReason").val();
                     var gridRowCount = $("[id*=grdProductCategory] tr").length;
-                    debugger
                     if (gridRowCount == 0) {
                         $("#spnAddProductCategory").css({ 'display': 'block','text-align':'right'});
                         flag = false;

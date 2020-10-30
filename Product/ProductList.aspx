@@ -190,19 +190,19 @@
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:BoundField HeaderText="Unit" DataField="grpUnit" />
-                                    <asp:TemplateField HeaderText="MRP" ItemStyle-Width="120">
+                                    <%--<asp:TemplateField HeaderText="MRP" ItemStyle-Width="120">
                                         <ItemTemplate>
                                             <asp:TextBox runat="server" ID="txtGrpMrp" Text='<%# Eval("grpMrp") %>' AutoPostBack="true" />
                                         </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <%-- <asp:BoundField HeaderText="MRP" DataField="grpMrp" />--%>
-                                    <asp:TemplateField HeaderText="DiscountType" ItemStyle-Width="120">
+                                    </asp:TemplateField>--%>
+                                    <asp:BoundField HeaderText="MRP" DataField="grpMrp" />
+                                  <%--  <asp:TemplateField HeaderText="DiscountType" ItemStyle-Width="120">
                                         <ItemTemplate>
                                             <asp:TextBox runat="server" ID="txtGrpDiscountType" Text='<%# Eval("grpDiscountType") %>' AutoPostBack="true" />
                                         </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <%--<asp:BoundField HeaderText="Discount Type" DataField="grpDiscountType" />--%>
-                                    <asp:BoundField HeaderText="Discount" DataField="grpDiscount" />
+                                    </asp:TemplateField>--%>
+                                    <asp:BoundField HeaderText="Discount Type" DataField="grpDiscountType" />
+                                    <asp:BoundField HeaderText="Discount" DataField="grpDiscount"  />
                                     <asp:BoundField HeaderText="Sosho Price" DataField="grpSoshoPrice" />
                                     <asp:BoundField HeaderText="Packing Type" DataField="grpPackingType" />
                                     <%--<asp:BoundField HeaderText="Is Selected" DataField="grpisSelected" />--%>
@@ -241,9 +241,9 @@
                                     "alwaysCloneTop": false,
                                 });
 
-                                $("#txtGrpMrp").blur(function () {
-                                    alert("This input field has lost its focus.");
-                                });
+                                //$("#txtGrpMrp").blur(function () {
+                                //    alert("This input field has lost its focus.");
+                                //});
 
                 });
 

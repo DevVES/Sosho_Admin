@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using WebApplication1;
 
@@ -152,7 +145,8 @@ public partial class Product_ProductList : System.Web.UI.Page
     {
         grdgProduct.EditIndex = e.NewEditIndex;
         this.BindGrid();
-       
+        (grdgProduct.Rows[e.NewEditIndex].Cells[4].Controls[0] as TextBox).ReadOnly = true;
+
     }
     protected void OnUpdate(object sender, EventArgs e)
     {
@@ -170,13 +164,12 @@ public partial class Product_ProductList : System.Web.UI.Page
 
         if (discountType == "%")
         {
-            grpSoshoPrice = mrp - (( mrp * grpDiscount) / 100);
+            grpDiscount = Convert.ToDecimal( 100 - (grpSoshoPrice * 100) / mrp);//mrp - (( mrp * grpSoshoPrice) / 100);
         }
         else if (discountType == "Fixed")
         {
-            grpSoshoPrice = mrp - grpDiscount;
+            grpDiscount = mrp - grpSoshoPrice;
         }
-       
 
         dt.Rows[row.RowIndex]["grpUnit"] = unit;
         dt.Rows[row.RowIndex]["grpMrp"] = mrp;
@@ -230,11 +223,12 @@ public partial class Product_ProductList : System.Web.UI.Page
         }
     }
 
-    //protected void OnTextChangedMRP(object sender, EventArgs e)
-    //{
-    //    TextBox textBox = sender as TextBox;
-    //    string mrp = textBox.Text;
-        
-    //    BindGrid();
-    //}
-}
+   
+        //protected void OnTextChangedMRP(object sender, EventArgs e)
+        //{
+        //    TextBox textBox = sender as TextBox;
+        //    string mrp = textBox.Text;
+
+        //    BindGrid();
+        //}
+    }
