@@ -559,7 +559,7 @@
                                     <asp:Label ID="lblgrpUnit" runat="server" Text="Unit"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:TextBox ID="txtgrpUnit" runat="server" TextMode="Number" CssClass="form-control" Width="40%" onkeypress="return isNumber(event)" placeholder="Unit"> </asp:TextBox>
+                                    <asp:TextBox ID="txtgrpUnit" runat="server" CssClass="form-control" Width="40%" onkeypress="return isNumber(event)" placeholder="Unit"> </asp:TextBox>
                                 </div>
                                 <div class="col-md-2 pad">
                                     <span id="spngrpUnit" style="color: #d9534f; display: none;">This field is required</span>
