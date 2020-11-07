@@ -3,8 +3,10 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-    <link href="../plugins/datepicker/datepicker3.css" rel="stylesheet" />
-    <script src="../plugins/datepicker/bootstrap-datepicker.js"></script>
+  <link rel="stylesheet" href="../../plugins/datepicker/datepicker3.css" />
+    <link rel="stylesheet" href="../../plugins/timepicker/bootstrap-timepicker.min.css" />
+    <script src="../../plugins/datepicker/bootstrap-datepicker.js"></script>
+    <script src="../../plugins/timepicker/bootstrap-timepicker.min.js"></script>
 
 
 
@@ -159,12 +161,85 @@
                     <div class="modal-content" style="width: 120%;">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
                             <h4 class="modal-title">Variants Of 
                                 <label id="lblProdName" runat="server"></label>
                             </h4>
                         </div>
                         <div class="modal-body" style="overflow-y: auto; max-height: 100%; margin-bottom: 20px;">
                             <asp:Label ID="lblmessage" runat="server" ClientIDMode="Static"></asp:Label>
+                            <input type="hidden" id="hdnPopupProductId" name="hdnPopupProductId" runat="server" />
+                            <div class="col-md-12">
+                                <div class="col-md-2 pad">
+                                    <asp:Label ID="lblJurisdiction" runat="server" Text="Apply On Franchise"></asp:Label>
+                                </div>
+                                <div class="col-md-4 pad">
+                                    <asp:DropDownList CssClass="form-control" runat="server" ID="ddlJurisdiction"  AppendDataBoundItems="true" AutoPostBack="true" OnSelectedIndexChanged="OnSelectedIndexChangedForJuridiction">
+                                        <asp:ListItem Text="Select Jurisdiction" Value=""></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-md-2 pad">
+                                    <asp:Label ID="lblassignedpins" runat="server" Text="Assigned Pincodes"></asp:Label>
+                                </div>
+                                <div class="col-md-4 pad">
+                                    <asp:TextBox id="assignedpins" Enabled="false" TextMode="multiline" class="form-control" Columns="50" Rows="2" runat="server" />
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-2 pad">
+                                    <asp:Label ID="lblstartdate" runat="server" Text="Date"></asp:Label><span style="color: red">*</span>
+
+                                </div>
+                                <div class="col-md-10 pad" style="padding: 0">
+                                    <div class="col-md-3 pad">
+                                        <asp:TextBox ID="PopUpStartDt" CssClass="form-control" placeholder="Start Date" runat="server"></asp:TextBox>
+                                        <script>
+                                            $('#ContentPlaceHolder1_PopUpStartDt').datepicker({
+                                                format: 'dd/M/yyyy',
+                                                autoclose: true
+                                            });
+                                        </script>
+                                        
+                                    </div>
+                                    <div class="col-md-2 pad">
+                                        <div class="bootstrap-timepicker">
+
+                                            <div class="input-group">
+
+                                                <asp:TextBox runat="server" type="text" ID="txtstarttime" class="form-control timepicker"></asp:TextBox>
+                                                <div class="input-group-addon">
+                                                    <i class="fa fa-clock-o"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <div class="col-md-3 pad">
+                                        <asp:TextBox ID="PopUpEndDt" CssClass="form-control" placeholder="End Date" runat="server"></asp:TextBox>
+                                        <script>
+                                            $('#ContentPlaceHolder1_PopUpEndDt').datepicker({
+                                                format: 'dd/M/yyyy',
+                                                autoclose: true
+                                            });
+                                        </script>
+
+                                    </div>
+                                    <div class="col-md-2 pad">
+                                        <div class="bootstrap-timepicker">
+                                            <div class="input-group">
+                                                <asp:TextBox runat="server" type="text" ID="txtendtime" class="form-control timepicker"></asp:TextBox>
+                                                <div class="input-group-addon">
+                                                    <i class="fa fa-clock-o"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 pad">
+                                    <asp:Button ID="btnDateSave" CssClass="btn btn-primary" runat="server" Text="Save" OnClick="BtnSaveDate_Click" />
+                                        </div>
+                                </div>
+
+                            </div>
 
                             <asp:GridView ID="grdgProduct" runat="server" AutoGenerateColumns="false" OnRowEditing="GridView1_RowEditing"
                                 AllowPaging="true" Width="99%">
@@ -253,7 +328,52 @@
 
 
             </script>
+            <script>
+                            var today = new Date();
+                            var dd = today.getDate();
+                            var mm = today.getMonth() + 1; //January is 0!
+                            var yyyy = today.getFullYear();
+                            if (dd < 10) {
+                                dd = '0' + dd
+                            }
+                            if (mm < 10) {
+                                mm = '0' + mm
+                            }
+                            today = dd + '-' + mm + '-' + yyyy;
+                            $('#PopUpStartDt').val(today);
+                            $('#PopUpStartDt').datepicker({
+                                format: 'dd-mm-yyyy',
+                                autoclose: true
+                            });
+                            $(".timepicker").timepicker({
+                                showInputs: false
+                            });
+            </script>
 
+
+            <script>
+                            var today = new Date();
+                            var dd = today.getDate();
+                            var mm = today.getMonth() + 1; //January is 0!
+                            var yyyy = today.getFullYear();
+                            if (dd < 10) {
+                                dd = '0' + dd
+                            }
+                            if (mm < 10) {
+                                mm = '0' + mm
+                            }
+                            today = dd + '-' + mm + '-' + yyyy;
+                            $('#PopUpEndDt').val(today);
+                            $('#PopUpEndDt').datepicker({
+                                format: 'dd-mm-yyyy',
+                                autoclose: true
+                            });
+                            $(".timepicker").timepicker({
+                                showInputs: false
+                            });
+
+
+            </script>
         </section>
     </div>
 

@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.Sql;
+using WebApplication1;
 
 public partial class final : System.Web.UI.Page
 {
@@ -163,7 +164,7 @@ public partial class final : System.Web.UI.Page
                         mess = "Since you have chosen to buy with 4 friends, share offer to ensure your friends buy it by  " + date + " to pay offer price of only ₹" + forcust + " instead of single-buy price of ₹" + mrp + " at time of delivery.";
                         whatsapp = clsCommon.WhatsappmsgKey("ButWith4Frd");
                     }
-
+                    
                     lblmsg.InnerHtml = mess;
 
                 }
