@@ -210,7 +210,8 @@ public partial class Product_ProductList : System.Web.UI.Page
         string sJurisdictionId = ddlJurisdiction.SelectedItem.Value;
         if (sJurisdictionId == "-1")
         {
-            updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + unit + "',Mrp='" + mrp + "',DiscountType='" + discountType + "',Discount='" + grpDiscount + "',SoshoPrice='" + grpSoshoPrice + "',PackingType='" + grpPackingType + "' Where ProductId IN (Select Id from Product where Id =" + productid + " OR ProductMasterId =" + productid + ")";
+            //updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + unit + "',Mrp='" + mrp + "',DiscountType='" + discountType + "',Discount='" + grpDiscount + "',SoshoPrice='" + grpSoshoPrice + "',PackingType='" + grpPackingType + "' Where ProductId IN (Select Id from Product where Id =" + productid + " OR ProductMasterId =" + productid + ")";
+            updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + unit + "',Mrp='" + mrp + "',DiscountType='" + discountType + "',Discount='" + grpDiscount + "',SoshoPrice='" + grpSoshoPrice + "',PackingType='" + grpPackingType + "' Where Id=" + grpId + " OR AttributeMasterId = " + grpId;
         }
         else
         {

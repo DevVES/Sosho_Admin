@@ -872,10 +872,18 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                             {
                                 strPackingType = "";
                             }
-                            string updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + g1.Cells[1].Text + "',UnitId='" + strUnitId.ToString() + "',Mrp='" + g1.Cells[2].Text + "',DiscountType='" + g1.Cells[3].Text + "',Discount='" + g1.Cells[4].Text + "',SoshoPrice='" + g1.Cells[5].Text + "',PackingType='" + strPackingType.ToString() + "',ProductImage='" + strImage.ToString() + "',isOutOfStock='" + strisOutOfStock + "',isSelected='" + strisSelected + "',MinQty='" + MinQty + "',MaxQty='" + MaxQty + "',IsQtyFreeze='" + isQtyFreezeVal + "',IsBestBuy='" + strisBestBuy + "',FreezeQty='" + FreezeQty + "' Where Id=" + sGrpId + " and ProductId = " + id1;
-                            //string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id1 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + ","+ isQtyFreezeVal + ","+ strisBestBuy + ","+ FreezeQty + ")";
-                            //int VALatt = dbc.ExecuteQuery(ProductAttrqry);
-                            int VALatt = dbc.ExecuteQuery(updateqty);
+
+                            if (string.IsNullOrEmpty(sGrpId))
+                            {
+                                string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + id1 + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + "," + strisBestBuy + "," + FreezeQty + ")";
+                                int VALatt = dbc.ExecuteQuery(ProductAttrqry);
+                            }
+                            else
+                            {
+                                string updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + g1.Cells[1].Text + "',UnitId='" + strUnitId.ToString() + "',Mrp='" + g1.Cells[2].Text + "',DiscountType='" + g1.Cells[3].Text + "',Discount='" + g1.Cells[4].Text + "',SoshoPrice='" + g1.Cells[5].Text + "',PackingType='" + strPackingType.ToString() + "',ProductImage='" + strImage.ToString() + "',isOutOfStock='" + strisOutOfStock + "',isSelected='" + strisSelected + "',MinQty='" + MinQty + "',MaxQty='" + MaxQty + "',IsQtyFreeze='" + isQtyFreezeVal + "',IsBestBuy='" + strisBestBuy + "',FreezeQty='" + FreezeQty + "' Where Id=" + sGrpId + " and ProductId = " + id1;
+                                int VALatt = dbc.ExecuteQuery(updateqty);
+                            }
+                            
                         }
                         string updateProductPrice = "UPDATE Product SET SoshoPrice = " + selectedSoshoPrice + ", MRP = "+ selectedMRP +
                                                    ",Discount = " +selectedDiscount+ " Where id=" + Convert.ToInt32(id1);
@@ -915,9 +923,12 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 }
                 int VAL = 0;
                 int ProductMasterId = 0;
+                int AttributeMasterId = 0;
                 int iCtr = 0;
+               
                 if (selectedIncharge.Count > 0)
                 {
+                    List<int> AttributeMasterIds = new List<int>();
                     foreach (ListItem item in selectedIncharge)
                     {
                         ++iCtr;
@@ -969,8 +980,10 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                         decimal selectedSoshoPrice = 0;
                         decimal selectedDiscount = 0;
                         decimal selectedMRP = 0;
+                        int iAtr = 0;
                         foreach (GridViewRow g1 in grdgProduct.Rows)
                         {
+                            ++iAtr;
                             HiddenField hdnMinQty = (HiddenField)g1.FindControl("HiddenFieldMinQty");
                             MinQty = hdnMinQty.Value;
                             HiddenField hdnMaxQty = (HiddenField)g1.FindControl("HiddenFieldMaxQty");
@@ -1034,8 +1047,27 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                                 strPackingType = "";
                             }
 
-                            string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + VAL + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+","+ FreezeQty + ")";
-                            int VALatt = dbc.ExecuteQuery(ProductAttrqry);
+                            string ProductAttrqry = "INSERT INTO [dbo].[Product_ProductAttribute_Mapping] ([ProductId],[Unit],[UnitId],[Mrp],[DiscountType],[Discount],[SoshoPrice],[PackingType],[ProductImage],[IsActive],[IsDeleted],[CreatedOn],[CreatedBy],[isOutOfStock],[isSelected],[MinQty],[MaxQty],[IsQtyFreeze],[IsBestBuy],[FreezeQty]) VALUES (" + VAL + ",'" + g1.Cells[1].Text + "'," + strUnitId.ToString() + "," + g1.Cells[2].Text + ",'" + g1.Cells[3].Text + "'," + g1.Cells[4].Text + "," + g1.Cells[5].Text + ",'" + strPackingType.ToString() + "','" + strImage.ToString() + "',1,0,'" + dtCreatedon.ToString() + "'," + userId + "," + strisOutOfStock + "," + strisSelected + "," + MinQty + "," + MaxQty + "," + isQtyFreezeVal + ","+strisBestBuy+","+ FreezeQty + "); SELECT SCOPE_IDENTITY();";
+                            //int VALatt = dbc.ExecuteQuery(ProductAttrqry);
+                            object att = dbc.ExecuteSQLScaler(ProductAttrqry);
+                            int VALatt = Convert.ToInt32(att);
+                            string UpdateAttrQry = string.Empty;
+                            if (iCtr == 1)
+                            {
+                                AttributeMasterIds.Add(VALatt);
+                                //AttributeMasterId = VALatt;
+                            }
+                            if (AttributeMasterIds.Count > 0 && iCtr != 1)
+                            {
+                                UpdateAttrQry = " UPDATE [dbo].[Product_ProductAttribute_Mapping]  SET AttributeMasterId = " + AttributeMasterIds[iAtr - 1].ToString() + " WHERE id = " + VALatt;
+
+                            }
+                            else
+                            {
+                               UpdateAttrQry = " UPDATE [dbo].[Product_ProductAttribute_Mapping]  SET AttributeMasterId = " + AttributeMasterId + " WHERE id = " + VALatt;
+                            }
+                            dbc.ExecuteQuery(UpdateAttrQry);
+                           
                         }
                         string updateProductPrice = "UPDATE Product SET SoshoPrice = " + selectedSoshoPrice + ", MRP = " + selectedMRP +
                                                    ",Discount = " + selectedDiscount + " Where id=" + Convert.ToInt32(VAL);
@@ -1715,7 +1747,8 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
             if (chkIsQuantityFreez.Checked)
                 isQtyFreeze = 1;
-            
+           
+
             foreach (DataRow row in dtgrpProduct.Rows)
             {
                 if (bisSelected)
@@ -1771,37 +1804,68 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                     dtgrpProduct1 = ViewState["dt"] as DataTable;
                     foreach (DataRow row in dtgrpProduct1.Rows)
                     {
-                        if (Convert.ToBoolean(row["grpisOutOfStock"]) == true)
-                            isOutOfStock = true;
+                        if (bisSelected)
+                        {
+                            row[12] = "False";
+                        }
+                        if (bisbestbuy)
+                        {
+                            row[17] = "False";
+                        }
+                        //if (Convert.ToBoolean(row["grpisOutOfStock"]) == true)
+                        //    isOutOfStock = true;
 
-                        if (Convert.ToBoolean(row["grpisSelected"]) == true)
-                            bisSelected = true;
+                        //if (Convert.ToBoolean(row["grpisSelected"]) == true)
+                        //    bisSelected = true;
 
-                        if (Convert.ToBoolean(row["grpisBestBuy"]) == true)
-                            bisbestbuy = true;
+                        //if (Convert.ToBoolean(row["grpisBestBuy"]) == true)
+                        //    bisbestbuy = true;
+
+                        isOutOfStock = Convert.ToBoolean(row["grpisOutOfStock"]);
+                        var isSelected = Convert.ToBoolean(row["grpisSelected"]);
+                        var isbestbuy = Convert.ToBoolean(row["grpisBestBuy"]);
 
                         if (Convert.ToBoolean(row["grpIsQtyFreeze"]) == true)
                             isQtyFreeze = 1;
 
+                    //    dtgrpProduct.Rows.Add(
+                    //     row["grpunitname"].ToString()
+                    //    , row["grpUnit"]
+                    //    , row["grpMrp"]
+                    //    , row["grpDiscountType"]
+                    //    , row["grpDiscount"]
+                    //    , row["grpSoshoPrice"]
+                    //    , row["grpPackingType"].ToString()
+                    //    , row["Id"]
+                    //    , row["grpId"]
+                    //    , row["grpUnitId"]
+                    //    , row["grpimage"].ToString()
+                    //     , isOutOfStock, bisSelected, "",
+                    //     row["grpMinQty"],
+                    //     row["grpMaxQty"],
+                    //     isQtyFreeze,
+                    //     bisbestbuy,
+                    //     row["grpFreezeQty"]
+                    //);
                         dtgrpProduct.Rows.Add(
-                         row["grpunitname"].ToString()
-                        , row["grpUnit"]
-                        , row["grpMrp"]
-                        , row["grpDiscountType"]
-                        , row["grpDiscount"]
-                        , row["grpSoshoPrice"]
-                        , row["grpPackingType"].ToString()
-                        , row["Id"]
-                        , row["grpId"]
-                        , row["grpUnitId"]
-                        , row["grpimage"].ToString()
-                         , isOutOfStock, bisSelected, "",
-                         row["grpMinQty"],
-                         row["grpMaxQty"],
-                         isQtyFreeze,
-                         bisbestbuy,
-                         row["grpFreezeQty"]
-                    );
+                       row["grpunitname"].ToString()
+                      , row["grpUnit"]
+                      , row["grpMrp"]
+                      , row["grpDiscountType"]
+                      , row["grpDiscount"]
+                      , row["grpSoshoPrice"]
+                      , row["grpPackingType"].ToString()
+                      , row["Id"]
+                      , row["grpId"]
+                      , row["grpUnitId"]
+                      , row["grpimage"].ToString()
+                       , isOutOfStock, isSelected, "",
+                       row["grpMinQty"],
+                       row["grpMaxQty"],
+                       isQtyFreeze,
+                       isbestbuy,
+                       row["grpFreezeQty"]
+                  );
                     }
                 }
             }
@@ -1970,6 +2034,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
 
     protected void OnCancel(object sender, EventArgs e)
     {
+        BtnAdd.Text = "Add";
         grdgProduct.EditIndex = -1;
         this.BindgrpProductData();
     }
