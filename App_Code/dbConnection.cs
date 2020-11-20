@@ -273,6 +273,31 @@ namespace WebApplication1
             return 0;
             //Close
         }
+
+        public int ExecuteQueryWithScalarId(string query)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = query;
+                cmd.Connection = openConnection();//Open
+                //int i = cmd.ExecuteNonQuery();
+                int val1 = Convert.ToInt32(cmd.ExecuteScalar());
+                return val1;
+            }
+            catch (Exception e)
+            {
+                //InsertLogs(ErrorMsgPrefix + " ExecuteQuery Msg:" + e.Message, "", e.StackTrace + query);
+                InsertLogs(ErrorMsgPrefix + " ExecuteQuery Msg:" + e.Message, "", query);
+            }
+            finally
+            {
+                closeConnection();
+            }
+            return 0;
+            //Close
+        }
+
         public int ExecuteQuery1(string query)
         {
             try
