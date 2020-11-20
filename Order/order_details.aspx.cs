@@ -64,7 +64,7 @@ public partial class order_details : System.Web.UI.Page
                             
                         }
 
-                        string OrderDetails = "select [Order].Id as oid,  (DATENAME(dw,CAST(DATEPART(m, CreatedOnUtc) AS VARCHAR)+ '/'+ CAST(DATEPART(d, CreatedOnUtc) AS VARCHAR)  + '/' + CAST(DATEPART(yy, CreatedOnUtc) AS VARCHAR))) +' '+convert(varchar(12),CreatedOnUtc,106)+', '+convert(varchar(12),CreatedOnUtc,108) as EndDate,OrderStatus.Name AS Ex, ISNULL([Order].OrderMRP,0) as MRP,ISNULL([Order].OrderTotal,0)as OrderTotal,[Order].TotalQTY,isnull((select top 1 Name from Payment_Methods where [Order].PaymentGatewayId=Payment_Methods.Id),'Default') as GatwayType  from [Order] INNER JOIN OrderStatus ON [Order].OrderStatusId = OrderStatus.Id where [Order].Id=" + oid + "";
+                        string OrderDetails = "select [Order].Id as oid,  (DATENAME(dw,CAST(DATEPART(m, CreatedOnUtc) AS VARCHAR)+ '/'+ CAST(DATEPART(d, CreatedOnUtc) AS VARCHAR)  + '/' + CAST(DATEPART(yy, CreatedOnUtc) AS VARCHAR))) +' '+convert(varchar(12),CreatedOnUtc,106)+', '+convert(varchar(12),CreatedOnUtc,108) as EndDate,OrderStatus.Name AS Ex, ISNULL([Order].OrderMRP,0) as MRP,ISNULL([Order].PaidAmount,0)as OrderTotal,[Order].TotalQTY,isnull((select top 1 Name from Payment_Methods where [Order].PaymentGatewayId=Payment_Methods.Id),'Default') as GatwayType  from [Order] INNER JOIN OrderStatus ON [Order].OrderStatusId = OrderStatus.Id where [Order].Id=" + oid + "";
 
                         DataTable dtorderdetails = dbc.GetDataTable(OrderDetails);
 
@@ -72,7 +72,7 @@ public partial class order_details : System.Web.UI.Page
                         {
                             lblorderid.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["oid"].ToString();
                             orderdatedid.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["EndDate"].ToString();
-                            lblmrp.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["MRP"].ToString();
+                            //lblmrp.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["MRP"].ToString();
                             lbltotordeamt.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["OrderTotal"].ToString();
                             lblstatus.InnerHtml = "&nbsp" + dtorderdetails.Rows[0]["Ex"].ToString();
 

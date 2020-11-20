@@ -75,8 +75,8 @@ public partial class OrderList : System.Web.UI.Page
                 qry = "SELECT  Convert(varchar(17),[order].CreatedOnUtc,113) as CreatedOnUtc ,[Order].Id as ordid, " +
                      " isnull(Customer.FirstName,(Select CustomerAddress.FirstName from CustomerAddress " +
                      " where CustomerAddress.Id= [Order].AddressId)) as FirstName, [Order].AddressId,CustomerAddress.MobileNo  as Mobile, " +
-                     " (isnull(CustomerAddress.BuildingNo,'') + ' ' + isnull(bm.Building,'') + ' ' + isnull(zm.Area,'') + ' ' + isnull(CustomerAddress.LandMark,'') + ' ' + isnull(cm.CityName,'') + ' ' + isnull(convert(varchar(20),zm.zipcode),'') + ' ' + isnull(sm.StateName,'')) as cadd, [Order].OrderStatusId, OrderItem.Quantity * OrderItem.MrpPerUnit as  PaymentAmt, " +
-                     " OrderItem.Quantity * OrderItem.MrpPerUnit AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, " +
+                     " (isnull(CustomerAddress.BuildingNo,'') + ' ' + isnull(bm.Building,'') + ' ' + isnull(zm.Area,'') + ' ' + isnull(CustomerAddress.LandMark,'') + ' ' + isnull(CustomerAddress.OtherDetail,isnull(CustomerAddress.Address,''))  + ' ' + isnull(cm.CityName,'') + ' ' + isnull(convert(varchar(20),zm.zipcode),'') + ' ' + isnull(sm.StateName,'')) as cadd, [Order].OrderStatusId, Convert(numeric(18,2),(OrderItem.Quantity * OrderItem.TotalAmount)) as  PaymentAmt, " +
+                     " Convert(numeric(18,2),(OrderItem.Quantity * OrderItem.TotalAmount)) AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, " +
                      " [Order].TotalGram, [Order].CustReedeemAmount, [Order].PaymentGatewayId, Product.Name, " +
                      " OrderStatus.Name AS Ex, AH.ReceiveAmount AS AdminAmount, FH.ReceiveAmount AS FrenchiessAmt, DH.ReceiveAmount AS DeliveryManAmt  " +
                      " FROM [Order] INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
@@ -97,8 +97,8 @@ public partial class OrderList : System.Web.UI.Page
             qry = "SELECT  Convert(varchar(17),[order].CreatedOnUtc,113) as CreatedOnUtc ,[Order].Id as ordid, " +
                      " isnull(Customer.FirstName,(Select CustomerAddress.FirstName from CustomerAddress " +
                      " where CustomerAddress.Id= [Order].AddressId)) as FirstName, [Order].AddressId,CustomerAddress.MobileNo  as Mobile, " +
-                     " (isnull(CustomerAddress.BuildingNo,'') + ' ' + isnull(bm.Building,'') + ' ' + isnull(zm.Area,'') + ' ' + isnull(CustomerAddress.LandMark,'') + ' ' + isnull(cm.CityName,'') + ' ' + isnull(convert(varchar(20),zm.zipcode),'') + ' ' + isnull(sm.StateName,'')) as cadd, [Order].OrderStatusId, OrderItem.Quantity * OrderItem.MrpPerUnit as  PaymentAmt, " +
-                     " OrderItem.Quantity * OrderItem.MrpPerUnit AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, " +
+                     " (isnull(CustomerAddress.BuildingNo,'') + ' ' + isnull(bm.Building,'') + ' ' + isnull(zm.Area,'') + ' ' + isnull(CustomerAddress.LandMark,'') + ' ' + isnull(CustomerAddress.OtherDetail,isnull(CustomerAddress.Address,''))  + ' ' + isnull(cm.CityName,'') + ' ' + isnull(convert(varchar(20),zm.zipcode),'') + ' ' + isnull(sm.StateName,'')) as cadd, [Order].OrderStatusId, Convert(numeric(18,2),(OrderItem.Quantity * OrderItem.TotalAmount)) as  PaymentAmt, " +
+                     " Convert(numeric(18,2),(OrderItem.Quantity * OrderItem.TotalAmount)) AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, " +
                      " [Order].TotalGram, [Order].CustReedeemAmount, [Order].PaymentGatewayId, Product.Name, " +
                      " OrderStatus.Name AS Ex, AH.ReceiveAmount AS AdminAmount, FH.ReceiveAmount AS FrenchiessAmt, DH.ReceiveAmount AS DeliveryManAmt " +
                      " FROM [Order] INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +

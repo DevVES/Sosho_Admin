@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-  <link rel="stylesheet" href="../../plugins/datepicker/datepicker3.css" />
+    <link rel="stylesheet" href="../../plugins/datepicker/datepicker3.css" />
     <link rel="stylesheet" href="../../plugins/timepicker/bootstrap-timepicker.min.css" />
     <script src="../../plugins/datepicker/bootstrap-datepicker.js"></script>
     <script src="../../plugins/timepicker/bootstrap-timepicker.min.js"></script>
@@ -119,7 +119,7 @@
             <div style="width: 100%;" class="table-responsive">
                 <asp:GridView ID="gvproductlist" OnRowDataBound="gvproductlist_RowDataBound" OnRowCommand="gvproductlist_RowCommand"
                     runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all"
-                    role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" 
+                    role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8"
                     HeaderStyle-HorizontalAlign="Center" Caption="<b><u>PRODUCT LIST</u></b>" CaptionAlign="Top">
                     <Columns>
                         <%-- <asp:TemplateField HeaderText="OrderId" Visible="True">
@@ -174,7 +174,7 @@
                                     <asp:Label ID="lblJurisdiction" runat="server" Text="Apply On Franchise"></asp:Label>
                                 </div>
                                 <div class="col-md-4 pad">
-                                    <asp:DropDownList CssClass="form-control" runat="server" ID="ddlJurisdiction"  AppendDataBoundItems="true" AutoPostBack="true" OnSelectedIndexChanged="OnSelectedIndexChangedForJuridiction">
+                                    <asp:DropDownList CssClass="form-control" runat="server" ID="ddlJurisdiction" AppendDataBoundItems="true" AutoPostBack="true" OnSelectedIndexChanged="OnSelectedIndexChangedForJuridiction">
                                         <asp:ListItem Text="Select Jurisdiction" Value=""></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
@@ -182,13 +182,31 @@
                                     <asp:Label ID="lblassignedpins" runat="server" Text="Assigned Pincodes"></asp:Label>
                                 </div>
                                 <div class="col-md-4 pad">
-                                    <asp:TextBox id="assignedpins" Enabled="false" TextMode="multiline" class="form-control" Columns="50" Rows="2" runat="server" />
+                                    <asp:TextBox ID="assignedpins" Enabled="false" TextMode="multiline" class="form-control" Columns="50" Rows="2" runat="server" />
                                 </div>
-                                
+
+                            </div>
+                              <div class="col-md-12">
+                                <div class="col-md-2 pad">
+                                    <asp:Label ID="lblProductName" runat="server" Text="Product Name"></asp:Label>
+                                </div>
+                                <div class="col-md-4 pad">
+                                    <asp:TextBox ID="txtProduct" class="form-control" runat="server" />
+                                </div>                                
+
                             </div>
                             <div class="col-md-12">
                                 <div class="col-md-2 pad">
-                                    <asp:Label ID="lblstartdate" runat="server" Text="Date"></asp:Label><span style="color: red">*</span>
+                                    <asp:Label ID="lblDisplayOrder" runat="server" Text="Display Order"></asp:Label>
+                                </div>
+
+                                <div class="col-md-4 pad">
+                                    <asp:TextBox ID="txtDisplayOrder" runat="server" onkeypress="return isNumber(event)" CssClass="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-2 pad">
+                                    <asp:Label ID="lblstartdate" runat="server" Text="Date"></asp:Label>
 
                                 </div>
                                 <div class="col-md-10 pad" style="padding: 0">
@@ -200,7 +218,7 @@
                                                 autoclose: true
                                             });
                                         </script>
-                                        
+
                                     </div>
                                     <div class="col-md-2 pad">
                                         <div class="bootstrap-timepicker">
@@ -214,7 +232,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                     <div class="col-md-3 pad">
+                                    <div class="col-md-3 pad">
                                         <asp:TextBox ID="PopUpEndDt" CssClass="form-control" placeholder="End Date" runat="server"></asp:TextBox>
                                         <script>
                                             $('#ContentPlaceHolder1_PopUpEndDt').datepicker({
@@ -235,12 +253,12 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2 pad">
-                                    <asp:Button ID="btnDateSave" CssClass="btn btn-primary" runat="server" Text="Save" OnClick="BtnSaveDate_Click" />
-                                        </div>
+                                        <asp:Button ID="btnDateSave" CssClass="btn btn-primary" runat="server" Text="Save" OnClick="BtnSaveDate_Click" />
+                                    </div>
                                 </div>
 
                             </div>
-
+                    
                             <asp:GridView ID="grdgProduct" runat="server" AutoGenerateColumns="false" OnRowEditing="GridView1_RowEditing"
                                 AllowPaging="true" Width="99%">
                                 <PagerStyle ForeColor="#8C4510"
@@ -252,7 +270,7 @@
                                         <ItemTemplate>
                                             <asp:HiddenField ID="HiddenFieldgrpid" runat="server" Value='<%# Bind("grpId") %>' />
                                             <asp:HiddenField ID="HiddenFieldgrpUnitId" runat="server" Value='<%# Bind("grpUnitId") %>' />
-                                            <asp:HiddenField ID="HiddenFieldgrpImage" runat="server" Value='<%# Bind("grpImage") %>' />
+                                            <asp:HiddenField ID="HiddenFieldgrpImage" runat="server" Value='<%# Bind("ProductImage") %>' />
                                             <asp:HiddenField ID="HiddenFieldgrpisOutOfStock" runat="server" Value='<%# Bind("grpisOutOfStock") %>' />
                                             <asp:HiddenField ID="HiddenFieldgrpisSelected" runat="server" Value='<%# Bind("grpisSelected") %>' />
                                             <asp:Label ID="lblname" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "grpUnitName")%>'></asp:Label>
@@ -271,15 +289,29 @@
                                         </ItemTemplate>
                                     </asp:TemplateField>--%>
                                     <asp:BoundField HeaderText="MRP" DataField="grpMrp" />
-                                  <%--  <asp:TemplateField HeaderText="DiscountType" ItemStyle-Width="120">
+                                    <%--  <asp:TemplateField HeaderText="DiscountType" ItemStyle-Width="120">
                                         <ItemTemplate>
                                             <asp:TextBox runat="server" ID="txtGrpDiscountType" Text='<%# Eval("grpDiscountType") %>' AutoPostBack="true" />
                                         </ItemTemplate>
                                     </asp:TemplateField>--%>
                                     <asp:BoundField HeaderText="Discount Type" DataField="grpDiscountType" />
-                                    <asp:BoundField HeaderText="Discount" DataField="grpDiscount"  />
+                                    <asp:BoundField HeaderText="Discount" DataField="grpDiscount" />
                                     <asp:BoundField HeaderText="Sosho Price" DataField="grpSoshoPrice" />
                                     <asp:BoundField HeaderText="Packing Type" DataField="grpPackingType" />
+                                    <%--<asp:ImageField DataImageUrlField="grpImage" HeaderText="Image" ControlStyle-Width="25%" ControlStyle-Height="25%"></asp:ImageField>--%>
+                                    
+                                    <asp:TemplateField HeaderText="Image" HeaderStyle-Width="200px">
+                                        <ItemTemplate>
+                                            <asp:Image ID="Image1" runat="server" ImageUrl='<%# Eval("grpImage" ) %>'
+                                                Height="80px" Width="100px" />
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:Image ID="img_user" runat="server" ImageUrl='<%# Eval("grpImage" ) %>'
+                                                Height="80px" Width="100px" /><br />
+                                            <asp:FileUpload ID="FileUpload1" runat="server" />
+                                        </EditItemTemplate>
+
+                                    </asp:TemplateField>
                                     <%--<asp:BoundField HeaderText="Is Selected" DataField="grpisSelected" />--%>
 
                                     <asp:TemplateField>
@@ -302,75 +334,75 @@
             </div>
             <!-- end -->
             <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#ContentPlaceHolder1_gvproductlist').DataTable({
-                                    "fixedHeader": true,
-                                    "paging": true,
-                                    "order": [[5, "desc"]],
-                                    "lengthChange": true,
-                                    "deferRender": true,
-                                    "ordering": true,
-                                    "scrollX": true,
-                                    "info": true,
-                                    "autoWidth": false,
-                                    "alwaysCloneTop": false,
-                                });
+                                            $(document).ready(function () {
+                                                $('#ContentPlaceHolder1_gvproductlist').DataTable({
+                                                    "fixedHeader": true,
+                                                    "paging": true,
+                                                    "order": [[5, "desc"]],
+                                                    "lengthChange": true,
+                                                    "deferRender": true,
+                                                    "ordering": true,
+                                                    "scrollX": true,
+                                                    "info": true,
+                                                    "autoWidth": false,
+                                                    "alwaysCloneTop": false,
+                                                });
 
-                                //$("#txtGrpMrp").blur(function () {
-                                //    alert("This input field has lost its focus.");
-                                //});
+                                                //$("#txtGrpMrp").blur(function () {
+                                                //    alert("This input field has lost its focus.");
+                                                //});
 
-                });
+                                            });
 
-                            function openModal() {
-                                $('[id*=myModal').modal('show');
-                            } 
+                                            function openModal() {
+                                                $('[id*=myModal').modal('show');
+                                            }
 
 
             </script>
             <script>
-                            var today = new Date();
-                            var dd = today.getDate();
-                            var mm = today.getMonth() + 1; //January is 0!
-                            var yyyy = today.getFullYear();
-                            if (dd < 10) {
-                                dd = '0' + dd
-                            }
-                            if (mm < 10) {
-                                mm = '0' + mm
-                            }
-                            today = dd + '-' + mm + '-' + yyyy;
-                            $('#PopUpStartDt').val(today);
-                            $('#PopUpStartDt').datepicker({
-                                format: 'dd-mm-yyyy',
-                                autoclose: true
-                            });
-                            $(".timepicker").timepicker({
-                                showInputs: false
-                            });
+                                            var today = new Date();
+                                            var dd = today.getDate();
+                                            var mm = today.getMonth() + 1; //January is 0!
+                                            var yyyy = today.getFullYear();
+                                            if (dd < 10) {
+                                                dd = '0' + dd
+                                            }
+                                            if (mm < 10) {
+                                                mm = '0' + mm
+                                            }
+                                            today = dd + '-' + mm + '-' + yyyy;
+                                            $('#PopUpStartDt').val(today);
+                                            $('#PopUpStartDt').datepicker({
+                                                format: 'dd-mm-yyyy',
+                                                autoclose: true
+                                            });
+                                            $(".timepicker").timepicker({
+                                                showInputs: false
+                                            });
             </script>
 
 
             <script>
-                            var today = new Date();
-                            var dd = today.getDate();
-                            var mm = today.getMonth() + 1; //January is 0!
-                            var yyyy = today.getFullYear();
-                            if (dd < 10) {
-                                dd = '0' + dd
-                            }
-                            if (mm < 10) {
-                                mm = '0' + mm
-                            }
-                            today = dd + '-' + mm + '-' + yyyy;
-                            $('#PopUpEndDt').val(today);
-                            $('#PopUpEndDt').datepicker({
-                                format: 'dd-mm-yyyy',
-                                autoclose: true
-                            });
-                            $(".timepicker").timepicker({
-                                showInputs: false
-                            });
+                                            var today = new Date();
+                                            var dd = today.getDate();
+                                            var mm = today.getMonth() + 1; //January is 0!
+                                            var yyyy = today.getFullYear();
+                                            if (dd < 10) {
+                                                dd = '0' + dd
+                                            }
+                                            if (mm < 10) {
+                                                mm = '0' + mm
+                                            }
+                                            today = dd + '-' + mm + '-' + yyyy;
+                                            $('#PopUpEndDt').val(today);
+                                            $('#PopUpEndDt').datepicker({
+                                                format: 'dd-mm-yyyy',
+                                                autoclose: true
+                                            });
+                                            $(".timepicker").timepicker({
+                                                showInputs: false
+                                            });
 
 
             </script>

@@ -202,6 +202,8 @@
                                     <%--<li id="liwhatsappmsg"><a class="myABC" href="/Product/WhatsappMsg.aspx"><i class="fa fa-circle-o"></i>Share WhatsApp Message</a></li>--%>
                                     <li id="liSharemsg"><a class="myABC" href="/Product/ShareMessage.aspx"><i class="fa fa-circle-o"></i>Share Message</a></li>
                                     <li id="liApprovedProduct"><a class="myABC" href="/Product/ApprovedProductList.aspx"><i class="fa fa-circle-o"></i>Approve Product List</a></li>
+                                    <li id="liProductAssign"><a class="myABC" href="/Product/ProductAssignToJuridiction.aspx"><i class="fa fa-circle-o"></i>Assign Products</a></li>
+                                    <li id="liProductRemove"><a class="myABC" href="/Product/ProductRemoveFromJuridiction.aspx"><i class="fa fa-circle-o"></i>Remove Products</a></li>
                                 </ul>
                             </li>
 
@@ -620,6 +622,7 @@
                 $("#lisharemsg").hide();
                 $("#liApprovedProduct").hide();
                 $("#liWalletDashboard").hide();
+                $("#liProductAssign").hide();
             }
             if (hiddenUserType == 3)
             {
@@ -638,6 +641,7 @@
                 $("#lisharemsg").hide();
                 $("#liApprovedProduct").hide();
                 $("#liWalletDashboard").hide();
+                $("#liProductAssign").hide();
             }
         });
 

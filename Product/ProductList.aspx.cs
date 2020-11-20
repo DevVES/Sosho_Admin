@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web.UI.WebControls;
 using WebApplication1;
@@ -18,7 +19,7 @@ public partial class Product_ProductList : System.Web.UI.Page
                 txtdt.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtdt1.Text = DateTime.Now.ToString("dd/MM/yyyy");
 
-                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 order by Sequence asc";
+                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 AND isnull(IsActive,0)=1 order by Sequence asc";
                 DataTable dtcategory = new DataTable();
                 dtcategory = dbc.GetDataTable(categoryqry);
                 dtcategory.Rows.Add("0", "Select Category");
@@ -95,19 +96,21 @@ public partial class Product_ProductList : System.Web.UI.Page
         string IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
         string sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
         int categoryId = Convert.ToInt32(ddlCategoryName.SelectedValue);
+        int subcategoryId = Convert.ToInt32(ddlSubCategoryName.SelectedValue);
         int productId = Convert.ToInt32(ddlProduct.SelectedValue);
         //string query = "SELECT [Id],[Name],[StartDate],[EndDate],[IsActive],[Mrp] as MRP,[Offer] as Offer,[BuyWith1FriendExtraDiscount] as BuyWith1Friend,[BuyWith5FriendExtraDiscount] as BuyWith5Friend FROM [SalebhaiOnePage_Staging].[dbo].[Product] where IsDeleted=0  and DOC>='" + txtdt.Text + " 00:00:00' and DOC<='" + txtdt1.Text + " 23:59:59' order by EndDate desc ";
         string query = "SELECT P.[Id],P.[Name],P.[StartDate],P.[EndDate],P.[IsActive],P.[Mrp] as MRP,P.[Offer] as Offer, " +
                        " P.[BuyWith1FriendExtraDiscount] as BuyWith1Friend, P.[BuyWith5FriendExtraDiscount] as BuyWith5Friend, PT.Name AS ProductType  " +
                        " FROM [dbo].[Product] P " +
                        " LEFT JOIN ProductTemplate PT ON PT.Id = P.ProductTemplateID " +
-                       " where IsDeleted=0 " +
-                       " and IsApproved = 1 and convert(date,DOC,103)>='" +
+                       " LEFT JOIN tblCategoryProductLink L ON L.ProductId = P.Id  " +
+                       " where P.IsDeleted=0 " +
+                       " and P.IsApproved = 1 and convert(date,DOC,103)>='" +
                        StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + "' and convert(date,DOC,103)<='"
                        + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + "'";
         if (IsAdmin == "False")
         {
-            query += " and JurisdictionId=" + sJurisdictionId;
+            query += " and P.JurisdictionId=" + sJurisdictionId;
         }
         if (IsAdmin == "True")
         {
@@ -115,20 +118,24 @@ public partial class Product_ProductList : System.Web.UI.Page
         }
         if (categoryId > 0)
         {
-            query += " and CategoryID=" + categoryId;
+            query += " and L.CategoryID=" + categoryId;
+        }
+        if (subcategoryId > 0)
+        {
+            query += " and L.SubCategoryID=" + subcategoryId;
         }
         if (productId > 0)
         {
-            query += " and Id =" + productId;
+            query += " and P.Id =" + productId;
         }
-        query += " order by EndDate desc ";
+        query += " order by P.EndDate desc ";
 
         DataTable dtbannerlist = dbc.GetDataTable(query);
-        if (dtbannerlist.Rows.Count > 0)
-        {
+        //if (dtbannerlist.Rows.Count > 0)
+        //{
             gvproductlist.DataSource = dtbannerlist;
             gvproductlist.DataBind();
-        }
+        //}
     }
 
     protected void OnSelectedIndexChanged(object sender, EventArgs e)
@@ -186,16 +193,36 @@ public partial class Product_ProductList : System.Web.UI.Page
         decimal grpDiscount = Convert.ToDecimal((row.Cells[4].Controls[0] as TextBox).Text);
         decimal grpSoshoPrice = Convert.ToDecimal((row.Cells[5].Controls[0] as TextBox).Text);
         string grpPackingType = (row.Cells[6].Controls[0] as TextBox).Text;
+        string grpImg = ((HiddenField)row.Cells[3].FindControl("HiddenFieldgrpImage")).Value;
         DataTable dt = ViewState["dt"] as DataTable;
         string productid = dt.Rows[0]["Id"].ToString();
 
         if (discountType == "%")
         {
-            grpDiscount = Math.Round(Convert.ToDecimal(100 - (grpSoshoPrice * 100) / mrp),2);//mrp - (( mrp * grpSoshoPrice) / 100);
+            grpDiscount = Math.Round(Convert.ToDecimal(100 - (grpSoshoPrice * 100) / mrp), 2);//mrp - (( mrp * grpSoshoPrice) / 100);
         }
         else if (discountType == "Fixed")
         {
             grpDiscount = mrp - grpSoshoPrice;
+        }
+
+        
+        FileUpload FileUpload1 = (FileUpload)row.FindControl("FileUpload1");
+        string path = "../ProductAttributeImage/";
+        string filename = string.Empty;
+        if (FileUpload1.HasFile)
+        {
+            filename = FileUpload1.FileName;
+            path += filename;
+            //save image in folder
+            FileUpload1.SaveAs(Server.MapPath(path));
+        }
+        else
+        {
+            // use previous user image if new image is not changed
+            Image img = (Image)row.FindControl("img_user");
+            path = img.ImageUrl;
+            filename = grpImg;
         }
 
         dt.Rows[row.RowIndex]["grpUnit"] = unit;
@@ -205,17 +232,18 @@ public partial class Product_ProductList : System.Web.UI.Page
         dt.Rows[row.RowIndex]["grpSoshoPrice"] = grpSoshoPrice;
         dt.Rows[row.RowIndex]["grpPackingType"] = grpPackingType;
         dt.Rows[row.RowIndex]["grpId"] = grpId;
+        dt.Rows[row.RowIndex]["grpImage"] = path;
         ViewState["dt"] = dt;
         string updateqty = string.Empty;
         string sJurisdictionId = ddlJurisdiction.SelectedItem.Value;
         if (sJurisdictionId == "-1")
         {
             //updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + unit + "',Mrp='" + mrp + "',DiscountType='" + discountType + "',Discount='" + grpDiscount + "',SoshoPrice='" + grpSoshoPrice + "',PackingType='" + grpPackingType + "' Where ProductId IN (Select Id from Product where Id =" + productid + " OR ProductMasterId =" + productid + ")";
-            updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + unit + "',Mrp='" + mrp + "',DiscountType='" + discountType + "',Discount='" + grpDiscount + "',SoshoPrice='" + grpSoshoPrice + "',PackingType='" + grpPackingType + "' Where Id=" + grpId + " OR AttributeMasterId = " + grpId;
+            updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + unit + "',Mrp='" + mrp + "',DiscountType='" + discountType + "',Discount='" + grpDiscount + "',SoshoPrice='" + grpSoshoPrice + "',PackingType='" + grpPackingType + "',ProductImage='" + filename + "' Where Id=" + grpId + " OR AttributeMasterId = " + grpId;
         }
         else
         {
-            updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + unit + "',Mrp='" + mrp + "',DiscountType='" + discountType + "',Discount='" + grpDiscount + "',SoshoPrice='" + grpSoshoPrice + "',PackingType='" + grpPackingType + "' Where Id=" + grpId + " and ProductId = " + productid;
+            updateqty = "UPDATE [Product_ProductAttribute_Mapping] set Unit = '" + unit + "',Mrp='" + mrp + "',DiscountType='" + discountType + "',Discount='" + grpDiscount + "',SoshoPrice='" + grpSoshoPrice + "',PackingType='" + grpPackingType + "',ProductImage='" + filename + "' Where Id=" + grpId + " and ProductId = " + productid;
         }
         int VALupdate = dbc.ExecuteQuery(updateqty);
         grdgProduct.EditIndex = -1;
@@ -236,10 +264,12 @@ public partial class Product_ProductList : System.Web.UI.Page
             LinkButton lnkView = (LinkButton)e.CommandSource;
             string productId = lnkView.CommandArgument;
             hdnPopupProductId.Value = productId;
-            string productQry = "SELECT Top 1 StartDate,EndDate FROM Product where isnull(IsActive,0)=1  and Id = " + productId;
+            string productQry = "SELECT Top 1 StartDate,EndDate, Name, DisplayOrder FROM Product where isnull(IsActive,0)=1  and Id = " + productId;
             DataTable dtProductlist = dbc.GetDataTable(productQry);
             if (dtProductlist.Rows.Count > 0)
             {
+                txtProduct.Text = dtProductlist.Rows[0]["Name"].ToString();
+                txtDisplayOrder.Text = dtProductlist.Rows[0]["DisplayOrder"].ToString();
                 DateTime startDate = Convert.ToDateTime(dtProductlist.Rows[0]["StartDate"].ToString());
                 DateTime endDate = Convert.ToDateTime(dtProductlist.Rows[0]["EndDate"].ToString());
                 //PopUpEndDt.Text = dtProductlist.Rows[0]["EndDate"].ToString();
@@ -280,9 +310,9 @@ public partial class Product_ProductList : System.Web.UI.Page
             else
             {
                 productIdsQry = "SELECT Id FROM Product where isnull(IsActive,0)=1  and (Id = " + productId + " or ProductMasterId = " + productId + ") AND JurisdictionID = " + sJurisdictionId;
-                
+
             }
-            
+
             DataTable dtProductIdslist = dbc.GetDataTable(productIdsQry);
             if (dtProductIdslist.Rows.Count > 0)
             {
@@ -296,9 +326,14 @@ public partial class Product_ProductList : System.Web.UI.Page
                     Ids += dtProductIdslist.Rows[nCtr]["Id"].ToString();
 
                 }
-                DataTable dtProductAttribute = dbc.GetDataTable("SELECT UnitId as grpUnitId,um.UnitName as grpUnitName,Unit as grpUnit,Mrp as grpMrp,DiscountType as grpDiscountType,Discount as grpDiscount,SoshoPrice as grpSoshoPrice,PackingType as grpPackingType,ProductImage as grpImage,ProductId as Id,pam.Id as grpId,pam.isOutofStock as grpisOutOfStock,pam.isSelected as grpisSelected,'Update' as Status, ISNULL(pam.MinQty,1) as grpMinQty, ISNULL(pam.MaxQty,99) as grpMaxQty, ISNULL(pam.IsQtyFreeze,0) as grpIsQtyFreeze, ISNULL(pam.IsBestBuy,0) AS grpisBestBuy, ISNULL(pam.FreezeQty,0) AS grpFreezeQty  FROM [dbo].[Product_ProductAttribute_Mapping] pam INNER JOIN [UnitMaster] um on pam.UnitId=um.Id  where pam.IsDeleted=0 and ProductId in(" + Ids + ")");
+                DataTable dtProductAttribute = dbc.GetDataTable("SELECT UnitId as grpUnitId,um.UnitName as grpUnitName,Unit as grpUnit,Mrp as grpMrp,DiscountType as grpDiscountType,Discount as grpDiscount,SoshoPrice as grpSoshoPrice,PackingType as grpPackingType,ProductImage as grpImage,ProductImage,ProductId as Id,pam.Id as grpId,pam.isOutofStock as grpisOutOfStock,pam.isSelected as grpisSelected,'Update' as Status, ISNULL(pam.MinQty,1) as grpMinQty, ISNULL(pam.MaxQty,99) as grpMaxQty, ISNULL(pam.IsQtyFreeze,0) as grpIsQtyFreeze, ISNULL(pam.IsBestBuy,0) AS grpisBestBuy, ISNULL(pam.FreezeQty,0) AS grpFreezeQty  FROM [dbo].[Product_ProductAttribute_Mapping] pam INNER JOIN [UnitMaster] um on pam.UnitId=um.Id  where pam.IsDeleted=0 and ProductId in(" + Ids + ")");
                 if (dtProductAttribute.Rows.Count > 0)
                 {
+                    for (int i = 0; i < dtProductAttribute.Rows.Count; i++)
+                    {
+                        dtProductAttribute.Rows[i]["grpImage"] = "../ProductAttributeImage/" + dtProductAttribute.Rows[i]["grpImage"].ToString();
+                        
+                    }
                     ViewState["dt"] = dtProductAttribute;
                     grdgProduct.DataSource = dtProductAttribute;
                     grdgProduct.DataBind();
@@ -356,18 +391,20 @@ public partial class Product_ProductList : System.Web.UI.Page
 
         string FROM1 = startdate + " " + starttime;
         string TO1 = enddate + " " + endtime;
-
+        string productname = txtProduct.Text;
+        string displayOrder = txtDisplayOrder.Text;
         string sJurisdictionId = ddlJurisdiction.SelectedItem.Value;
         string productIdsQry = string.Empty;
         if (sJurisdictionId == "-1")
         {
-            productIdsQry = "UPDATE [Product] SET [StartDate]='" + FROM1 + "',[EndDate]='" + TO1 + "' where ([Id]=" + productId  + " or ProductMasterId = " + productId + ")";
+            productIdsQry = "UPDATE [Product] SET [StartDate]='" + FROM1 + "',[EndDate]='" + TO1 + "', Name = '"+ productname +"', DisplayOrder = "+ displayOrder +" where ([Id]=" + productId + " or ProductMasterId = " + productId + ")";
         }
         else
         {
-            productIdsQry = "UPDATE [Product] SET [StartDate]='" + FROM1 + "',[EndDate]='" + TO1 + "' where ( [Id]=" + productId + " or ProductMasterId = " + productId + ") AND JurisdictionID = " + ddlJurisdiction.SelectedItem.Value;
+            productIdsQry = "UPDATE [Product] SET [StartDate]='" + FROM1 + "',[EndDate]='" + TO1 + "', Name = '" + productname + "', DisplayOrder = " + displayOrder + " where ( [Id]=" + productId + " or ProductMasterId = " + productId + ") AND JurisdictionID = " + ddlJurisdiction.SelectedItem.Value;
         }
-
+        lblProdName.InnerText = productname;
+        txtDisplayOrder.Text = displayOrder;
         //string query = "UPDATE [Product] SET [StartDate]='" + FROM1 + "',[EndDate]='" + TO1 + "' where [Id]=" + productId;
         dbc.ExecuteQuery(productIdsQry);
         ClientScript.RegisterStartupScript(this.GetType(), "Pop", "openModal();", true);
@@ -389,7 +426,7 @@ public partial class Product_ProductList : System.Web.UI.Page
         {
             assignedpins.Visible = true;
             lblassignedpins.Visible = true;
-            var assignedpinsquery = "Select PinCodeID from JurisdictionDetail where JurisdictionID ="+ sJurisdictionId;
+            var assignedpinsquery = "Select PinCodeID from JurisdictionDetail where JurisdictionID =" + sJurisdictionId;
             DataTable dtAssignedPins = dbc.GetDataTable(assignedpinsquery);
             var SelectedValues = dtAssignedPins.AsEnumerable().Select(s => s.Field<int>("PinCodeID")).ToArray();
 
@@ -397,7 +434,7 @@ public partial class Product_ProductList : System.Web.UI.Page
             assignedpins.Text = commaSeperatedValues;
             productIdsQry = "SELECT Id FROM Product where isnull(IsActive,0)=1  and (Id = " + productId + " or ProductMasterId = " + productId + ") AND JurisdictionID = " + ddlJurisdiction.SelectedItem.Value;
         }
-        
+
         DataTable dtProductIdslist = dbc.GetDataTable(productIdsQry);
         if (dtProductIdslist.Rows.Count > 0)
         {
@@ -413,6 +450,10 @@ public partial class Product_ProductList : System.Web.UI.Page
             DataTable dtProductAttribute = dbc.GetDataTable("SELECT UnitId as grpUnitId,um.UnitName as grpUnitName,Unit as grpUnit,Mrp as grpMrp,DiscountType as grpDiscountType,Discount as grpDiscount,SoshoPrice as grpSoshoPrice,PackingType as grpPackingType,ProductImage as grpImage,ProductId as Id,pam.Id as grpId,pam.isOutofStock as grpisOutOfStock,pam.isSelected as grpisSelected,'Update' as Status, ISNULL(pam.MinQty,1) as grpMinQty, ISNULL(pam.MaxQty,99) as grpMaxQty, ISNULL(pam.IsQtyFreeze,0) as grpIsQtyFreeze, ISNULL(pam.IsBestBuy,0) AS grpisBestBuy, ISNULL(pam.FreezeQty,0) AS grpFreezeQty  FROM [dbo].[Product_ProductAttribute_Mapping] pam INNER JOIN [UnitMaster] um on pam.UnitId=um.Id  where pam.IsDeleted=0 and ProductId in(" + Ids + ")");
             if (dtProductAttribute.Rows.Count > 0)
             {
+                for (int i = 0; i < dtProductAttribute.Rows.Count; i++)
+                {
+                    dtProductAttribute.Rows[i]["grpImage"] = "../ProductAttributeImage/" + dtProductAttribute.Rows[i]["grpImage"].ToString();
+                }
                 ViewState["dt"] = dtProductAttribute;
                 grdgProduct.DataSource = dtProductAttribute;
                 grdgProduct.DataBind();
@@ -425,6 +466,6 @@ public partial class Product_ProductList : System.Web.UI.Page
             }
             ClientScript.RegisterStartupScript(this.GetType(), "Pop", "openModal();", true);
         }
-        
+
     }
 }

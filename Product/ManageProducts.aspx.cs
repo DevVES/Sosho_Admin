@@ -58,7 +58,7 @@ public partial class Product_ManageProducts : System.Web.UI.Page
                 dtProductCategory.Columns.Add("hdnlinkSubCategoryId", typeof(string));
                 dtProductCategory.Columns.Add("linkProdSubCategory", typeof(string));
                 
-                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 order by Sequence asc";
+                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 AND isnull(IsActive,0)=1 order by Sequence asc";
                 DataTable dtcategory = dbc.GetDataTable(categoryqry);
                 //ddlCategoryName.DataSource = dtcategory;
                 //ddlCategoryName.DataTextField = "CategoryName";

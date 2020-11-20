@@ -50,10 +50,10 @@
                                 <td colspan="1">Order Date:</td>
                                 <td class="pleft" id="orderdatedid" runat="server">wednesday 5, 2019</td>
                             </tr>
-                            <tr>
+<%--                            <tr>
                                 <td colspan="1">Order MRP:</td>
                                 <td class="pleft" id="lblmrp" runat="server">Rs.450</td>
-                            </tr>
+                            </tr>--%>
                             <tr>
                                 <td colspan="1">Order Amount:</td>
                                 <td class="pleft" id="lbltotordeamt" runat="server">Rs.550</td>

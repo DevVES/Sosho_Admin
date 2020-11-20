@@ -32,7 +32,7 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                 ddlBannerType.DataBind();
                 ddlBannerType.Items.Insert(0, new ListItem("Select Banner Type", ""));
 
-                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 order by Sequence asc";
+                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 AND isnull(IsActive,0)=1 order by Sequence asc";
                 DataTable dtcategory = dbc.GetDataTable(categoryqry);
 
                 ddlbasicCategory.DataSource = dtcategory;
@@ -349,7 +349,14 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                                 Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
                                 dbc.ExecuteQuery(Jurisdictionquery);
                             }
+                            foreach (ListItem item in selectedCategory)
+                            {
+                                string cCategoryId = item.Value.ToString();
 
+                                string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
+                                Categoryquery += " VALUES ('" + cCategoryId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",1," + "'HomePage')";
+                                dbc.ExecuteQuery(Categoryquery);
+                            }
                             sweetMessage("", "Banner Updated Successfully", "success");
                             Response.Redirect("HomePageBannerList.aspx", true);
                         }
@@ -371,7 +378,14 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                                 Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
                                 dbc.ExecuteQuery(Jurisdictionquery);
                             }
+                            foreach (ListItem item in selectedCategory)
+                            {
+                                string cCategoryId = item.Value.ToString();
 
+                                string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
+                                Categoryquery += " VALUES ('" + cCategoryId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",1," + "'HomePage')";
+                                dbc.ExecuteQuery(Categoryquery);
+                            }
                             sweetMessage("", "Banner Updated Successfully", "success");
                             Response.Redirect("HomePageBannerList.aspx", true);
                         }

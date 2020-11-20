@@ -9,17 +9,17 @@
 
 
 
-    <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css" />
+    <%--<script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css" />--%>
     <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>--%>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
+    <%--<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>--%>
 
 
     <%@ Register Assembly="CKEditor.NET" Namespace="CKEditor.NET" TagPrefix="CKEditor" %>
@@ -1537,32 +1537,6 @@
                     if (ProductTypeval == "2") {
                         var totalRows = $("#<%=grdgProduct.ClientID %> tr").length;
                     }
-                    //if (grpDiscountTypeval == "") {
-                    //    $("#spnDiscountType").css('display', 'block');
-                    //    flag = false;
-                    //}
-                    //if (grpMrpval == "") {
-                    //    $("#spnDiscount").css('display', 'block');
-                    //    flag = false;
-                    //}
-                    //if (val == "") {
-                    //    $("#spnSoshoPrice").css('display', 'block');
-                    //    flag = false;
-                    //}
-                    //if (isProductval == true) {
-                    //    if (Productdesval == "") {
-                    //         $("#spnFullDescription").css('display', 'block');
-                    //        flag = false;
-                    //    }
-                    //    if (KeyFeatureval == "") {
-                    //        $("#spnkey").css('display', 'block');
-                    //        flag = false;
-                    //    }
-                    //    if (Notesval == "") {
-                    //        $("#spnnote").css('display', 'block');
-                    //        flag = false;
-                    //    }
-                    //}
                     if (IsAdminval == "1") {
                         if (isApprovedval == true) {
                             if (!Inchargechecked) {
@@ -1585,7 +1559,75 @@
 
 
 
+                function Validate() {
+                    var flag = true;
+                    var IsAdminval = $("#ContentPlaceHolder1_hdnIsAdmin").val();
+                    var pnameval = $("#ContentPlaceHolder1_txtpname").val();
+                    var ProductTypeval = $("#ContentPlaceHolder1_ddlProductType").val();
+                    var videolinkval = $("#ContentPlaceHolder1_txtvdo").val();
+                    var soldtimeval = $("#ContentPlaceHolder1_txtNoOfSoldItems").val();
+                    var gstval = $("#ContentPlaceHolder1_ddlgst").val();
+                    var unitval = $("#ContentPlaceHolder1_txtunit").val();
+                    var unitnameval = $("#ContentPlaceHolder1_ddlunitname").val();
+                    var displayorderval = $("#ContentPlaceHolder1_txtDisplayOrder").val();
+                    var grpDiscountTypeval = $("#ContentPlaceHolder1_ddlDiscountType").val();
+                    var grpMrpval = $("#ContentPlaceHolder1_txtMRP").val();
+                    var val = $("#ContentPlaceHolder1_txtDiscount").val();
+                    var isProductval = $("#ContentPlaceHolder1_chkIsProductDescription").is(":checked");
+                    var Productdesval = $("#ContentPlaceHolder1_txtFullDescription").val();
+                    var KeyFeatureval = $("#ContentPlaceHolder1_ckkey").val();
+                    var Notesval = $("#ContentPlaceHolder1_cknotes").val();
 
+                    var isApprovedval = $("#ContentPlaceHolder1_ChkIsApproved").prop('checked');
+                    var Inchargechecked = $("#ContentPlaceHolder1_chklstJurisdictionIncharge input[type='checkbox']:checked").length > 0;
+                    var rejectedreasonval = $("#ContentPlaceHolder1_txtRejectedReason").val();
+                    var gridRowCount = $("[id*=grdProductCategory] tr").length;
+                    if (gridRowCount == 0) {
+                        $("#spnAddProductCategory").css({ 'display': 'block', 'text-align': 'right' });
+                        flag = false;
+
+                    }
+                    if (pnameval == "") {
+                        $("#spnpname").css('display', 'block');
+                        flag = false;
+                    }
+                    
+                    if (ProductTypeval == "") {
+                        $("#spnProductType").css('display', 'block');
+                        flag = false;
+                    }
+                    
+                    if (soldtimeval == "") {
+                        $("#spnsoldtime").css('display', 'block');
+                        flag = false;
+                    }
+                    if (gstval == "") {
+                        $("#spngst").css('display', 'block');
+                        flag = false;
+                    }
+                    
+                    if (displayorderval == "") {
+                        $("#spnDisplayOrder").css('display', 'block');
+                        flag = false;
+                    }
+                    if (ProductTypeval == "2") {
+                        var totalRows = $("#<%=grdgProduct.ClientID %> tr").length;
+                    }
+                    if (IsAdminval == "1") {
+                        if (isApprovedval == true) {
+                            if (!Inchargechecked) {
+                                $("#spnJurisdictionIncharge").css('display', 'block');
+                                flag = false;
+                            }
+                        }
+                        else if (isApprovedval == false) {
+                            if (rejectedreasonval == "") {
+                                $("#spnRejectedReason").css('display', 'block');
+                                flag = false;
+                            }
+                        }
+                    }
+                }
 
 
                 function CalulatePSoshoPrice() {
