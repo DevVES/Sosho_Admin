@@ -8,20 +8,20 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SalebhaiOnePage_Admin", "ht
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.1"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_2169"
-		Debug.AspNetCompiler.PhysicalPath = "D:\Vidhi\S\Sosho\Sosho_Admin"
+		Debug.AspNetCompiler.PhysicalPath = "F:\Project\S\Sosho\Sosho_Admin"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_2168\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/localhost_2169"
-		Release.AspNetCompiler.PhysicalPath = "D:\Vidhi\S\Sosho\Sosho_Admin"
+		Release.AspNetCompiler.PhysicalPath = "F:\Project\S\Sosho\Sosho_Admin"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_2169\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "D:\Vidhi\S\Sosho\Sosho_Admin"
+		SlnRelativePath = "F:\Project\S\Sosho\Sosho_Admin"
 	EndProjectSection
 EndProject
 Global

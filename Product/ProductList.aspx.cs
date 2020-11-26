@@ -16,8 +16,8 @@ public partial class Product_ProductList : System.Web.UI.Page
             try
             {
 
-                txtdt.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                txtdt1.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                //txtdt.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                //txtdt1.Text = DateTime.Now.ToString("dd/MM/yyyy");
 
                 string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 AND isnull(IsActive,0)=1 order by Sequence asc";
                 DataTable dtcategory = new DataTable();
@@ -86,12 +86,12 @@ public partial class Product_ProductList : System.Web.UI.Page
     }
     private void DataList()
     {
-        String from = txtdt.Text.ToString();
-        String to = txtdt1.Text.ToString();
+       // String from = txtdt.Text.ToString();
+       // String to = txtdt1.Text.ToString();
 
-        String[] StrPart = from.Split('/');
+        //String[] StrPart = from.Split('/');
 
-        String[] StrPart1 = to.Split('/');
+        //String[] StrPart1 = to.Split('/');
 
         string IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
         string sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
@@ -105,9 +105,10 @@ public partial class Product_ProductList : System.Web.UI.Page
                        " LEFT JOIN ProductTemplate PT ON PT.Id = P.ProductTemplateID " +
                        " LEFT JOIN tblCategoryProductLink L ON L.ProductId = P.Id  " +
                        " where P.IsDeleted=0 " +
-                       " and P.IsApproved = 1 and convert(date,DOC,103)>='" +
-                       StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + "' and convert(date,DOC,103)<='"
-                       + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + "'";
+                       " and P.IsApproved = 1 ";
+                       //and convert(date,DOC,103)>='" +
+                       //StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + "' and convert(date,DOC,103)<='"
+                       //+ StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + "'";
         if (IsAdmin == "False")
         {
             query += " and P.JurisdictionId=" + sJurisdictionId;

@@ -79,6 +79,7 @@ public partial class OrderList : System.Web.UI.Page
                      " Convert(numeric(18,2),(OrderItem.Quantity * OrderItem.TotalAmount)) AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, " +
                      " [Order].TotalGram, [Order].CustReedeemAmount, [Order].PaymentGatewayId, Product.Name, " +
                      " OrderStatus.Name AS Ex, AH.ReceiveAmount AS AdminAmount, FH.ReceiveAmount AS FrenchiessAmt, DH.ReceiveAmount AS DeliveryManAmt  " +
+                     " , OrderItem.Unit + ' ' + U.UnitName AS Unit ,OS.OrderSourceName " +
                      " FROM [Order] INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
                      " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id LEFT OUTER JOIN StateMaster sm on sm.Id = CustomerAddress.StateId LEFT OUTER JOIN CityMaster cm on cm.Id = CustomerAddress.CityId LEFT OUTER JOIN Zipcode zm on zm.Id = CustomerAddress.AreaId LEFT OUTER JOIN tblBuilding bm on bm.Id = CustomerAddress.BuildingId " +
                      " INNER JOIN OrderItem ON [Order].Id = OrderItem.OrderId " +
@@ -87,6 +88,8 @@ public partial class OrderList : System.Web.UI.Page
                      " LEFT OUTER JOIN tblPaymentHistory AH ON AH.UserType = 1 AND AH.OrderId = [Order].Id " +
                      " LEFT OUTER JOIN tblPaymentHistory FH ON FH.UserType = 2 AND FH.OrderId = [Order].Id " +
                      " LEFT OUTER JOIN tblPaymentHistory DH ON DH.UserType = 3 AND DH.OrderId = [Order].Id " +
+                     " INNER JOIN UnitMaster U ON OrderItem.UnitId = U.Id " +
+                     " LEFT OUTER JOIN Order_Source OS ON OS.OrderId = [Order].Id " +
                      " WHERE ([Order].CreatedOnUtc>='" + startdate.Value + " 00:00:00') AND ([Order].CreatedOnUtc<='" + enddate.Value + " 23:59:59') " +
                      "  AND CustomerAddress.AreaId in("+areaIds+ ") AND CustomerAddress.BuildingId in ("+ buildingIds + ")" +
                     " ORDER BY ordid DESC";
@@ -100,7 +103,8 @@ public partial class OrderList : System.Web.UI.Page
                      " (isnull(CustomerAddress.BuildingNo,'') + ' ' + isnull(bm.Building,'') + ' ' + isnull(zm.Area,'') + ' ' + isnull(CustomerAddress.LandMark,'') + ' ' + isnull(CustomerAddress.OtherDetail,isnull(CustomerAddress.Address,''))  + ' ' + isnull(cm.CityName,'') + ' ' + isnull(convert(varchar(20),zm.zipcode),'') + ' ' + isnull(sm.StateName,'')) as cadd, [Order].OrderStatusId, Convert(numeric(18,2),(OrderItem.Quantity * OrderItem.TotalAmount)) as  PaymentAmt, " +
                      " Convert(numeric(18,2),(OrderItem.Quantity * OrderItem.TotalAmount)) AS Totalamt, OrderItem.Quantity as TotalQTY, [Order].BuyWith, " +
                      " [Order].TotalGram, [Order].CustReedeemAmount, [Order].PaymentGatewayId, Product.Name, " +
-                     " OrderStatus.Name AS Ex, AH.ReceiveAmount AS AdminAmount, FH.ReceiveAmount AS FrenchiessAmt, DH.ReceiveAmount AS DeliveryManAmt " +
+                     " OrderStatus.Name AS Ex, AH.ReceiveAmount AS AdminAmount, FH.ReceiveAmount AS FrenchiessAmt, " +
+                     " DH.ReceiveAmount AS DeliveryManAmt, OrderItem.Unit +' '+ U.UnitName AS Unit,OS.OrderSourceName " +
                      " FROM [Order] INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
                      " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id LEFT OUTER JOIN StateMaster sm on sm.Id = CustomerAddress.StateId LEFT OUTER JOIN CityMaster cm on cm.Id = CustomerAddress.CityId LEFT OUTER JOIN Zipcode zm on zm.Id = CustomerAddress.AreaId LEFT OUTER JOIN tblBuilding bm on bm.Id = CustomerAddress.BuildingId " +
                      " INNER JOIN OrderItem ON [Order].Id = OrderItem.OrderId " +
@@ -109,6 +113,8 @@ public partial class OrderList : System.Web.UI.Page
                      " LEFT OUTER JOIN tblPaymentHistory AH ON AH.UserType = 1 AND AH.OrderId = [Order].Id " +
                      " LEFT OUTER JOIN tblPaymentHistory FH ON FH.UserType = 2 AND FH.OrderId = [Order].Id " +
                      " LEFT OUTER JOIN tblPaymentHistory DH ON DH.UserType = 3 AND DH.OrderId = [Order].Id " +
+                     " INNER JOIN UnitMaster U ON OrderItem.UnitId = U.Id " +
+                     " LEFT OUTER JOIN Order_Source OS ON OS.OrderId = [Order].Id " +
                      " WHERE ([Order].CreatedOnUtc>='" + startdate.Value + " 00:00:00') AND ([Order].CreatedOnUtc<='" + enddate.Value + " 23:59:59') ";
             if (IsUserType == "2")
                 qry += " and ISNULL([Order].JurisdictionID,0) =" + sJurisdictionId;

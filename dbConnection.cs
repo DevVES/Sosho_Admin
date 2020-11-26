@@ -17,20 +17,21 @@ namespace WebApplication1
         //public static string ServiceUrl = "http://192.168.1.122";
 
         public static string ServiceUrl = "http://sosho.in/";
-	public  string consString = @"Data Source=KHUSHBU\SQLEXPRESS;Initial Catalog=SalebhaiOnePageStaging;Persist Security Info=True;User Id=sa;Password=ves123;";
+	public  string consString = @"Data Source=DESKTOP-6O43O5M\SQLEXPRESS03;Initial Catalog=SalebhaiOnePage_V2;Integrated Security=True;Persist Security Info=False";
+        //public string consString = @"Data Source=KHUSHBU\SQLEXPRESS;Initial Catalog=SalebhaiOnePageStaging;Persist Security Info=True;User Id=sa;Password=ves123;";
         //public string consString = @"Data Source=S97-74-232-233\SQLEXPRESS;Initial Catalog = SalebhaiOnePage_Testing; Integrated Security = True; Persist Security Info=False";
-                      //CONVERT(datetime, SWITCHOFFSET(SYSDATETIMEOFFSET(), '+05:30'))
-                      //public string consString = @"Data Source=DISHA\SQLEXPRESS;Initial Catalog=SalebhaiOnePage_Staging;User Id=sa;Password=123";
-                      //public string consString = @"Data Source=S97-74-229-95\SQLEXPRESS;Initial Catalog=MOTORZ;Integrated Security=True;Persist Security Info=False";
-                      // public string consString = getConnectionString();
-                      //public static string getConnectionString()
-                      //{
-                      //    string txtpath = HttpContext.Current.Server.MapPath("../") + "\\setting.txt";
-                      //    StreamReader sr = new StreamReader(txtpath);
-                      //    String line = sr.ReadToEnd();
-                      //    return line;
-                      //}
-                      SqlConnection conn = new SqlConnection();
+        //CONVERT(datetime, SWITCHOFFSET(SYSDATETIMEOFFSET(), '+05:30'))
+        //public string consString = @"Data Source=DISHA\SQLEXPRESS;Initial Catalog=SalebhaiOnePage_Staging;User Id=sa;Password=123";
+        //public string consString = @"Data Source=S97-74-229-95\SQLEXPRESS;Initial Catalog=MOTORZ;Integrated Security=True;Persist Security Info=False";
+        // public string consString = getConnectionString();
+        //public static string getConnectionString()
+        //{
+        //    string txtpath = HttpContext.Current.Server.MapPath("../") + "\\setting.txt";
+        //    StreamReader sr = new StreamReader(txtpath);
+        //    String line = sr.ReadToEnd();
+        //    return line;
+        //}
+        SqlConnection conn = new SqlConnection();
         string ErrorMsgPrefix = "Error in dbConnection.cs  ";
         public SqlConnection GetConnectionForAdapter()
         {

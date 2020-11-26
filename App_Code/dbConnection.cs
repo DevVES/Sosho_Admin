@@ -17,7 +17,9 @@ namespace WebApplication1
         //public static string ServiceUrl = "http://192.168.1.122";
 
         public static string ServiceUrl = "http://sosho.in/";
-	public  string consString = @"Data Source=KHUSHBU\SQLEXPRESS;Initial Catalog=SalebhaiOnePageStaging;Persist Security Info=True;User Id=sa;Password=ves123;";
+        public string consString = @"Data Source=DESKTOP-6O43O5M\SQLEXPRESS03;Initial Catalog=SalebhaiOnePage_V2;Integrated Security=True;Persist Security Info=False";
+        //public  string consString = @"Data Source=KHUSHBU\SQLEXPRESS;Initial Catalog=SalebhaiOnePageStaging;Persist Security Info=True;User Id=sa;Password=ves123;";
+
         //public string consString = @"Data Source=S97-74-232-233\SQLEXPRESS;Initial Catalog=SalebhaiOnePage_Testing;Integrated Security=True;Persist Security Info=False";
 
         //CONVERT(datetime, SWITCHOFFSET(SYSDATETIMEOFFSET(), '+05:30'))
