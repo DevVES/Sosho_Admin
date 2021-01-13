@@ -215,8 +215,6 @@ public partial class Home : System.Web.UI.Page
                         "        OR FL.fcode in (select FL.FranchiseeCustomerCode from Franchisee FL where FL.MasterFranchiseeId IN (select ML.MasterFranchiseeId from MasterFranchisee ML where ML.SuperFranchiseeId = " + FranchiseeId + ")) " +
                         "        OR FL.fcode in (select F.FranchiseeCustomerCode from Franchisee F where F.SuperFranchiseeId = " + FranchiseeId + ")) ";
 
-                //" WHERE F.SuperFranchiseeId = " + FranchiseeId +
-                  //      " AND FL.CreatedOn <= '" + todate + " 23:59:59' AND FL.CreatedOn  >= '" + fromdate + " 00:00:00' ";
             }
             string customerIds = string.Empty;
             DataTable dtFranchisees = dbc.GetDataTable(franchiseeQry);
@@ -237,7 +235,7 @@ public partial class Home : System.Web.UI.Page
             string qry = string.Empty;
             if (UserType == "4" || UserType == "5" || UserType == "6")
             {
-                qry = "Select  * from [Order] " + join + where + " and CustomerId in("+ customerIds +")";
+                qry = "Select  * from [Order] " + join + where + " and CustomerId in("+ customerIds + ") and OrderStatusId<>90";
             }
             else
             {
@@ -370,6 +368,7 @@ public partial class Home : System.Web.UI.Page
             sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
             UserType = Request.Cookies["TUser"]["UserType"].ToString();
             DeliveryId = Request.Cookies["TUser"]["DeliveryId"].ToString();
+            FranchiseeId = Request.Cookies["TUser"]["FranchiseeId"].ToString();
             boxbind();
         }
         catch (Exception ee)

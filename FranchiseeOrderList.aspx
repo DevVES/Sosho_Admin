@@ -71,6 +71,7 @@
                                     <%--   <asp:BoundField DataField="ordid" HeaderText="Order Id" />--%>
                                     <asp:BoundField DataField="CreatedOnUtc" HeaderText="Date" />
 				    <asp:BoundField DataField="OrderSourceName" HeaderText="Franchisee Code" />
+                                    <asp:BoundField DataField="FranchiseeName" HeaderText="Franchisee Name" />
                                     <asp:BoundField DataField="FirstName" HeaderText="Customer Name" />
                                     <asp:BoundField DataField="Mobile" HeaderText="Customer Mobile No" />
                                     <asp:BoundField DataField="cadd" HeaderText="Address" />

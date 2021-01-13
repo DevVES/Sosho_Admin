@@ -38,27 +38,26 @@ public partial class FranchiseeOrderList : System.Web.UI.Page
             franchiseeQry = "SELECT C.Id " +
                     " FROM [customer_franchise_link] FL " +
                     " INNER JOIN Franchisee F ON F.FranchiseeCustomerCode = FL.fcode" +
-                    " LEFT OUTER JOIN Customer C ON C.Mobile = FL.Mobile " +
-                    " WHERE (FL.CreatedOn>='" + startdate.Value + " 00:00:00') AND (FL.CreatedOn<='" + enddate.Value + " 23:59:59') " +
-                    " AND F.FranchiseeId = " + sFranchiseeId;
+                    " INNER JOIN Customer C ON C.Mobile = FL.Mobile " +
+                    " WHERE F.FranchiseeId = " + sFranchiseeId;
         }
         else if (IsUserType == "5")
         {
             franchiseeQry = "SELECT C.Id " +
                     " FROM [customer_franchise_link] FL " +
-                    " INNER JOIN MasterFranchisee F ON F.MasterFranchiseeCustomerCode = FL.fcode" +
                     " LEFT OUTER JOIN Customer C ON C.Mobile = FL.Mobile " +
-                    " WHERE (FL.CreatedOn>='" + startdate.Value + " 00:00:00') AND (FL.CreatedOn<='" + enddate.Value + " 23:59:59') " +
-                    " AND F.MasterFranchiseeId = " + sFranchiseeId;
+                    "   AND (FL.fcode in (select M.MasterFranchiseeCustomerCode from MasterFranchisee M where M.MasterFranchiseeId = " + sFranchiseeId + ") " +
+                        "        OR FL.fcode in (select F.FranchiseeCustomerCode from Franchisee F where F.MasterFranchiseeId = " + sFranchiseeId + ")) ";
         }
         else if (IsUserType == "6")
         {
             franchiseeQry = "SELECT C.Id " +
                     " FROM [customer_franchise_link] FL " +
-                    " INNER JOIN SuperFranchisee F ON F.SuperFranchiseeCustomerCode = FL.fcode" +
                     " LEFT OUTER JOIN Customer C ON C.Mobile = FL.Mobile " +
-                    " WHERE (FL.CreatedOn>='" + startdate.Value + " 00:00:00') AND (FL.CreatedOn<='" + enddate.Value + " 23:59:59') " +
-                    " AND F.SuperFranchiseeId = " + sFranchiseeId;
+                    "   WHERE (FL.fcode in (select S.SuperFranchiseeCustomerCode from SuperFranchisee S where S.SuperFranchiseeId = " + sFranchiseeId + ") " +
+                        "        OR FL.fcode in (select M.MasterFranchiseeCustomerCode from MasterFranchisee M where M.SuperFranchiseeId = " + sFranchiseeId + ") " +
+                        "        OR FL.fcode in (select FL.FranchiseeCustomerCode from Franchisee FL where FL.MasterFranchiseeId IN (select ML.MasterFranchiseeId from MasterFranchisee ML where ML.SuperFranchiseeId = " + sFranchiseeId + ")) " +
+                        "        OR FL.fcode in (select F.FranchiseeCustomerCode from Franchisee F where F.SuperFranchiseeId = " + sFranchiseeId + ")) ";
         }
         string customerIds = string.Empty;
         DataTable dtFranchisees = dbc.GetDataTable(franchiseeQry);
@@ -91,7 +90,7 @@ public partial class FranchiseeOrderList : System.Web.UI.Page
                         " '' AS Ex, 0 AS AdminAmount, 0 AS FrenchiessAmt, " +
                         " 0 AS DeliveryManAmt, '' AS Unit, fl.fcode as OrderSourceName, " +
                         " CustomerAddress.PinCode, ISNULL(zm.Area,'') AS Area, [Order].PaidAmount, '' as CategoryName, '' as SubCategory, " +
-                        " 0 as CategoryWiseSummary, '' as VendorName  " +
+                        " 0 as CategoryWiseSummary, '' as VendorName, F.FranchiseeName " +
                         " FROM [Order] " +
                         " INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
                         " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id " +
@@ -113,7 +112,7 @@ public partial class FranchiseeOrderList : System.Web.UI.Page
                 //" inner join Category c on c.CategoryID = cl.CategoryId " +
                 //" inner join tblSubCategory s on s.id = cl.SubCategoryId" +
                 " inner join customer_franchise_link fl on fl.mobile = Customer.Mobile" +
-                        " INNER JOIN Franchisee F ON F.FranchiseeCustomerCode = FL.fcode" +
+                        " Left Outer JOIN Franchisee F ON F.FranchiseeCustomerCode = FL.fcode" +
                         " WHERE ([Order].CreatedOnUtc>='" + startdate.Value + " 00:00:00') AND ([Order].CreatedOnUtc<='" + enddate.Value + " 23:59:59') and [Order].OrderStatusId<>90 " +
                         "   AND F.FranchiseeId = " + sFranchiseeId;
                 //"  and [Customer].Id in(" + customerIds + ")";
@@ -133,7 +132,8 @@ public partial class FranchiseeOrderList : System.Web.UI.Page
                         " '' AS Ex, 0 AS AdminAmount, 0 AS FrenchiessAmt, " +
                         " 0 AS DeliveryManAmt, '' AS Unit, fl.fcode as OrderSourceName, " +
                         " CustomerAddress.PinCode, ISNULL(zm.Area,'') AS Area, [Order].PaidAmount, '' as CategoryName, '' as SubCategory, " +
-                        " 0 as CategoryWiseSummary, '' as VendorName  " +
+                        " 0 as CategoryWiseSummary, '' as VendorName, " + 
+                        " isnull(fs.FranchiseeName,ISNULL(mfs.MasterFranchiseeName,isnull(sfs.SuperFranchiseeName,''))) as FranchiseeName  " +
                         " FROM [Order] " +
                         " INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
                         " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id " +
@@ -155,6 +155,9 @@ public partial class FranchiseeOrderList : System.Web.UI.Page
                 //" inner join Category c on c.CategoryID = cl.CategoryId " +
                 //" inner join tblSubCategory s on s.id = cl.SubCategoryId" +
                 " inner join customer_franchise_link fl on fl.mobile = Customer.Mobile" +
+                " left outer join SuperFranchisee sfs on fl.fcode = sfs.SuperFranchiseeCustomerCode " +
+                " left outer join MasterFranchisee mfs on fl.fcode = mfs.MasterFranchiseeCustomerCode " +
+                " left outer join Franchisee fs on fl.fcode = fs.FranchiseeCustomerCode " +
                         //" INNER JOIN MasterFranchisee F ON F.MasterFranchiseeCustomerCode = FL.fcode" +
                         " WHERE ([Order].CreatedOnUtc>='" + startdate.Value + " 00:00:00') AND ([Order].CreatedOnUtc<='" + enddate.Value + " 23:59:59') and [Order].OrderStatusId<>90 " +
                         "   AND (fl.fcode in (select M.MasterFranchiseeCustomerCode from MasterFranchisee M where M.MasterFranchiseeId = " + sFranchiseeId + ") " +
@@ -177,7 +180,8 @@ public partial class FranchiseeOrderList : System.Web.UI.Page
                         " '' AS Ex, 0 AS AdminAmount, 0 AS FrenchiessAmt, " +
                         " 0 AS DeliveryManAmt, '' AS Unit, fl.fcode as OrderSourceName, " +
                         " CustomerAddress.PinCode, ISNULL(zm.Area,'') AS Area, [Order].PaidAmount, '' as CategoryName, '' as SubCategory, " +
-                        " 0 as CategoryWiseSummary, '' as VendorName  " +
+                        " 0 as CategoryWiseSummary, '' as VendorName," +
+                        " isnull(fs.FranchiseeName,ISNULL(mfs.MasterFranchiseeName,isnull(sfs.SuperFranchiseeName,''))) as FranchiseeName  " +
                         " FROM [Order] " +
                         " INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
                         " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id " +
@@ -199,6 +203,9 @@ public partial class FranchiseeOrderList : System.Web.UI.Page
                 //" inner join Category c on c.CategoryID = cl.CategoryId " +
                 //" inner join tblSubCategory s on s.id = cl.SubCategoryId" +
                 " inner join customer_franchise_link fl on fl.mobile = Customer.Mobile" +
+                " left outer join SuperFranchisee sfs on fl.fcode = sfs.SuperFranchiseeCustomerCode " +
+                " left outer join MasterFranchisee mfs on fl.fcode = mfs.MasterFranchiseeCustomerCode " +
+                " left outer join Franchisee fs on fl.fcode = fs.FranchiseeCustomerCode " +
                         //" INNER JOIN MasterFranchisee F ON F.MasterFranchiseeCustomerCode = FL.fcode" +
                         " WHERE ([Order].CreatedOnUtc>='" + startdate.Value + " 00:00:00') AND ([Order].CreatedOnUtc<='" + enddate.Value + " 23:59:59') and [Order].OrderStatusId<>90 " +
                         "   AND (fl.fcode in (select S.SuperFranchiseeCustomerCode from SuperFranchisee S where S.SuperFranchiseeId = " + sFranchiseeId + ") " +
@@ -225,7 +232,7 @@ public partial class FranchiseeOrderList : System.Web.UI.Page
                      " (select sum(Convert(numeric(18, 2), (oii.Quantity * oii.TotalAmount))) from OrderItem oii " +
                      "      inner join (select Distinct CategoryId, SubCategoryId, ProductId from tblCategoryProductLink) icpl on icpl.productid = oii.productid " +
                      "      where icpl.categoryid = cl.CategoryId and oii.OrderId = [order].Id " +
-                     " ) CategoryWiseSummary, IsNull(Product.VideoName,'') as VendorName  " +
+                     " ) CategoryWiseSummary, IsNull(Product.VideoName,'') as VendorName, '' as FranchiseeName  " +
                      " FROM [Order] INNER JOIN Customer ON Customer.Id = [Order].CustomerId " +
                      " INNER JOIN CustomerAddress ON [Order].AddressId = CustomerAddress.Id LEFT OUTER JOIN StateMaster sm on sm.Id = CustomerAddress.StateId LEFT OUTER JOIN CityMaster cm on cm.Id = CustomerAddress.CityId LEFT OUTER JOIN Zipcode zm on zm.Id = CustomerAddress.AreaId LEFT OUTER JOIN tblBuilding bm on bm.Id = CustomerAddress.BuildingId " +
                      " INNER JOIN OrderItem ON [Order].Id = OrderItem.OrderId " +
