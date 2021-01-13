@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using WebApplication1;
@@ -2318,18 +2321,31 @@ public partial class Product_ManageProducts : System.Web.UI.Page
         ddlLinkSubCategoryName.DataValueField = "Id";
         ddlLinkSubCategoryName.DataBind();
     }
-    //protected void OnDicountTypeSelectedChanged(object sender, EventArgs e)
-    //{
-    //    Decimal total = 0;
-    //    string Type = ddlgrpDiscountType.SelectedItem.Text;
-    //    if(Type == "%")
-    //    {
-    //        total = (Convert.ToDecimal(txtSoshoPrice.Text) * 100) / Convert.ToDecimal(txtMRP.Text);
-    //    }
-    //    if(Type == "Fixed")
-    //    {
-    //        total = Convert.ToDecimal(txtMRP.Text) - Convert.ToDecimal(txtSoshoPrice.Text);
-    //    }
-    //    txtDiscount.Text = total.ToString();
-    //}   
+    [WebMethod]
+    public static List<string> GetProductName(string prefixText)
+    {
+        dbConnection dbc = new dbConnection();
+        using (SqlConnection conn = new SqlConnection())
+        {
+            conn.ConnectionString = dbc.consString;
+            using (SqlCommand cmd = new SqlCommand())
+            {
+                cmd.CommandText = "select Name, Id from Product where Name like @SearchText + '%'";
+                cmd.Parameters.AddWithValue("@SearchText", prefixText);
+                cmd.Connection = conn;
+                conn.Open();
+                List<string> products = new List<string>();
+                using (SqlDataReader sdr = cmd.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        products.Add(sdr["Name"].ToString());
+                    }
+                }
+                conn.Close();
+                return products;
+            }
+        }
+    }
+    
 }

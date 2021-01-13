@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using WebApplication1;
@@ -32,9 +34,10 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                 ddlBannerType.DataBind();
                 ddlBannerType.Items.Insert(0, new ListItem("Select Banner Type", ""));
 
-                string categoryqry = "SELECT CategoryId,CategoryName FROM Category where isnull(IsDeleted,0)=0 AND isnull(IsActive,0)=1 order by Sequence asc";
+                string categoryqry = "SELECT 0 AS CategoryId,'SELECT ALL' AS CategoryName, -9999 as [sequence] " +
+                                     " UNION " +
+                                    " SELECT CategoryId,CategoryName, [sequence]  FROM Category where isnull(IsDeleted,0)=0 AND isnull(IsActive,0)=1 order by Sequence asc";
                 DataTable dtcategory = dbc.GetDataTable(categoryqry);
-
                 ddlbasicCategory.DataSource = dtcategory;
                 ddlbasicCategory.DataTextField = "CategoryName";
                 ddlbasicCategory.DataValueField = "CategoryId";
@@ -45,13 +48,13 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                 chklstCategory.DataValueField = "CategoryId";
                 chklstCategory.DataBind();
 
-                string productqry = "SELECT Id,Name FROM Product where isnull(IsDeleted,0)=0 and isnull(ProductMasterId,0)=0 order by Id asc";
-                DataTable dtproduct = dbc.GetDataTable(productqry);
+                //string productqry = "SELECT Id,Name FROM Product where isnull(IsDeleted,0)=0 and isnull(ProductMasterId,0)=0 order by Id asc";
+                //DataTable dtproduct = dbc.GetDataTable(productqry);
 
-                ddlbasicProduct.DataSource = dtproduct;
-                ddlbasicProduct.DataTextField = "Name";
-                ddlbasicProduct.DataValueField = "Id";
-                ddlbasicProduct.DataBind();
+                //ddlbasicProduct.DataSource = dtproduct;
+                //ddlbasicProduct.DataTextField = "Name";
+                //ddlbasicProduct.DataValueField = "Id";
+                //ddlbasicProduct.DataBind();
 
                 List<ActionType> ActionList = new List<ActionType>
                 {
@@ -100,7 +103,8 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                 lblbasicLink.Visible = false;
                 ddlbasicCategory.Visible = false;
                 lblbasicCategory.Visible = false;
-                ddlbasicProduct.Visible = false;
+                //ddlbasicProduct.Visible = false;
+                txtpname.Visible = false;
                 lblbasicProduct.Visible = false;
                 dvbasicLink.Style.Add("display", "none");
                 dvbasicCategory.Style.Add("display", "none");
@@ -116,13 +120,13 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                     DataTable Categorydt = new DataTable();
                     if (typeid == "1")
                     {
-                        dt1 = dbc.GetDataTable("SELECT  [Title],[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],[ActionId],[CategoryId],[ProductId] FROM [dbo].[HomepageBanner] where IsDeleted=0  and Id=" + id);
+                        dt1 = dbc.GetDataTable(" SELECT  B.[Title], B.[AltText], B.[Link], B.[StartDate], B.[EndDate], B.[IsActive], B.[ImageName], B.[ActionId], B.[CategoryId], B.[ProductId],B.[Sequence], P.Name AS ProductName FROM[dbo].[HomepageBanner] B INNER JOIN Product P ON P.Id = B.ProductId where B.IsDeleted = 0   and B.Id=" + id);
                         Jurisdictiondt = dbc.GetDataTable("SELECT  [JurisdictionId] FROM [dbo].[JurisdictionBanner] where BannerType = 'HomePage' AND BannerId=" + id);
                         Categorydt = dbc.GetDataTable("SELECT  [CategoryId] FROM [dbo].[tblCategoryBannerLink] where BannerType = 'HomePage' AND BannerId=" + id);
                     }
                     else
                     {
-                        dt1 = dbc.GetDataTable("SELECT  [Title],[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],[ActionId],[CategoryId],[ProductId] FROM [dbo].[IntermediateBanners] where IsDeleted=0  and Id=" + id);
+                        dt1 = dbc.GetDataTable("SELECT  B.[Title],B.[AltText],B.[Link],B.[StartDate],B.[EndDate],B.[IsActive],B.[ImageName],B.[ActionId],B.[CategoryId],B.[ProductId],B.[Sequence], P.Name AS ProductName FROM[dbo].[IntermediateBanners]  B INNER JOIN Product P ON P.Id = B.ProductId where B.IsDeleted = 0  and B.Id=" + id);
                         Jurisdictiondt = dbc.GetDataTable("SELECT  [JurisdictionId] FROM [dbo].[JurisdictionBanner] where BannerType = 'Intermediate' AND BannerId=" + id);
                         Categorydt = dbc.GetDataTable("SELECT  [CategoryId] FROM [dbo].[tblCategoryBannerLink] where BannerType = 'Intermediate' AND BannerId=" + id);
                     }
@@ -135,8 +139,9 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                         ddlbasicAction.SelectedIndex = Convert.ToInt32(dt1.Rows[0]["ActionId"]);
                         txtbasicLink.Text = dt1.Rows[0]["Link"].ToString();
                         ddlbasicCategory.SelectedValue = Convert.ToInt32(dt1.Rows[0]["CategoryId"]).ToString();
-                        ddlbasicProduct.SelectedValue = Convert.ToInt32(dt1.Rows[0]["ProductId"]).ToString();
-
+                        //ddlbasicProduct.SelectedValue = Convert.ToInt32(dt1.Rows[0]["ProductId"]).ToString();
+                        txtpname.Text = dt1.Rows[0]["ProductName"].ToString();
+                        txtSequence.Text = dt1.Rows[0]["Sequence"].ToString();
                         if (ddlbasicAction.SelectedIndex == clsCommon.BannerActionType.OpenUrl.GetHashCode())
                         {
                             if (!string.IsNullOrEmpty(txtbasicLink.Text))
@@ -157,10 +162,12 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                         }
                         if (ddlbasicAction.SelectedIndex == clsCommon.BannerActionType.AddToCart.GetHashCode())
                         {
-                            if (ddlbasicProduct.SelectedIndex > 0)
+                            if (txtpname.Text != "")
+                            //if (ddlbasicProduct.SelectedIndex > 0)
                             {
-                                ddlbasicProduct.Visible = true;
+                                //ddlbasicProduct.Visible = true;
                                 lblbasicProduct.Visible = true;
+                                txtpname.Visible = true;
                                 dvbasicProduct.Style.Add("display", "block");
                             }
                         }
@@ -213,7 +220,7 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                             }
                         }
 
-                        
+
                         if (Categorydt.Rows.Count > 0)
                         {
                             foreach (ListItem li in chklstCategory.Items)
@@ -233,7 +240,29 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
             catch (Exception W) { }
         }
     }
+    protected void OnCheckBox_Changed(object sender, EventArgs e)
+    {
+        string result = Request.Form["__EVENTTARGET"];
 
+        string[] checkedBox = result.Split('$'); ;
+
+        int index = int.Parse(checkedBox[checkedBox.Length - 1]);
+        if (index == 0)
+        {
+            foreach (ListItem li in chklstCategory.Items)
+            {
+                if (chklstCategory.Items[0].Selected == true)
+                {
+                    li.Selected = true;
+                }
+                else
+                {
+                    li.Selected = false;
+                }
+            }
+        }
+
+    }
     protected void BtnSave_Click(object sender, EventArgs e)
     {
         try
@@ -306,176 +335,199 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
                 sCategoryId = ddlbasicCategory.SelectedValue.ToString();
 
             string sProductId = "";
-            if (string.IsNullOrEmpty(ddlbasicProduct.SelectedValue))
-                sProductId = "0";
-            else
-                sProductId = ddlbasicProduct.SelectedValue.ToString();
-
-            int sActionId = 0;
-            if (Convert.ToInt32(ddlbasicAction.SelectedValue) != 0)
-                sActionId = Convert.ToInt32(ddlbasicAction.SelectedValue);
-
-            List<ListItem> selectedIncharge = new List<ListItem>();
-            selectedIncharge = chklstBasicJurisdictionIncharge.Items.Cast<ListItem>().Where(n => n.Selected).ToList();
-
-            List<ListItem> selectedCategory = new List<ListItem>();
-            selectedCategory = chklstCategory.Items.Cast<ListItem>().Where(n => n.Selected).ToList();
-
-            if (BtnSave.Text.Equals("Update"))
+            if (string.IsNullOrEmpty(txtpname.Text))
             {
-                string id = Request.QueryString["id"].ToString();
-                if (ddlBannerType.SelectedValue == "1")
-                {
-                    string delJurisdictionBanner = " Delete FROM [dbo].[JurisdictionBanner]  where BannerType = 'HomePage' AND BannerId=" + Convert.ToInt32(id);
-                    dbc.ExecuteQuery(delJurisdictionBanner);
-
-                    string delCategoryBannerLink = " Delete FROM [dbo].[tblCategoryBannerLink]  where BannerType='HomePage' AND BannerId=" + Convert.ToInt32(id);
-                    dbc.ExecuteQuery(delCategoryBannerLink);
-
-                    if (fileName != "")
-                    {
-                        string[] para1 = { txtTitle1.Text, txtAltText.Text, txtbasicLink.Text, FROM1, TO1, IsActive.ToString(), fileName, dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), sCategoryId, sProductId, sActionId.ToString(), id1 };
-                        string query = "UPDATE [HomepageBanner] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4," +
-                                       " [EndDate]=@5,[IsActive]=@6,[ImageName]=@7,[DOM]=@8,[CategoryId]=@9,[ProductId]=@10, [ActionId]=@11 where [Id]=@12";
-                        int v1 = dbc.ExecuteQueryWithParams(query, para1);
-                        if (v1 > 0)
-                        {
-
-                            foreach (ListItem item in selectedIncharge)
-                            {
-                                string sJurisdictionId = item.Value.ToString();
-
-                                string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
-                                Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
-                                dbc.ExecuteQuery(Jurisdictionquery);
-                            }
-                            foreach (ListItem item in selectedCategory)
-                            {
-                                string cCategoryId = item.Value.ToString();
-
-                                string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
-                                Categoryquery += " VALUES ('" + cCategoryId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",1," + "'HomePage')";
-                                dbc.ExecuteQuery(Categoryquery);
-                            }
-                            sweetMessage("", "Banner Updated Successfully", "success");
-                            Response.Redirect("HomePageBannerList.aspx", true);
-                        }
-                    }
-                    else if (fileName == "")
-                    {
-                        string[] para1 = { txtTitle1.Text, txtAltText.Text, txtbasicLink.Text, FROM1, TO1, IsActive.ToString(), dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), sCategoryId, sProductId, sActionId.ToString(), id1 };
-
-                        string query = "UPDATE [HomepageBanner] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4," +
-                                       " [EndDate]=@5,[IsActive]=@6,[DOM]=@7,[CategoryId]=@8,[ProductId]=@9, [ActionId]=@10 where [Id]=@11";
-                        int v1 = dbc.ExecuteQueryWithParams(query, para1);
-                        if (v1 > 0)
-                        {
-                            foreach (ListItem item in selectedIncharge)
-                            {
-                                string sJurisdictionId = item.Value.ToString();
-
-                                string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
-                                Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
-                                dbc.ExecuteQuery(Jurisdictionquery);
-                            }
-                            foreach (ListItem item in selectedCategory)
-                            {
-                                string cCategoryId = item.Value.ToString();
-
-                                string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
-                                Categoryquery += " VALUES ('" + cCategoryId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",1," + "'HomePage')";
-                                dbc.ExecuteQuery(Categoryquery);
-                            }
-                            sweetMessage("", "Banner Updated Successfully", "success");
-                            Response.Redirect("HomePageBannerList.aspx", true);
-                        }
-                        else
-                        {
-                            sweetMessage("", "Please Try Again!!", "warning");
-                        }
-                    }
-                }
-                else
-                {
-                    string delJurisdictionBanner = " Delete FROM [dbo].[JurisdictionBanner]  where BannerType='Intermediate' AND BannerId=" + Convert.ToInt32(id);
-                    dbc.ExecuteQuery(delJurisdictionBanner);
-
-                    string delCategoryBannerLink = " Delete FROM [dbo].[tblCategoryBannerLink]  where BannerType='Intermediate' AND BannerId=" + Convert.ToInt32(id);
-                    dbc.ExecuteQuery(delCategoryBannerLink);
-
-                    if (fileName != "")
-                    {
-                        string[] para1 = { txtTitle1.Text, txtAltText.Text, txtbasicLink.Text, FROM1, TO1, IsActive.ToString(), fileName, dbc.getindiantimeString(), userId, sCategoryId, sActionId.ToString(), sProductId, id1 };
-                        string query = "UPDATE [IntermediateBanners] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4,[EndDate]=@5,[IsActive]=@6,[ImageName]=@7,[ModifiedOn]=@8,[ModifiedBy]=@9," +
-                                        " [CategoryID]=@10,[ActionId]=@11,[ProductId]=@12" +
-                                       " where [Id]=@13";
-                        int v1 = dbc.ExecuteQueryWithParams(query, para1);
-                        if (v1 > 0)
-                        {
-                            foreach (ListItem item in selectedIncharge)
-                            {
-                                string sJurisdictionId = item.Value.ToString();
-
-                                string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
-                                Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id1 + "','" + dbc.getindiantimeString() + "'," + userId + ",'Intermediate')";
-                                dbc.ExecuteQuery(Jurisdictionquery);
-                            }
-
-                            foreach (ListItem item in selectedCategory)
-                            {
-                                string cCategoryId = item.Value.ToString();
-
-                                string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
-                                Categoryquery += " VALUES ('" + cCategoryId + "','" + id1 + "','" + dbc.getindiantimeString() + "'," + userId + ",1,"+ "'Intermediate')";
-                                dbc.ExecuteQuery(Categoryquery);
-                            }
-                            sweetMessage("", "Intermediate Updated Successfully", "success");
-                            Response.Redirect("HomePageBannerList.aspx", true);
-                        }
-                    }
-                    else if (fileName == "")
-                    {
-                        string[] para1 = { txtTitle1.Text, txtAltText.Text, txtbasicLink.Text, FROM1, TO1, IsActive.ToString(), dbc.getindiantimeString(), userId, sCategoryId, sActionId.ToString(), sProductId, id1 };
-
-                        string query = "UPDATE [IntermediateBanners] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4,[EndDate]=@5,[IsActive]=@6,[ModifiedOn]=@7,[ModifiedBy]=@8, " +
-                                        " [CategoryID]=@9,[ActionId]=@10,[ProductId]=@11" +
-                                        " where[Id] =@12";
-                        int v1 = dbc.ExecuteQueryWithParams(query, para1);
-                        if (v1 > 0)
-                        {
-                            foreach (ListItem item in selectedIncharge)
-                            {
-                                string sJurisdictionId = item.Value.ToString();
-
-                                string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
-                                Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id1 + "','" + dbc.getindiantimeString() + "'," + userId + ",'Intermediate')";
-                                dbc.ExecuteQuery(Jurisdictionquery);
-                            }
-
-                            foreach (ListItem item in selectedCategory)
-                            {
-                                string cCategoryId = item.Value.ToString();
-
-                                string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
-                                Categoryquery += " VALUES ('" + cCategoryId + "','" + id1 + "','" + dbc.getindiantimeString() + "'," + userId + ",1," + "'Intermediate')";
-                                dbc.ExecuteQuery(Categoryquery);
-                            }
-                            sweetMessage("", "Intermediate Banner Updated Successfully", "success");
-                            Response.Redirect("HomePageBannerList.aspx", true);
-                        }
-                        else
-                        {
-                            sweetMessage("", "Please Try Again!!", "warning");
-                        }
-                    }
-                }
-
+                sProductId = "0";
             }
             else
             {
-                if (ddlBannerType.SelectedValue == "1")
+                string productQry = " SELECT ID From Product WHERE Name = '" + txtpname.Text + "' AND IsDeleted=0  AND IsActive = 1";
+                DataTable dtProduct = dbc.GetDataTable(productQry);
+                if (dtProduct.Rows.Count > 0)
                 {
-                    string[] para1 = { txtTitle1.Text.ToString().Replace("'", "''"),
+                    sProductId = dtProduct.Rows[0]["ID"].ToString();
+                }
+            }
+            //sProductId = ddlbasicProduct.SelectedValue.ToString();
+            if (sProductId == "")
+            {
+                sweetMessage("", "Please select product from given list", "warning");
+            }
+            else
+            {
+                int sActionId = 0;
+                if (Convert.ToInt32(ddlbasicAction.SelectedValue) != 0)
+                    sActionId = Convert.ToInt32(ddlbasicAction.SelectedValue);
+
+                List<ListItem> selectedIncharge = new List<ListItem>();
+                selectedIncharge = chklstBasicJurisdictionIncharge.Items.Cast<ListItem>().Where(n => n.Selected).ToList();
+
+                List<ListItem> selectedCategory = new List<ListItem>();
+                selectedCategory = chklstCategory.Items.Cast<ListItem>().Where(n => n.Selected).ToList();
+
+                if (BtnSave.Text.Equals("Update"))
+                {
+                    string id = Request.QueryString["id"].ToString();
+                    if (ddlBannerType.SelectedValue == "1")
+                    {
+                        string delJurisdictionBanner = " Delete FROM [dbo].[JurisdictionBanner]  where BannerType = 'HomePage' AND BannerId=" + Convert.ToInt32(id);
+                        dbc.ExecuteQuery(delJurisdictionBanner);
+
+                        string delCategoryBannerLink = " Delete FROM [dbo].[tblCategoryBannerLink]  where BannerType='HomePage' AND BannerId=" + Convert.ToInt32(id);
+                        dbc.ExecuteQuery(delCategoryBannerLink);
+
+                        if (fileName != "")
+                        {
+                            string[] para1 = { txtTitle1.Text, txtAltText.Text, txtbasicLink.Text, FROM1, TO1, IsActive.ToString(), fileName, dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), sCategoryId, sProductId, sActionId.ToString(), txtSequence.Text, id1 };
+                            string query = "UPDATE [HomepageBanner] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4," +
+                                           " [EndDate]=@5,[IsActive]=@6,[ImageName]=@7,[DOM]=@8,[CategoryId]=@9,[ProductId]=@10, [ActionId]=@11, [sequence]=@12 where [Id]=@13";
+                            int v1 = dbc.ExecuteQueryWithParams(query, para1);
+                            if (v1 > 0)
+                            {
+
+                                foreach (ListItem item in selectedIncharge)
+                                {
+                                    string sJurisdictionId = item.Value.ToString();
+
+                                    string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                                    Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
+                                    dbc.ExecuteQuery(Jurisdictionquery);
+                                }
+                                foreach (ListItem item in selectedCategory)
+                                {
+                                    string cCategoryId = item.Value.ToString();
+                                    if (cCategoryId != "0")
+                                    {
+                                        string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
+                                        Categoryquery += " VALUES ('" + cCategoryId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",1," + "'HomePage')";
+                                        dbc.ExecuteQuery(Categoryquery);
+                                    }
+                                }
+                                sweetMessage("", "Banner Updated Successfully", "success");
+                                Response.Redirect("HomePageBannerList.aspx", true);
+                            }
+                        }
+                        else if (fileName == "")
+                        {
+                            string[] para1 = { txtTitle1.Text, txtAltText.Text, txtbasicLink.Text, FROM1, TO1, IsActive.ToString(), dbc.getindiantime().ToString("dd-MMM-yyyy HH:mm:ss"), sCategoryId, sProductId, sActionId.ToString(), txtSequence.Text, id1 };
+
+                            string query = "UPDATE [HomepageBanner] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4," +
+                                           " [EndDate]=@5,[IsActive]=@6,[DOM]=@7,[CategoryId]=@8,[ProductId]=@9, [ActionId]=@10,[sequence]=@11 where [Id]=@12";
+                            int v1 = dbc.ExecuteQueryWithParams(query, para1);
+                            if (v1 > 0)
+                            {
+                                foreach (ListItem item in selectedIncharge)
+                                {
+                                    string sJurisdictionId = item.Value.ToString();
+
+                                    string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                                    Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
+                                    dbc.ExecuteQuery(Jurisdictionquery);
+                                }
+                                foreach (ListItem item in selectedCategory)
+                                {
+                                    string cCategoryId = item.Value.ToString();
+                                    if (cCategoryId != "0")
+                                    {
+                                        string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
+                                        Categoryquery += " VALUES ('" + cCategoryId + "','" + id + "','" + dbc.getindiantimeString() + "'," + userId + ",1," + "'HomePage')";
+                                        dbc.ExecuteQuery(Categoryquery);
+                                    }
+                                }
+                                sweetMessage("", "Banner Updated Successfully", "success");
+                                Response.Redirect("HomePageBannerList.aspx", true);
+                            }
+                            else
+                            {
+                                sweetMessage("", "Please Try Again!!", "warning");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string delJurisdictionBanner = " Delete FROM [dbo].[JurisdictionBanner]  where BannerType='Intermediate' AND BannerId=" + Convert.ToInt32(id);
+                        dbc.ExecuteQuery(delJurisdictionBanner);
+
+                        string delCategoryBannerLink = " Delete FROM [dbo].[tblCategoryBannerLink]  where BannerType='Intermediate' AND BannerId=" + Convert.ToInt32(id);
+                        dbc.ExecuteQuery(delCategoryBannerLink);
+
+                        if (fileName != "")
+                        {
+                            string[] para1 = { txtTitle1.Text, txtAltText.Text, txtbasicLink.Text, FROM1, TO1, IsActive.ToString(), fileName, dbc.getindiantimeString(), userId, sCategoryId, sActionId.ToString(), sProductId, txtSequence.Text, id1 };
+                            string query = "UPDATE [IntermediateBanners] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4,[EndDate]=@5,[IsActive]=@6,[ImageName]=@7,[ModifiedOn]=@8,[ModifiedBy]=@9," +
+                                            " [CategoryID]=@10,[ActionId]=@11,[ProductId]=@12, [sequence]=@13" +
+                                           " where [Id]=@14";
+                            int v1 = dbc.ExecuteQueryWithParams(query, para1);
+                            if (v1 > 0)
+                            {
+                                foreach (ListItem item in selectedIncharge)
+                                {
+                                    string sJurisdictionId = item.Value.ToString();
+
+                                    string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                                    Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id1 + "','" + dbc.getindiantimeString() + "'," + userId + ",'Intermediate')";
+                                    dbc.ExecuteQuery(Jurisdictionquery);
+                                }
+
+                                foreach (ListItem item in selectedCategory)
+                                {
+                                    string cCategoryId = item.Value.ToString();
+                                    if (cCategoryId != "0")
+                                    {
+                                        string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
+                                        Categoryquery += " VALUES ('" + cCategoryId + "','" + id1 + "','" + dbc.getindiantimeString() + "'," + userId + ",1," + "'Intermediate')";
+                                        dbc.ExecuteQuery(Categoryquery);
+                                    }
+                                }
+                                sweetMessage("", "Intermediate Updated Successfully", "success");
+                                Response.Redirect("HomePageBannerList.aspx", true);
+                            }
+                        }
+                        else if (fileName == "")
+                        {
+                            string[] para1 = { txtTitle1.Text, txtAltText.Text, txtbasicLink.Text, FROM1, TO1, IsActive.ToString(), dbc.getindiantimeString(), userId, sCategoryId, sActionId.ToString(), sProductId, txtSequence.Text, id1 };
+
+                            string query = "UPDATE [IntermediateBanners] SET [Title]=@1,[AltText]=@2,[Link]=@3,[StartDate]=@4,[EndDate]=@5,[IsActive]=@6,[ModifiedOn]=@7,[ModifiedBy]=@8, " +
+                                            " [CategoryID]=@9,[ActionId]=@10,[ProductId]=@11, [sequence]=@12" +
+                                            " where[Id] =@13";
+                            int v1 = dbc.ExecuteQueryWithParams(query, para1);
+                            if (v1 > 0)
+                            {
+                                foreach (ListItem item in selectedIncharge)
+                                {
+                                    string sJurisdictionId = item.Value.ToString();
+
+                                    string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                                    Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + id1 + "','" + dbc.getindiantimeString() + "'," + userId + ",'Intermediate')";
+                                    dbc.ExecuteQuery(Jurisdictionquery);
+                                }
+
+                                foreach (ListItem item in selectedCategory)
+                                {
+                                    string cCategoryId = item.Value.ToString();
+                                    if (cCategoryId != "0")
+                                    {
+                                        string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
+                                        Categoryquery += " VALUES ('" + cCategoryId + "','" + id1 + "','" + dbc.getindiantimeString() + "'," + userId + ",1," + "'Intermediate')";
+                                        dbc.ExecuteQuery(Categoryquery);
+                                    }
+                                }
+                                sweetMessage("", "Intermediate Banner Updated Successfully", "success");
+                                Response.Redirect("HomePageBannerList.aspx", true);
+                            }
+                            else
+                            {
+                                sweetMessage("", "Please Try Again!!", "warning");
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    if (ddlBannerType.SelectedValue == "1")
+                    {
+                        string[] para1 = { txtTitle1.Text.ToString().Replace("'", "''"),
             txtAltText.Text.ToString().Replace("'", "''"),
             txtbasicLink.Text.ToString().Replace("'", "''"),
             FROM1,
@@ -488,42 +540,45 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
             sActionId.ToString(),
             sCategoryId,
             sProductId,
+            txtSequence.Text
             };
-                    //string query = "INSERT INTO [dbo].[HomepageBanner] ([Title] ,[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],[IsDeleted],[DOC],[DOM],[ActionId],[CategoryId],[ProductId]) VALUES ('" + txtTitle1.Text + "','" + txtAltText.Text + "','" + txtbasicLink.Text + "','" + FROM1 + "','" + TO1 + "','" + IsActive + "','" + fileName + "',0,'" + dbc.getindiantimeString() + "','" + dbc.getindiantimeString() + "',"+sActionId+","+sCategoryId+","+sProductId+")";
-                    string query = "INSERT INTO [dbo].[HomepageBanner] ([Title] ,[AltText],[Link],[StartDate],[EndDate]," +
-                                   " [IsActive],[ImageName],[IsDeleted],[DOC],[DOM],[ActionId],[CategoryId],[ProductId])" +
-                                   " VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13); SELECT SCOPE_IDENTITY();";
-                    //int VAL = dbc.ExecuteQuery(query);
-                    int VAL = dbc.ExecuteQueryWithParamsId(query, para1);
-                    if (VAL > 0)
-                    {
-                        foreach (ListItem item in selectedIncharge)
+                        //string query = "INSERT INTO [dbo].[HomepageBanner] ([Title] ,[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],[IsDeleted],[DOC],[DOM],[ActionId],[CategoryId],[ProductId]) VALUES ('" + txtTitle1.Text + "','" + txtAltText.Text + "','" + txtbasicLink.Text + "','" + FROM1 + "','" + TO1 + "','" + IsActive + "','" + fileName + "',0,'" + dbc.getindiantimeString() + "','" + dbc.getindiantimeString() + "',"+sActionId+","+sCategoryId+","+sProductId+")";
+                        string query = "INSERT INTO [dbo].[HomepageBanner] ([Title] ,[AltText],[Link],[StartDate],[EndDate]," +
+                                       " [IsActive],[ImageName],[IsDeleted],[DOC],[DOM],[ActionId],[CategoryId],[ProductId],[sequence])" +
+                                       " VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14); SELECT SCOPE_IDENTITY();";
+                        //int VAL = dbc.ExecuteQuery(query);
+                        int VAL = dbc.ExecuteQueryWithParamsId(query, para1);
+                        if (VAL > 0)
                         {
-                            string sJurisdictionId = item.Value.ToString();
+                            foreach (ListItem item in selectedIncharge)
+                            {
+                                string sJurisdictionId = item.Value.ToString();
 
-                            string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
-                            Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + VAL + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
-                            dbc.ExecuteQuery(Jurisdictionquery);
+                                string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                                Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + VAL + "','" + dbc.getindiantimeString() + "'," + userId + ",'HomePage')";
+                                dbc.ExecuteQuery(Jurisdictionquery);
+                            }
+                            foreach (ListItem item in selectedCategory)
+                            {
+                                string cCategoryId = item.Value.ToString();
+                                if (cCategoryId != "0")
+                                {
+                                    string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
+                                    Categoryquery += " VALUES ('" + cCategoryId + "','" + VAL + "','" + dbc.getindiantimeString() + "'," + userId + ",1" + ",'HomePage')";
+                                    dbc.ExecuteQuery(Categoryquery);
+                                }
+                            }
+                            sweetMessage("", "Banner Uploaded Successfully", "success");
+                            Response.Redirect("HomePageBannerList.aspx", true);
                         }
-                        foreach (ListItem item in selectedCategory)
+                        else
                         {
-                            string cCategoryId = item.Value.ToString();
-
-                            string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
-                            Categoryquery += " VALUES ('" + cCategoryId + "','" + VAL + "','" + dbc.getindiantimeString() + "'," + userId + ",1" + ",'HomePage')";
-                            dbc.ExecuteQuery(Categoryquery);
+                            sweetMessage("", "Please Try Again!!", "warning");
                         }
-                        sweetMessage("", "Banner Uploaded Successfully", "success");
-                        Response.Redirect("HomePageBannerList.aspx", true);
                     }
                     else
                     {
-                        sweetMessage("", "Please Try Again!!", "warning");
-                    }
-                }
-                else
-                {
-                    string[] para1 = { txtTitle1.Text.ToString().Replace("'", "''"),
+                        string[] para1 = { txtTitle1.Text.ToString().Replace("'", "''"),
             txtAltText.Text.ToString().Replace("'", "''"),
             txtbasicLink.Text.ToString().Replace("'", "''"),
             FROM1,
@@ -538,40 +593,42 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
             sCategoryId,
             sActionId.ToString(),
             sProductId,
+            txtSequence.Text
             };
 
-                    string query = "INSERT INTO [dbo].[IntermediateBanners] ([Title] ,[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],";
-                    query += "[IsDeleted],[TypeId],[CreatedOn],[CreatedBy],[Action],[CategoryID],[ActionId],[ProductId]) VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15); SELECT SCOPE_IDENTITY();";
-                    //query +=  ddlintermediateType.SelectedValue.ToString() + "','" + dtCreatedon.ToString() + "'," + userId + ",'" + ddlintermedicateAction.SelectedItem.ToString() + "'," + sCategoryId + "," + intermediateActionId + "," + sProductId + "); SELECT SCOPE_IDENTITY();";
-                    //int VAL = dbc.ExecuteQuery(query);
-                    int VAL = dbc.ExecuteQueryWithParamsId(query, para1);
-                    //query += "','" + FROM1 + "','" + TO1 + "','" + IsActive + "','" + fileName + "',0,'";
+                        string query = "INSERT INTO [dbo].[IntermediateBanners] ([Title] ,[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],";
+                        query += "[IsDeleted],[TypeId],[CreatedOn],[CreatedBy],[Action],[CategoryID],[ActionId],[ProductId],[sequence]) VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16); SELECT SCOPE_IDENTITY();";
+                        //query +=  ddlintermediateType.SelectedValue.ToString() + "','" + dtCreatedon.ToString() + "'," + userId + ",'" + ddlintermedicateAction.SelectedItem.ToString() + "'," + sCategoryId + "," + intermediateActionId + "," + sProductId + "); SELECT SCOPE_IDENTITY();";
+                        //int VAL = dbc.ExecuteQuery(query);
+                        int VAL = dbc.ExecuteQueryWithParamsId(query, para1);
+                        //query += "','" + FROM1 + "','" + TO1 + "','" + IsActive + "','" + fileName + "',0,'";
 
 
-                    if (VAL > 0)
-                    {
-                        foreach (ListItem item in selectedIncharge)
+                        if (VAL > 0)
                         {
-                            string sJurisdictionId = item.Value.ToString();
+                            foreach (ListItem item in selectedIncharge)
+                            {
+                                string sJurisdictionId = item.Value.ToString();
 
-                            string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
-                            Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + VAL + "','" + dbc.getindiantimeString() + "'," + userId + ",'Intermediate')";
-                            dbc.ExecuteQuery(Jurisdictionquery);
+                                string Jurisdictionquery = "INSERT INTO [dbo].[JurisdictionBanner] ([JurisdictionId] ,[BannerId],[CreatedOn],[CreatedBy],[BannerType])";
+                                Jurisdictionquery += " VALUES ('" + sJurisdictionId + "','" + VAL + "','" + dbc.getindiantimeString() + "'," + userId + ",'Intermediate')";
+                                dbc.ExecuteQuery(Jurisdictionquery);
+                            }
+                            foreach (ListItem item in selectedCategory)
+                            {
+                                string cCategoryId = item.Value.ToString();
+
+                                string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
+                                Categoryquery += " VALUES ('" + cCategoryId + "','" + VAL + "','" + dbc.getindiantimeString() + "'," + userId + ",1" + ",'Intermediate')";
+                                dbc.ExecuteQuery(Categoryquery);
+                            }
+                            sweetMessage("", "Intermediate Banner Added Successfully", "success");
+                            Response.Redirect("HomePageBannerList.aspx", true);
                         }
-                        foreach (ListItem item in selectedCategory)
+                        else
                         {
-                            string cCategoryId = item.Value.ToString();
-
-                            string Categoryquery = "INSERT INTO [dbo].[tblCategoryBannerLink] ([CategoryId],[BannerId],[CreatedDate],[CreatedBy],[IsActive],[BannerType])";
-                            Categoryquery += " VALUES ('" + cCategoryId + "','" + VAL + "','" + dbc.getindiantimeString() + "'," + userId + ",1"+ ",'Intermediate')";
-                            dbc.ExecuteQuery(Categoryquery);
+                            sweetMessage("", "Please Try Again!!", "warning");
                         }
-                        sweetMessage("", "Intermediate Banner Added Successfully", "success");
-                        Response.Redirect("HomePageBannerList.aspx", true);
-                    }
-                    else
-                    {
-                        sweetMessage("", "Please Try Again!!", "warning");
                     }
                 }
             }
@@ -714,7 +771,8 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
         txtbasicLink.Visible = false;
         lblbasicLink.Visible = false;
 
-        ddlbasicProduct.Visible = false;
+        txtpname.Visible = false;
+        //ddlbasicProduct.Visible = false;
         lblbasicProduct.Visible = false;
 
         dvbasicLink.Style.Add("display", "none");
@@ -737,7 +795,8 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
 
         if (ddlbasicAction.SelectedIndex == clsCommon.BannerActionType.AddToCart.GetHashCode())
         {
-            ddlbasicProduct.Visible = true;
+            txtpname.Visible = true;
+            //ddlbasicProduct.Visible = true;
             lblbasicProduct.Visible = true;
             dvbasicProduct.Style.Add("display", "block");
         }
@@ -745,7 +804,14 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
 
     protected void OnSelectedProductChanged(object sender, EventArgs e)
     {
-        string productid = ddlbasicProduct.SelectedValue;
+        string productid = "";
+        string productQry = " SELECT ID From Product WHERE Name = '" + txtpname.Text + "' AND IsDeleted=0  AND IsActive = 1";
+        DataTable dtProduct = dbc.GetDataTable(productQry);
+        if (dtProduct.Rows.Count > 0)
+        {
+            productid = dtProduct.Rows[0]["ID"].ToString();
+        }
+        //string productid = ddlbasicProduct.SelectedValue;
         string JurisdictionInchargeqry = "Select Distinct JurisdictionId,JurisdictionIncharge From JurisdictionMaster where IsActive = 1 and JurisdictionId IN (Select JurisdictionID from Product Where Id =" + productid + "OR ISNULL(ProductMasterId,0) =" + productid + ") order by JurisdictionId";
         DataTable dtIncharge = dbc.GetDataTable(JurisdictionInchargeqry);
         chklstBasicJurisdictionIncharge.DataSource = dtIncharge;
@@ -753,5 +819,33 @@ public partial class Banner_UploadBanner : System.Web.UI.Page
         chklstBasicJurisdictionIncharge.DataValueField = "JurisdictionId";
         chklstBasicJurisdictionIncharge.DataBind();
 
+    }
+
+    [WebMethod]
+    public static List<string> GetProductName(string prefixText)
+    {
+        dbConnection dbc = new dbConnection();
+        using (SqlConnection conn = new SqlConnection())
+        {
+            conn.ConnectionString = dbc.consString;
+            using (SqlCommand cmd = new SqlCommand())
+            {
+                cmd.CommandText = "select Name, Id from Product where Name like @SearchText + '%'";
+                cmd.Parameters.AddWithValue("@SearchText", prefixText);
+                cmd.Connection = conn;
+                conn.Open();
+                List<string> products = new List<string>();
+                using (SqlDataReader sdr = cmd.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        products.Add(sdr["Name"].ToString());
+                        //products.Add(string.Format("{0}-{1}", sdr["Name"], sdr["Id"]));
+                    }
+                }
+                conn.Close();
+                return products;
+            }
+        }
     }
 }

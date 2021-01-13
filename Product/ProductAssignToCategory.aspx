@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="ProductRemoveFromJuridiction.aspx.cs" Inherits="Product_ProductRemoveFromJuridiction" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="ProductAssignToCategory.aspx.cs" Inherits="Product_ProductAssignToCategory" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -41,7 +41,7 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>Remove Products From Category/Jurisdiction
+            <h1>Assign Products To Category
                <small>
                    <asp:Label runat="server" ID="lblDateTime"></asp:Label>
                </small>
@@ -53,11 +53,13 @@
             <!-- Small boxes (Stat box) -->
 
             <div class="row">
-                <asp:Button ID="btnRemove" runat="server" Text="Remove" Width="70Px" CssClass="btn btn-success pull-right add-padding" OnClick="BtnRemove_Click" />
+                <asp:Button ID="btnAdd" runat="server" Text="Add" Width="70Px" CssClass="btn btn-success pull-right add-padding" OnClick="BtnAdd_Click" />
             </div>
-
+            <asp:Label>From Category: </asp:Label>
             <div class="row">
+                
                 <div class="col-md-3 col-sm-6 col-xs-12">
+                    
                     <div class="form-group">
                         <asp:DropDownList ID="ddlCategoryName" runat="server" class="form-control" OnSelectedIndexChanged="OnSelectedIndexChanged" AutoPostBack="true">
                         </asp:DropDownList>
@@ -75,6 +77,28 @@
                         <span id="spnSubCategoryName" style="color: #d9534f; display: none;">This field is required</span>
                     </div>
                 </div>
+                
+            </div>
+            <asp:Label>To Category: </asp:Label>
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <asp:DropDownList ID="ddlToCategoryName" runat="server" class="form-control" OnSelectedIndexChanged="OnToSelectedIndexChanged" AutoPostBack="true">
+                        </asp:DropDownList>
+                    </div>
+                    <div class="col-md-6 pad">
+                        <span id="spnToCategoryName" style="color: #d9534f; display: none;">This field is required</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <asp:DropDownList ID="ddlToSubCategoryName" runat="server" class="form-control">
+                        </asp:DropDownList>
+                    </div>
+                     <div class="col-md-6 pad">
+                        <span id="spnToSubCategoryName" style="color: #d9534f; display: none;">This field is required</span>
+                    </div>
+                </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="form-group">
                         <asp:DropDownList ID="ddlJurisdiction" runat="server" class="form-control">
@@ -86,7 +110,6 @@
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <asp:Button ID="Button2" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" OnClientClick="return Validate()"  />
-
                 </div>
             </div>
 
@@ -139,12 +162,22 @@
                         var categoryval = $("#ContentPlaceHolder1_ddlCategoryName").val();
                         var subcategoryval = $("#ContentPlaceHolder1_ddlSubCategoryName").val();
                         var Jurisdictionval = $("#ContentPlaceHolder1_ddlJurisdiction").val();
+                        var tocategoryval = $("#ContentPlaceHolder1_ddlToCategoryName").val();
+                        var tosubcategoryval = $("#ContentPlaceHolder1_ddlToSubCategoryName").val();
                         if (categoryval == "0") {
                             $("#spnCategoryName").css('display', 'block');
                             flag = false;
                         }
                         if (subcategoryval == "0") {
                             $("#spnSubCategoryName").css('display', 'block');
+                            flag = false;
+                        }
+                        if (tocategoryval == "0") {
+                            $("#spnToCategoryName").css('display', 'block');
+                            flag = false;
+                        }
+                        if (tosubcategoryval == "0") {
+                            $("#spnToSubCategoryName").css('display', 'block');
                             flag = false;
                         }
                         if (Jurisdictionval == "0") {

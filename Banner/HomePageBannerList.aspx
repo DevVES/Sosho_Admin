@@ -49,8 +49,15 @@
 
 
             <div class="row">
-                <div class="col-md-12">
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="col-md-2 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <input id="chkisactive" name="isActive" type="checkbox" value="valactive" runat="server" checked />
+                        &nbsp;
+                            <asp:Label ID="lblisactive" runat="server" Text="Active" Font-Size="18px"></asp:Label>
+                    </div>
+                </div>
+
+                <%--              <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <asp:Label runat="server" ID="Startdate"></asp:Label>
                             <asp:TextBox ID="txtdt" CssClass="form-control" placeholder="Select Date" runat="server"></asp:TextBox>
@@ -75,24 +82,24 @@
                             </script>
                             <!-- /.input group -->
                         </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    </div>--%>
+                <div class="col-md-3 col-sm-6 col-xs-12">
 
-                        <div class="col-md-12">
-                            <asp:DropDownList ID="ddlBannerType" runat="server" class="form-control">
-                            </asp:DropDownList>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
-
-                        <asp:Button ID="Button2" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" />
-
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <a href="UploadBanner.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px">Add</a>
+                    <div class="col-md-12">
+                        <asp:DropDownList ID="ddlBannerType" runat="server" class="form-control">
+                        </asp:DropDownList>
                     </div>
                 </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+
+                    <asp:Button ID="Button2" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" />
+
+                </div>
+                <div class="col-md-10 col-sm-6 col-xs-12">
+                    <a href="UploadBanner.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px">Add</a>
+                </div>
             </div>
+
 
             <div style="width: 100%;" class="table-responsive">
                 <asp:GridView ID="gvbannerlist" OnRowDataBound="gvbannerlist_RowDataBound" OnRowCommand="gvbannerlist_RowCommand" runat="server" Width="95%" AutoGenerateColumns="False" class="table table-bordered table-hover" rules="all" role="grid" CellPadding="10" CellSpacing="5" AllowSorting="True" HeaderStyle-BackColor="#ede8e8" HeaderStyle-HorizontalAlign="Center" EnableViewState="False" Caption="<b><u>HOMEPAGE BANNER LIST</u></b>" CaptionAlign="Top">
@@ -124,23 +131,24 @@
                     <HeaderStyle HorizontalAlign="Center" BackColor="#EDE8E8"></HeaderStyle>
                 </asp:GridView>
             </div>
-            <script type="text/javascript">
-                                $(document).ready(function () {
-                                    $('#ContentPlaceHolder1_gvbannerlist').DataTable({
-                                        "fixedHeader": true,
-                                        "paging": true,
-                                        "order": [[5, "desc"]],
-                                        "lengthChange": true,
-                                        "deferRender": true,
-                                        "ordering": true,
-                                        "scrollX": true,
-                                        "info": true,
-                                        "autoWidth": false,
-                                        "alwaysCloneTop": false,
-                                    });
-                                });
-            </script>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ContentPlaceHolder1_gvbannerlist').DataTable({
+                "fixedHeader": true,
+                "paging": true,
+                "order": [[5, "desc"]],
+                "lengthChange": true,
+                "deferRender": true,
+                "ordering": true,
+                "scrollX": true,
+                "info": true,
+                "autoWidth": false,
+                "alwaysCloneTop": false,
+            });
+        });
+    </script>
 
-        </section>
+    </section>
     </div>
 </asp:Content>

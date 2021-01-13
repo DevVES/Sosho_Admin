@@ -289,6 +289,8 @@
             var DeliveryIncharge = $("#ContentPlaceHolder1_txtDeliveryIncharge").val();
             var Contact = $("#ContentPlaceHolder1_txtContact").val();
             var EmailId = $("#ContentPlaceHolder1_txtEmailId").val();
+            var password = $("#ContentPlaceHolder1_txtPassword").val();
+            var cpassword = $("#ContentPlaceHolder1_txtConfirmPassword").val();
             if (DeliveryIncharge == "") {
                 $("#spnDeliveryIncharge").css('display', 'block');
                 flag = false;
@@ -299,6 +301,11 @@
             }
             if (EmailId == "") {
                 $("#spnEmailId").css('display', 'block');
+                flag = false;
+            }
+            if (password != cpassword) {
+                $('#spnConfirmPassword').css('display', 'block');
+                $('#spnConfirmPassword').html('This field is required');
                 flag = false;
             }
             else {
@@ -318,7 +325,13 @@
             }
             return flag;
         });
-        
+
+        $("#ContentPlaceHolder1_txtConfirmPassword").blur(function () {
+            var password = $("#ContentPlaceHolder1_txtPassword").val();
+            var cpassword = $("#ContentPlaceHolder1_txtConfirmPassword").val();
+            
+        });
+
         function checkPasswordStrength() {
             var number = /([0-9])/;
             var alphabets = /([a-zA-Z])/;

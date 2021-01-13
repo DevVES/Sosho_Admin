@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="OrderList.aspx.cs" Inherits="OrderList" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.master" AutoEventWireup="true" CodeFile="FranchiseeOrderList.aspx.cs" Inherits="FranchiseeOrderList" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <style type="text/css">
@@ -47,20 +47,7 @@
                     <input type="text" class="form-control pull-right" runat="server" id="enddate" />
 
                 </div>
-                 <div class="col-lg-2">
-                     <asp:Label ID="Label3" runat="server" Text="Category"></asp:Label><br />
-                    <div class="form-group">
-                        <asp:DropDownList ID="ddlCategoryName" runat="server" class="form-control" OnSelectedIndexChanged="OnSelectedIndexChanged" AutoPostBack="true">
-                        </asp:DropDownList>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <asp:Label ID="Label4" runat="server" Text="Sub Category"></asp:Label><br />
-                    <div class="form-group">
-                        <asp:DropDownList ID="ddlSubCategoryName" runat="server" class="form-control" >
-                        </asp:DropDownList>
-                    </div>
-                </div>
+                 
                 <div class="col-lg-4">
                     <br />
                     <asp:Button ID="Button2" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button2_Click" />
@@ -83,29 +70,16 @@
 
                                     <%--   <asp:BoundField DataField="ordid" HeaderText="Order Id" />--%>
                                     <asp:BoundField DataField="CreatedOnUtc" HeaderText="Date" />
+				    <asp:BoundField DataField="OrderSourceName" HeaderText="Franchisee Code" />
                                     <asp:BoundField DataField="FirstName" HeaderText="Customer Name" />
                                     <asp:BoundField DataField="Mobile" HeaderText="Customer Mobile No" />
                                     <asp:BoundField DataField="cadd" HeaderText="Address" />
                                     <asp:BoundField DataField="PinCode" HeaderText="PinCode" />
-                                    <asp:BoundField DataField="Area" HeaderText="Area" />
-                                    <asp:BoundField DataField="Name" HeaderText="Product Name" />
-                                    <asp:BoundField DataField="Unit" HeaderText="Unit" />
-                                    <asp:BoundField DataField="Categoryname" HeaderText="Category" />
-                                    <asp:BoundField DataField="SubCategory" HeaderText="SubCategory" />
-                                    <asp:BoundField DataField="PaymentAmt" HeaderText="Payment Amount" />
-                                    <asp:BoundField DataField="Totalamt" HeaderText="Total Amount" />
-                                    <asp:BoundField DataField="TotalQTY" HeaderText="Quantity" />
-                                    <asp:BoundField DataField="PaidAmount" HeaderText="Total Amount Payable" />
-                                    <asp:BoundField DataField="CategoryWiseSummary" HeaderText="CategoryWiseTotal" />
-                                    <asp:BoundField DataField="Ex" HeaderText="Oder Status" />
-                                    <asp:BoundField DataField="DeliveryManAmt" HeaderText="Delivery Man Received Amount" />
-                                    <asp:BoundField DataField="FrenchiessAmt" HeaderText="Franchisee Received Amount" />
-                                    <asp:BoundField DataField="AdminAmount" HeaderText="Sosho Received Amount" />
-                                    <asp:BoundField DataField="OrderSourceName" HeaderText="Device" />
-				    <asp:BoundField DataField="VendorName" HeaderText="VendorName" />
+                                    <asp:BoundField DataField="PaidAmount" HeaderText="Total Order Amount" />
+                                    <%-- <asp:BoundField DataField="FrenchiessAmt" HeaderText="Franchisee Received Amount" />--%>
                                     
                                     <%-- <asp:HyperLinkField ControlStyle-CssClass="btn btn-social" DataNavigateUrlFields="ordid" Target="_blank" DataNavigateUrlFormatString="Order/order_details.aspx?Orderid={0}" HeaderText="Order Detail" Text="View"></asp:HyperLinkField>--%>
-                                    <asp:TemplateField HeaderText="Deliverd">
+                                    <%--<asp:TemplateField HeaderText="Deliverd">
                                         <ItemTemplate>
                                             <asp:HiddenField ID="hdn" Value='<%# Eval("OrderStatusId") %>' runat="server" />
                                             <asp:HiddenField ID="oid" Value='<%# Eval("ordid") %>' runat="server" />
@@ -119,17 +93,8 @@
                                             <asp:HiddenField ID="oid1" Value='<%# Eval("ordid") %>' runat="server" />
                                             <asp:Literal ID="ltr1" runat="server"></asp:Literal>
                                         </ItemTemplate>
-                                    </asp:TemplateField>
+                                    </asp:TemplateField>--%>
 
-                                         <asp:TemplateField HeaderText="Status">
-                                        <ItemTemplate>
-                                            <asp:HiddenField ID="hdn2" Value='<%# Eval("OrderStatusId") %>' runat="server" />
-                                            <asp:HiddenField ID="oid2" Value='<%# Eval("ordid") %>' runat="server" />
-                                            <asp:Literal ID="ltr2" runat="server"></asp:Literal>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <%--  <asp:HyperLinkField HeaderText="" DataTextField="ordid"  />--%>
-                                    <%--<asp:BoundField DataField="TotalGram" HeaderText="Quality" />--%>
                                 </Columns>
                             </asp:GridView>
                         </div>
@@ -141,35 +106,7 @@
         </section>
     </div>
     <input type="hidden" id="hdnOrderId" />
-    <div class="modal fade" id="paymentStatusModal" role="dialog">
-    <div class="modal-dialog">
     
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Payment Status</h4>
-        </div>
-        <div class="modal-body">
-            
-            <div class="row">
-            <div class="col-md-3 pad">
-                        <asp:Label ID="lblReceiveAmount" runat="server" Text="Receive Amount"></asp:Label><span style="color: red">*</span>
-                    </div>
-                    
-          <div class="col-md-7 pad">
-              <input type="text" id="txtReceiveAmount" class="form-control" placeholder="Amount" />
-                    </div>
-                </div>
-        </div>
-        <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" >Cancel</button>
-                <button type="button" class="btn btn-primary" id="btnStatusSave">Save</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
 
     <script>
         function SubmitData(OrderId) {
@@ -227,83 +164,13 @@
                 ]
             });
 
-            $("#btnStatusSave").click(function () {
-                debugger
-                //alert($("#hdnOrderId").val());
-                var OrderId = $("#hdnOrderId").val();
-                var receiveAmount =  $("#txtReceiveAmount").val();
-                //window.location.href = "OrderList.aspx/SavePaymentStatusHistory?OrderId = " + OrderId + "&ReceiveAmount=" + receiveAmount;
-                $.ajax({
-                    type: "POST",
-                    url: "OrderList.aspx/SavePaymentStatusHistory",
-                    data: '{"OrderId":"' + OrderId + '","ReceiveAmount":"' + receiveAmount + '"}',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data) {
-                        $('#paymentStatusModal').modal('hide');
-                        //window.location.href = "OrderList.aspx/fillData";
-                        $("#<%=Button2.ClientID%>").click();
-                    },
-                    error: function (msg) {
-                        msg = "There is an error";
-                        alert(msg);
-                    }
-                });
-            })
+ 
         });
 
-        //$(document).ready(function () {
-        //    $('#ContentPlaceHolder1_grdGrn').DataTable({
-        //        "fixedHeader": true,
-        //        "paging": false,
-        //        "lengthChange": true,
-        //        "searching": true,
-        //        "ordering": false,
-        //        "info": true,
-        //        "autoWidth": true,
-
-        //        dom: 'Bfrtip',
-        //        buttons: [
-        //            'copy', 'csv', 'excel', 'pdf', 'print'
-        //        ]
-        //    });
-        //});
+        
     </script>
 
-    <script>
-        function Cancel(OrderId) {
-
-            var name = 'Ram';
-            var gender = 'Male';
-            var age = '30';
-            if (confirm("Mark Order Number:" + OrderId + " As Cancelled, Are you sure?")) {
-                $.ajax({
-                    type: "POST",
-                    url: "OrderList.aspx/SaveData1",
-                    data: '{"Id":"' + OrderId + '"}',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data) {
-                        showswalsuccess(OrderId + ' Order Number Marked As Cancelled', 2000);
-                        $("#del-" + OrderId).hide();
-                        $("#can-" + OrderId).hide();
-                    },
-                    error: function (msg) {
-                        msg = "There is an error";
-                        alert(msg);
-                    }
-                });
-            }
-        }
-
-        function StatusUpdateModal(orderid) {
-            //alert(orderid);
-            $('#paymentStatusModal').modal('show');
-            $("#hdnOrderId").val(orderid);
-
-        }
-    </script>
-
+   
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphScripts" runat="Server">
 </asp:Content>

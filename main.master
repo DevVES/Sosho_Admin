@@ -53,6 +53,13 @@
         gtag('js', new Date());
         gtag('config', 'UA-116071365-1');
     </script>
+
+    <style>
+        .sidebar-menu, .main-sidebar .user-panel, .sidebar-menu>li.header
+        {
+            white-space:normal !important;
+        }
+    </style>
 </head>
 <body class="sidebar-collapse skin-yellow-light sidebar-mini">
     <script>
@@ -163,7 +170,7 @@
                                 </ul>
 
                             </li>
-                            <li runat="server" id="li1" class="treeview">
+                            <li runat="server" id="li1" class="treeview" hidden>
 
                                 <a href="#">
                                     <i class="fa fa-flag  text-yellow" aria-hidden="true"></i><span>Banner</span> <i class="fa fa-angle-left pull-right"></i></a>
@@ -173,7 +180,7 @@
                                 </ul>
 
                             </li>
-                              <li id="liJurisdiction" runat="server" class="treeview">
+                              <li id="liJurisdiction" runat="server" class="treeview" hidden>
                                 <a href="#">
                                     <i class="fa fa-building-o text-yellow" aria-hidden="true"></i><span>Master</span> <i class="fa fa-angle-left pull-right"></i></a>
                                 <ul class="treeview-menu">
@@ -187,12 +194,14 @@
                                     </li>
                                     <li id="liAddArea"><a class="myABC" href="/Area/Area.aspx"><i class="fa fa-circle-o"></i>Area</a></li>
                                     <li id="liAddBuilding"><a class="myABC" href="/Building/Building.aspx"><i class="fa fa-circle-o"></i>Building/Society</a></li>
-                                    
+                                    <li id="liFranchisee"><a class="myABC" href="/Franchisee/FranchiseeList.aspx"><i class="fa fa-circle-o"></i>Franchisee</a></li>
+                                    <li id="liMasterFranchisee"><a class="myABC" href="/Franchisee/MasterFranchiseeList.aspx"><i class="fa fa-circle-o"></i>Master Franchisee</a></li>
+                                    <li id="liSuperFranchisee"><a class="myABC" href="/Franchisee/SuperFranchiseeList.aspx"><i class="fa fa-circle-o"></i>Super Franchisee</a></li>
                                 </ul>
                                 
                             </li>
 
-                            <li runat="server" id="li2" class="treeview">
+                            <li runat="server" id="li2" class="treeview" hidden>
                                 <a href="#">
                                     <i class="fa fa-product-hunt  text-yellow" aria-hidden="true"></i><span>Product</span> <i class="fa fa-angle-left pull-right"></i>
                                 </a>
@@ -202,12 +211,13 @@
                                     <%--<li id="liwhatsappmsg"><a class="myABC" href="/Product/WhatsappMsg.aspx"><i class="fa fa-circle-o"></i>Share WhatsApp Message</a></li>--%>
                                     <li id="liSharemsg"><a class="myABC" href="/Product/ShareMessage.aspx"><i class="fa fa-circle-o"></i>Share Message</a></li>
                                     <li id="liApprovedProduct"><a class="myABC" href="/Product/ApprovedProductList.aspx"><i class="fa fa-circle-o"></i>Approve Product List</a></li>
-                                    <li id="liProductAssign"><a class="myABC" href="/Product/ProductAssignToJuridiction.aspx"><i class="fa fa-circle-o"></i>Assign Products</a></li>
+                                    <li id="liProductAssign"><a class="myABC" href="/Product/ProductAssignToJuridiction.aspx"><i class="fa fa-circle-o"></i>Assign Products From Juridiction</a></li>
+                                    <li id="liProductAssignCategory"><a class="myABC" href="/Product/ProductAssignToCategory.aspx"><i class="fa fa-circle-o"></i>Assign Products From Category</a></li>
                                     <li id="liProductRemove"><a class="myABC" href="/Product/ProductRemoveFromJuridiction.aspx"><i class="fa fa-circle-o"></i>Remove Products</a></li>
                                 </ul>
                             </li>
 
-                            <li runat="server" id="li3" class="treeview">
+                            <li runat="server" id="li3" class="treeview" hidden>
                                 <a href="/Shipping/Shipping.aspx">
                                     <i class="fa fa-shopping-basket  text-yellow" aria-hidden="true"></i><span>Shipping</span> <i class="fa fa-angle-left pull-right"></i></a></li>
 
@@ -234,7 +244,7 @@
                                 </ul>
                             </li>--%>
                             <%-- Store Start --%>
-                            <li id="li15" class="treeview">
+                            <li id="li15" class="treeview" hidden>
                                 <a href="#">
                                     <i class="fa fa-bell text-yellow" aria-hidden="true"></i><span>Notification</span> <i class="fa fa-angle-left pull-right"></i>
                                 </a>
@@ -248,7 +258,7 @@
 
 
 
-                            <li id="li16" class="treeview">
+                            <li id="li16" class="treeview" hidden>
                                 <a href="#">
                                     <i class="fa fa-user text-yellow" aria-hidden="true"></i><span>Customer</span> <i class="fa fa-angle-left pull-right"></i>
                                 </a>
@@ -259,7 +269,7 @@
                                 </ul>
                             </li>
 
-                            <li runat="server" id="li7" class="treeview">
+                            <li runat="server" id="li7" class="treeview" hidden>
                                 <a href="#">
                                     <i class="fa fa-google-wallet  text-yellow" aria-hidden="true"></i><span>Wallet</span> <i class="fa fa-angle-left pull-right"></i>
                                 </a>
@@ -272,7 +282,7 @@
                             <%-- Store End --%>
 
                             <%-- Report Start --%>
-                            <li id="li5" class="treeview" style="display: none">
+                            <li id="li5" class="treeview" style="display: none" hidden>
                                 <a href="#">
                                     <i class="fa fa-bar-chart text-blue" aria-hidden="true"></i><span>Report(s)</span> <i class="fa fa-angle-left pull-right"></i>
                                 </a>
@@ -610,6 +620,23 @@
             //if (hiddenvalue == "False") {
                 
             //}
+
+            if (hiddenUserType == 1) {
+                $("#li1").show();
+                $("#li2").show();
+                $("#li3").show();
+                $("#li15").show();
+                $("#li16").show();
+                $("#li7").show();
+                $("#liJurisdiction").show();
+                $("#liwhatsappmsg").show();
+                $("#lisharemsg").show();
+                $("#liApprovedProduct").show();
+                $("#liWalletDashboard").show();
+                $("#liProductAssign").show();
+                $("#liProductAssignCategory").show();
+                $("#liProductRemove").show();
+            }
             if (hiddenUserType == 2)
             {
                 $("#li1").hide();
@@ -623,6 +650,8 @@
                 $("#liApprovedProduct").hide();
                 $("#liWalletDashboard").hide();
                 $("#liProductAssign").hide();
+                $("#liProductAssignCategory").hide();
+                $("#liProductRemove").hide();
             }
             if (hiddenUserType == 3)
             {
@@ -633,15 +662,29 @@
                 $("#li16").hide();
                 $("#li7").hide();
                 $("#liJurisdiction").hide();
-                //$("#liDelivery").hide();
-                //$("#liAddCategory").hide();
-                //$("#liAddLocation").hide();
-                //$("#liAddArea").hide();
                 $("#liwhatsappmsg").hide();
                 $("#lisharemsg").hide();
                 $("#liApprovedProduct").hide();
                 $("#liWalletDashboard").hide();
                 $("#liProductAssign").hide();
+                $("#liProductAssignCategory").hide();
+                $("#liProductRemove").hide();
+            }
+            if (hiddenUserType == 4 || hiddenUserType == 5 || hiddenUserType == 6) {
+                $("#li1").hide();
+                $("#li2").hide();
+                $("#li3").hide();
+                $("#li15").hide();
+                $("#li16").hide();
+                $("#li7").hide();
+                $("#liJurisdiction").hide();
+                $("#liwhatsappmsg").hide();
+                $("#lisharemsg").hide();
+                $("#liApprovedProduct").hide();
+                $("#liWalletDashboard").hide();
+                $("#liProductAssign").hide();
+                $("#liProductAssignCategory").hide();
+                $("#liProductRemove").hide();
             }
         });
 

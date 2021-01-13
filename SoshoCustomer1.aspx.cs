@@ -21,7 +21,8 @@ public partial class SoshoCustomer1 : System.Web.UI.Page
         {
 
             //lblmsg.Text = "";
-            DataTable dtdata = dbc.GetDataTable("select Customer.Id,Customer.Mobile,(select top 1 concat(CustomerAddress.FirstName, ' ' ,CustomerAddress.LastName )from CustomerAddress where CustomerAddress.CustomerId=Customer.Id)as Name,(select top 1 CustomerAddress.Address from CustomerAddress where CustomerAddress.CustomerId=Customer.Id)as CustAddress,(select top 1 CustomerAddress.PinCode from CustomerAddress where CustomerAddress.CustomerId=Customer.Id)as CustPin from Customer Order By Customer.Id Desc");
+            //DataTable dtdata = dbc.GetDataTable("select Customer.Id,Customer.Mobile,(select top 1 concat(CustomerAddress.FirstName, ' ' ,CustomerAddress.LastName )from CustomerAddress where CustomerAddress.CustomerId=Customer.Id)as Name,(select top 1 CustomerAddress.Address from CustomerAddress where CustomerAddress.CustomerId=Customer.Id)as CustAddress,(select top 1 CustomerAddress.PinCode from CustomerAddress where CustomerAddress.CustomerId=Customer.Id)as CustPin from Customer Order By Customer.Id Desc");
+            DataTable dtdata = dbc.GetDataTable("select Customer.Id,Customer.Mobile,(select top 1 concat(CustomerAddress.FirstName, ' ' ,CustomerAddress.LastName )from CustomerAddress where CustomerAddress.CustomerId=Customer.Id)as Name,(select top 1 CustomerAddress.Address from CustomerAddress where CustomerAddress.CustomerId=Customer.Id)as CustAddress,(select top 1 CustomerAddress.PinCode from CustomerAddress where CustomerAddress.CustomerId=Customer.Id)as CustPin from Customer where Customer.Mobile not in (select tblExcludedMobileNumbers.ExcludedNumber from tblExcludedMobileNumbers) Order By Customer.Id Desc");
             if (dtdata.Rows.Count > 0)
             {
                 grd.Caption = "Total Product: " + dtdata.Rows.Count;

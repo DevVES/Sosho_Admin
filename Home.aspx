@@ -26,9 +26,9 @@
                     <div style="display: none">
                         <input type="text" id="lblenddate" runat="server" />
                     </div>
-                    <div class="alert alert-success alert-dismissible">
+                    <%--<div class="alert alert-success alert-dismissible">
                         <div id="divTest" runat="server"></div>
-                    </div>
+                    </div>--%>
                 </div>
             </div>
             <div class="row">
@@ -95,7 +95,8 @@
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <a href="OrderList.aspx" target="_blank" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="OrderList.aspx" target="_blank" class="small-box-footer" id="linkForOrder" runat="server">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="FranchiseeOrderList.aspx" target="_blank" class="small-box-footer" id="linkForFranchisee" runat="server">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-xs-6">
@@ -110,7 +111,7 @@
                         <div class="icon">
                             <i class="ion ion ion-ios-people-outline"></i>
                         </div>
-                        <a href="#" target="_blank" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="Register.aspx" target="_blank" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
@@ -318,14 +319,13 @@
         $(document).ready(function () {
 
             //For Timer
-
             var data123 = $("#ContentPlaceHolder1_lblenddate").val();
 
 
             var ddd = Date.parse(data123);
             //var countDownDate = new Date("Oct 15, 2019 12:00:00").getTime();
             var countDownDate = new Date(ddd).getTime()
-
+            
             // Update the count down every 1 second
             var x = setInterval(function () {
 

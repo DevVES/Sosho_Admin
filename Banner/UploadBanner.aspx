@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../../plugins/timepicker/bootstrap-timepicker.min.css" />
     <script src="../../plugins/datepicker/bootstrap-datepicker.js"></script>
     <script src="../../plugins/timepicker/bootstrap-timepicker.min.js"></script>
-
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
     <div class="content-wrapper">
         <section class="content-header">
             <h1>Upload Banner</h1>
@@ -22,18 +22,18 @@
                 min-height: 100vh;
             }
         </style>
-            <style>
-        .select2-container .select2-selection--single {
-            height: 34px;
-        }
+        <style>
+            .select2-container .select2-selection--single {
+                height: 34px;
+            }
 
-        .block {
-            height: 150px;
-            width: 200px;
-            border: 1px solid aliceblue;
-            overflow-y: scroll;
-        }
-    </style>
+            .block {
+                height: 150px;
+                width: 200px;
+                border: 1px solid aliceblue;
+                overflow-y: scroll;
+            }
+        </style>
         <section class="content" style="">
             <div class="row">
                 <a href="HomePageBannerList.aspx" class="btn btn-block btn-success pull-right" width="30%">Back To List</a>
@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                         </div>
-                          
+
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -138,12 +138,14 @@
                                 </div>
 
                                 <div class="col-md-7 pad">
-                                    <asp:DropDownList ID="ddlbasicProduct" runat="server" class="form-control" Width="40%" AutoPostBack="true" AppendDataBoundItems="true" OnSelectedIndexChanged="OnSelectedProductChanged" Visible="false">
+                                    <asp:TextBox ID="txtpname" runat="server" CssClass="form-control autosuggest" Width="40%" placeholder="Product Name"> </asp:TextBox>
+                                    <%--<asp:DropDownList ID="ddlbasicProduct" runat="server" class="form-control autosuggest" Width="40%" AutoPostBack="true" AppendDataBoundItems="true" OnSelectedIndexChanged="OnSelectedProductChanged" Visible="false">
                                         <asp:ListItem Text="Select Product Name" Value=""></asp:ListItem>
-                                    </asp:DropDownList>
+                                    </asp:DropDownList>--%>
                                 </div>
                                 <div class="col-md-2 pad">
-                                    <span id="spnbasicProduct" style="color: #d9534f; display: none;">This field is required</span>
+                                    <span id="spnpname" style="color: #d9534f; display: none;">This field is required</span>
+                                    <%--<span id="spnbasicProduct" style="color: #d9534f; display: none;">This field is required</span>--%>
                                 </div>
                             </div>
                         </div>
@@ -228,6 +230,21 @@
                             </div>
 
                         </div>
+
+                        <div class="row pad-bottom">
+                            <div class="col-md-12">
+                                <div class="col-md-3 pad">
+                                    <asp:Label ID="lblSequence" runat="server" Text="Sequence"></asp:Label><span style="color: red">*</span>
+                                </div>
+                                <div class="col-md-7 pad">
+                                    <asp:TextBox ID="txtSequence" runat="server" TextMode="Number" CssClass="form-control" Width="40%" onkeypress="return isNumber(event)" placeholder="Sequence"> </asp:TextBox>
+                                </div>
+                                <div class="col-md-2 pad">
+                                    <span id="spnSequence" style="color: #d9534f; display: none;">This field is required</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row pad-bottom">
                             <div class="col-md-12">
                                 <div class="col-md-3 pad">
@@ -254,7 +271,7 @@
                                 </div>
                                 <div class="col-md-7 pad">
                                     <div class="block">
-                                        <asp:CheckBoxList runat="server" ID="chklstCategory" RepeatLayout="Table">
+                                        <asp:CheckBoxList runat="server" ID="chklstCategory" RepeatLayout="Table" OnSelectedIndexChanged = "OnCheckBox_Changed" AutoPostBack = "true">
                                         </asp:CheckBoxList>
                                     </div>
                                 </div>
@@ -314,25 +331,25 @@
             </script>
 
             <script>
-                var today = new Date();
-                var dd = today.getDate();
-                var mm = today.getMonth() + 1; //January is 0!
-                var yyyy = today.getFullYear();
-                if (dd < 10) {
-                    dd = '0' + dd
-                }
-                if (mm < 10) {
-                    mm = '0' + mm
-                }
-                today = dd + '-' + mm + '-' + yyyy;
-                $('#txtdt').val(today);
-                $('#txtdt').datepicker({
-                    format: 'dd-mm-yyyy',
-                    autoclose: true
-                });
-                $(".timepicker").timepicker({
-                    showInputs: false
-                });
+                                            var today = new Date();
+                                            var dd = today.getDate();
+                                            var mm = today.getMonth() + 1; //January is 0!
+                                            var yyyy = today.getFullYear();
+                                            if (dd < 10) {
+                                                dd = '0' + dd
+                                            }
+                                            if (mm < 10) {
+                                                mm = '0' + mm
+                                            }
+                                            today = dd + '-' + mm + '-' + yyyy;
+                                            $('#txtdt').val(today);
+                                            $('#txtdt').datepicker({
+                                                format: 'dd-mm-yyyy',
+                                                autoclose: true
+                                            });
+                                            $(".timepicker").timepicker({
+                                                showInputs: false
+                                            });
             </script>
 
 
@@ -357,7 +374,66 @@
                     showInputs: false
                 });
             </script>
+            <script>
+                $(document).ready(function () {
+                    $(".autosuggest").autocomplete({
+                        source: function (request, response) {
+                            $.ajax({
+                                type: "POST",
+                                contentType: "application/json;charset=utf-8",
+                                url: "UploadBanner.aspx/GetProductName",
+                                data: "{'prefixText':'" + $("#ContentPlaceHolder1_txtpname").val() + "'}",
+                                dataType: "json",
+                                success: function (data) {
+                                    response(data.d);
+                                },
+                                error: function (result) {
+                                    alert("Error");
+                                }
+                            });
+                        }
+                    });
 
+
+                    $("#ContentPlaceHolder1_BtnSave").click(function () {
+                        var flag = true;
+                        var ProductTypeval = $("#ContentPlaceHolder1_ddlbasicAction").val();
+                        var videolinkval = $("#ContentPlaceHolder1_txtbasicLink").val();
+                        var pnameval = $("#ContentPlaceHolder1_txtpname").val();
+                        var categoryval = $("#ContentPlaceHolder1_ddlbasicCategory").val();
+                        if (ProductTypeval == "") {
+                            $("#spnProductType").css('display', 'block');
+                            flag = false;
+                        }
+                        if (ProductTypeval == 3) {
+                            if (pnameval == "") {
+                                $("#spnpname").css('display', 'block');
+                                flag = false;
+                            }
+                        }
+                        if (ProductTypeval == 1) {
+                            if (videolinkval == "") {
+                                $("#spnbasicLink").css('display', 'block');
+                                flag = false;
+                            }
+                        }
+                        if (ProductTypeval == 2) {
+                            if (categoryval == "") {
+                                $("#spnbasicCategory").css('display', 'block');
+                                flag = false;
+                            }
+                        }
+                    
+                    if (flag) {
+                        $('#ContentPlaceHolder1_BtnSave').click();
+                    }
+                    return flag;
+                    });
+
+                });
+
+
+            </script>
 
         </section>
     </div>

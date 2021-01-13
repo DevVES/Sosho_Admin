@@ -44,7 +44,10 @@ public partial class Product_ProductList : System.Web.UI.Page
                 ddlSubCategoryName.DataValueField = "Id";
                 ddlSubCategoryName.DataBind();
 
-                string productQry = "SELECT Id,Name FROM Product where isnull(IsActive,0)=1 AND CategoryId = '" + ddlCategoryName.SelectedValue + "' AND SubCategoryId = '" + ddlSubCategoryName.SelectedValue + "' order by Id asc";
+                string productQry = "SELECT P.Id,P.Name FROM Product P " +
+                                    " Inner Join tblCategoryProductLink CL ON CL.ProductId = P.Id " +
+                                    " where isnull(P.IsActive,0)=1 AND CL.CategoryId = '" + ddlCategoryName.SelectedValue + "' AND CL.SubCategoryId = '" + ddlSubCategoryName.SelectedValue + "' order by P.Id asc";
+                
                 DataTable dtproduct = new DataTable();
                 dtproduct = dbc.GetDataTable(productQry);
                 dtproduct.Rows.Add("0", "Select Product");
@@ -86,12 +89,17 @@ public partial class Product_ProductList : System.Web.UI.Page
     }
     private void DataList()
     {
-       // String from = txtdt.Text.ToString();
-       // String to = txtdt1.Text.ToString();
+        // String from = txtdt.Text.ToString();
+        // String to = txtdt1.Text.ToString();
 
         //String[] StrPart = from.Split('/');
 
         //String[] StrPart1 = to.Split('/');
+        int isActive = 0;
+        if (chkisactive.Checked)
+        {
+            isActive = 1;
+        }
 
         string IsAdmin = Request.Cookies["TUser"]["IsAdmin"].ToString();
         string sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
@@ -105,7 +113,8 @@ public partial class Product_ProductList : System.Web.UI.Page
                        " LEFT JOIN ProductTemplate PT ON PT.Id = P.ProductTemplateID " +
                        " LEFT JOIN tblCategoryProductLink L ON L.ProductId = P.Id  " +
                        " where P.IsDeleted=0 " +
-                       " and P.IsApproved = 1 ";
+                       " and P.IsApproved = 1 "+
+                       " AND P.IsActive = " + isActive;
                        //and convert(date,DOC,103)>='" +
                        //StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + "' and convert(date,DOC,103)<='"
                        //+ StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + "'";
@@ -157,8 +166,11 @@ public partial class Product_ProductList : System.Web.UI.Page
 
     protected void OnSelectedIndexSubCategoryChanged(object sender, EventArgs e)
     {
-        ddlProduct.Items.Clear();
-        string productQry = "SELECT Id,Name FROM Product where isnull(IsActive,0)=1  AND CategoryId = '" + ddlCategoryName.SelectedValue + "' order by Id asc";
+        ddlProduct.Items.Clear();        
+        string productQry = "SELECT distinct P.Id,P.Name FROM Product P " +
+                            " Inner Join tblCategoryProductLink CL ON CL.ProductId = P.Id " +
+                            " where isnull(P.IsActive,0)=1 " + 
+                            " AND CL.CategoryId = '" + ddlCategoryName.SelectedValue + "' order by P.Id asc";
         DataTable dtproduct = new DataTable();
         dtproduct = dbc.GetDataTable(productQry);
         dtproduct.Rows.Add("0", "Select Product");

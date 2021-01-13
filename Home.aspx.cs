@@ -13,7 +13,7 @@ public partial class Home : System.Web.UI.Page
     //System.Data.DataTable dtorderfeed = new System.Data.DataTable();
     //System.Data.DataTable dtfeedbck = new System.Data.DataTable();
     string dtStart = "";
-    string dtEnd = "", IsAdmin = "", sJurisdictionId = "", UserType= string.Empty, DeliveryId = string.Empty;
+    string dtEnd = "", IsAdmin = "", sJurisdictionId = "", UserType= string.Empty, DeliveryId = string.Empty, FranchiseeId = string.Empty;
     protected void Page_Load(object sender, EventArgs e)
     {
 
@@ -35,7 +35,7 @@ public partial class Home : System.Web.UI.Page
                 sJurisdictionId = Request.Cookies["TUser"]["JurisdictionID"].ToString();
                 UserType = Request.Cookies["TUser"]["UserType"].ToString();
                 DeliveryId = Request.Cookies["TUser"]["DeliveryId"].ToString();
-
+                FranchiseeId = Request.Cookies["TUser"]["FranchiseeId"].ToString();
                 Date();
                 boxbind();
 
@@ -46,6 +46,17 @@ public partial class Home : System.Web.UI.Page
                 gd_last_5Buy_with_6();
 
                 gridbind();
+
+                if (UserType == "4" || UserType == "5" || UserType == "6")
+                {
+                    linkForOrder.Visible = false;
+                    linkForFranchisee.Visible = true;
+                }
+                else
+                {
+                    linkForOrder.Visible = true;
+                    linkForFranchisee.Visible = false;
+                }
 
                 string queryData = "select top 1 [Product].Name,[Product].Id, CONVERT(varchar(12),EndDate,107)+' '+CONVERT(varchar(20),EndDate,108) as Enddate1,StartDate,EndDate,sold  from Product  where StartDate <= '" + dbc.getindiantimeString(true) + "' and EndDate>= '" + dbc.getindiantimeString(true) + "' ";
                 DataTable dttime = dbc.GetDataTable(queryData);
@@ -61,9 +72,9 @@ public partial class Home : System.Web.UI.Page
                     string Id = dttime.Rows[0]["Id"].ToString();
 
 
-                    string htmlbodystr = "";
-                    htmlbodystr = (@"<div><a  href='Product/ManageProducts.aspx?Id=" + Id + "' target=\"_blank\">" + display + "</a> <p class=\"inline\">- Offer Expiring After:</p> <p id=\"demo\" class=\"inline\"></p></div>");
-                    divTest.InnerHtml = htmlbodystr;
+                    //string htmlbodystr = "";
+                    //htmlbodystr = (@"<div><a  href='Product/ManageProducts.aspx?Id=" + Id + "' target=\"_blank\">" + display + "</a> <p class=\"inline\">- Offer Expiring After:</p> <p id=\"demo\" class=\"inline\"></p></div>");
+                   // divTest.InnerHtml = htmlbodystr;
 
                 }
 
@@ -173,8 +184,65 @@ public partial class Home : System.Web.UI.Page
 
 
 
+            string franchiseeQry = string.Empty;
+            if (UserType == "4")
+            {
+                franchiseeQry = "SELECT C.Id " +
+                        " FROM [customer_franchise_link] FL " +
+                        " INNER JOIN Franchisee F ON F.FranchiseeCustomerCode = FL.fcode" +
+                        " INNER JOIN Customer C ON C.Mobile = FL.Mobile " +
+                        " WHERE F.FranchiseeId = " + FranchiseeId;
+                        //" AND FL.CreatedOn <= '" + todate + " 23:59:59' AND FL.CreatedOn  >= '" + fromdate + " 00:00:00' ";
+            }
+            else if (UserType == "5")
+            {
+                franchiseeQry = "SELECT C.Id " +
+                        " FROM [customer_franchise_link] FL " +
+                        " INNER JOIN Customer C ON C.Mobile = FL.Mobile " +
+                        "   AND (FL.fcode in (select M.MasterFranchiseeCustomerCode from MasterFranchisee M where M.MasterFranchiseeId = " + FranchiseeId + ") " +
+                        "        OR FL.fcode in (select F.FranchiseeCustomerCode from Franchisee F where F.MasterFranchiseeId = " + FranchiseeId + ")) ";
+                //" WHERE F.MasterFranchiseeId = " + FranchiseeId +
+                  //      " AND FL.CreatedOn <= '" + todate + " 23:59:59' AND FL.CreatedOn  >= '" + fromdate + " 00:00:00' ";
 
-            string qry = "Select  * from [Order] " +join+ where;
+            }
+            else if (UserType == "6")
+            {
+                franchiseeQry = "SELECT C.Id " +
+                        " FROM [customer_franchise_link] FL " +
+                        " INNER JOIN Customer C ON C.Mobile = FL.Mobile " +
+                        "   WHERE (FL.fcode in (select S.SuperFranchiseeCustomerCode from SuperFranchisee S where S.SuperFranchiseeId = " + FranchiseeId + ") " +
+                        "        OR FL.fcode in (select M.MasterFranchiseeCustomerCode from MasterFranchisee M where M.SuperFranchiseeId = " + FranchiseeId + ") " +
+                        "        OR FL.fcode in (select FL.FranchiseeCustomerCode from Franchisee FL where FL.MasterFranchiseeId IN (select ML.MasterFranchiseeId from MasterFranchisee ML where ML.SuperFranchiseeId = " + FranchiseeId + ")) " +
+                        "        OR FL.fcode in (select F.FranchiseeCustomerCode from Franchisee F where F.SuperFranchiseeId = " + FranchiseeId + ")) ";
+
+                //" WHERE F.SuperFranchiseeId = " + FranchiseeId +
+                  //      " AND FL.CreatedOn <= '" + todate + " 23:59:59' AND FL.CreatedOn  >= '" + fromdate + " 00:00:00' ";
+            }
+            string customerIds = string.Empty;
+            DataTable dtFranchisees = dbc.GetDataTable(franchiseeQry);
+            if (dtFranchisees.Rows.Count > 0)
+            {
+                int iCtr = 0;
+
+                foreach (DataRow item in dtFranchisees.Rows)
+                {
+                    if (iCtr > 0)
+                    {
+                        customerIds += ",";
+                    }
+                    ++iCtr;
+                    customerIds += item.ItemArray[0];
+                }
+            }
+            string qry = string.Empty;
+            if (UserType == "4" || UserType == "5" || UserType == "6")
+            {
+                qry = "Select  * from [Order] " + join + where + " and CustomerId in("+ customerIds +")";
+            }
+            else
+            {
+                qry = "Select  * from [Order] " + join + where;
+            }
             AlertMsg(qry);
             DataTable dt = dbc.GetDataTable(qry);
             dbc.InsertLogs(qry);
@@ -187,8 +255,37 @@ public partial class Home : System.Web.UI.Page
                 ltrReqVsGrn.Text = "0";
             }
             //dbc.InsertLogs("start find data4");
-
-            string q = "Select Count(Id) as totalCust FROM Customer " + wherec;
+            string q = string.Empty;
+            if (UserType == "4")
+            {
+                q = " Select Count(FL.Id) as totalCust FROM [customer_franchise_link] FL INNER JOIN Franchisee F ON F.FranchiseeCustomerCode = FL.fcode" +
+                    " INNER JOIN Customer C ON C.Mobile = FL.Mobile " +
+                    " where FL.CreatedOn <= '" + todate + " 23:59:59' AND FL.CreatedOn  >= '" + fromdate + " 00:00:00' " +
+                " AND F.FranchiseeId = " + FranchiseeId;
+            }
+            else if (UserType == "5")
+            {
+                q = " Select Count(FL.Id) as totalCust FROM [customer_franchise_link] FL" +
+                    " INNER JOIN Customer C ON C.Mobile = FL.Mobile " +
+                    " where FL.CreatedOn <= '" + todate + " 23:59:59' AND FL.CreatedOn  >= '" + fromdate + " 00:00:00' " +
+                    "   AND (FL.fcode in (select M.MasterFranchiseeCustomerCode from MasterFranchisee M where M.MasterFranchiseeId = " + FranchiseeId + ") " +
+                    "        OR FL.fcode in (select F.FranchiseeCustomerCode from Franchisee F where F.MasterFranchiseeId = " + FranchiseeId + ")) ";
+            }
+            else if (UserType == "6")
+            {
+                q = " Select Count(FL.Id) as totalCust FROM [customer_franchise_link] FL " +
+                    " INNER JOIN Customer C ON C.Mobile = FL.Mobile " +
+                    " where FL.CreatedOn <= '" + todate + " 23:59:59' AND FL.CreatedOn  >= '" + fromdate + " 00:00:00' " +
+                    "   AND (FL.fcode in (select S.SuperFranchiseeCustomerCode from SuperFranchisee S where S.SuperFranchiseeId = " + FranchiseeId + ") " +
+                        "        OR FL.fcode in (select M.MasterFranchiseeCustomerCode from MasterFranchisee M where M.SuperFranchiseeId = " + FranchiseeId + ") " +
+                        "        OR FL.fcode in (select FL.FranchiseeCustomerCode from Franchisee FL where FL.MasterFranchiseeId IN (select ML.MasterFranchiseeId from MasterFranchisee ML where ML.SuperFranchiseeId = " + FranchiseeId + ")) " +
+                    "        OR FL.fcode in (select F.FranchiseeCustomerCode from Franchisee F where F.SuperFranchiseeId = " + FranchiseeId + ")) ";
+            }
+            else
+            {
+                q = "Select Count(Id) as totalCust FROM Customer " + wherec;
+                
+            }
             AlertMsg(q);
             DataTable d = dbc.GetDataTable(q);
             if (d != null && d.Rows.Count > 0)
@@ -326,7 +423,7 @@ public partial class Home : System.Web.UI.Page
         {
             //INNER JOIN Customer ON CustomerAddress.CountryId=CountryMaster.Id INNER JOIN Customer ON CustomerAddress.StateId=StateMaster.Id INNER JOIN Customer ON CustomerAddress.CityId=CityMaster.Id
             string qry;
-            qry = "Select DISTINCT  TOP(5) [Customer].Id, [Customer].Mobile As MobileNumber,CustomerAddress.FirstName AS Custname,(Select Top 1 B.DOC from CustomerAddress as B where B.CustomerId= [Customer].Id order by Id asc)as regdate,Concat((select top 1 Zipcode.[Location] from Zipcode where Zipcode.zipcode=[CustomerAddress].Pincode),'-',([CustomerAddress].PinCode)) as PinCode,(select iif(count([Order].CustomerId)>0,'Y','N') as IsOrder from [Order] where [Order].CustomerId=[Customer].Id)as IsOrder FROM  [Customer] INNER JOIN CustomerAddress ON Customer.Id = CustomerAddress.CustomerId  ORDER BY Customer.Id DESC  ";
+            qry = "Select DISTINCT  TOP(5) [Customer].Id, [Customer].Mobile As MobileNumber,CustomerAddress.FirstName AS Custname,(Select Top 1 B.DOC from CustomerAddress as B where B.CustomerId= [Customer].Id order by Id asc)as regdate,Concat((select top 1 Zipcode.[Area] from Zipcode where Zipcode.zipcode=[CustomerAddress].Pincode),'-',([CustomerAddress].PinCode)) as PinCode,(select iif(count([Order].CustomerId)>0,'Y','N') as IsOrder from [Order] where [Order].CustomerId=[Customer].Id)as IsOrder FROM  [Customer] INNER JOIN CustomerAddress ON Customer.Id = CustomerAddress.CustomerId  ORDER BY Customer.Id DESC  ";
             DataTable dt = dbc.GetDataTable(qry);
             if (dt != null && dt.Rows.Count > 0)
             {

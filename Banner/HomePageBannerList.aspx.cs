@@ -32,9 +32,8 @@ public partial class Banner_HomePageBannerList : System.Web.UI.Page
                 ddlBannerType.DataSource = ActionList;
                 ddlBannerType.DataBind();
 
-
-                txtdt.Text = DateTime.Now.ToString("dd/MMM/yyyy");
-                txtdt1.Text = DateTime.Now.ToString("dd/MMM/yyyy");
+                // txtdt.Text = DateTime.Now.ToString("dd/MMM/yyyy");
+                //  txtdt1.Text = DateTime.Now.ToString("dd/MMM/yyyy");
 
                 DataList();
             }
@@ -43,27 +42,45 @@ public partial class Banner_HomePageBannerList : System.Web.UI.Page
     }
     private void DataList()
     {
-        String from = txtdt.Text.ToString();
-        String to = txtdt1.Text.ToString();
+        //String from = txtdt.Text.ToString();
+        //String to = txtdt1.Text.ToString();
         string type = ddlBannerType.SelectedValue;
 
-        String[] StrPart = from.Split('/');
-      
-        String[] StrPart1 = to.Split('/');
+        int isActive = 0;
+        if (chkisactive.Checked)
+        {
+            isActive = 1;
+        }
+
+
+        // String[] StrPart = from.Split('/');
+
+        //   String[] StrPart1 = to.Split('/');
         string query = "";
         if (type == "1")
         {
-            query = "SELECT  'HomePage' AS Type,'1' AS TypeId,[Id],[Title],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [dbo].[HomepageBanner] where IsDeleted=0  and StartDate>=CONVERT(DATETIME, '" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + " 00:00:00', 102) and StartDate<=CONVERT(DATETIME, '" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + " 23:59:59', 102)  order by EndDate desc ";
+            query = " SELECT  'HomePage' AS Type,'1' AS TypeId,[Id],[Title],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [dbo].[HomepageBanner] " + 
+                    " where IsDeleted=0  AND IsActive = " + isActive + 
+                    " order by sequence ";
+            //  and StartDate>=CONVERT(DATETIME, '" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + " 00:00:00', 102) and StartDate<=CONVERT(DATETIME, '" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + " 23:59:59', 102)  
         }
-        if(type == "2")
+        if (type == "2")
         {
-            query = "SELECT 'Intermediate' AS Type,'2' AS TypeId, [Id],[Title],[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],[TypeId],[CategoryID],[ProductId] FROM [dbo].[IntermediateBanners] where IsDeleted=0  and StartDate>=CONVERT(DATETIME, '" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + " 00:00:00', 102) and StartDate<=CONVERT(DATETIME, '" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + " 23:59:59', 102)  order by EndDate desc "; 
+            query = "SELECT 'Intermediate' AS Type,'2' AS TypeId, [Id],[Title],[AltText],[Link],[StartDate],[EndDate],[IsActive],[ImageName],[TypeId],[CategoryID],[ProductId] FROM [dbo].[IntermediateBanners] " +
+                    " where IsDeleted=0 AND IsActive = " + isActive  + 
+                    //and StartDate>=CONVERT(DATETIME, '" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + " 00:00:00', 102) and StartDate<=CONVERT(DATETIME, '" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + " 23:59:59', 102)  
+                    " order by sequence "; 
         }
         if (type == "3" || type == "0")
         {
-            query = "SELECT 'HomePage' AS Type,'1' AS TypeId, [Id],[Title],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [dbo].[HomepageBanner] where IsDeleted=0  and StartDate>=CONVERT(DATETIME, '" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + " 00:00:00', 102) and StartDate<=CONVERT(DATETIME, '" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + " 23:59:59', 102) " +
+            query = "SELECT 'HomePage' AS Type,'1' AS TypeId, [Id],[Title],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [dbo].[HomepageBanner] " +
+                    " where IsDeleted=0 AND IsActive = " + isActive  + 
+                    //and StartDate>=CONVERT(DATETIME, '" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + " 00:00:00', 102) and StartDate<=CONVERT(DATETIME, '" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + " 23:59:59', 102) " +
                     " Union All "+
-                    "SELECT  'Intermediate' AS Type,'2' AS TypeId, [Id],[Title],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [dbo].[IntermediateBanners] where IsDeleted=0  and StartDate>=CONVERT(DATETIME, '" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + " 00:00:00', 102) and StartDate<=CONVERT(DATETIME, '" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + " 23:59:59', 102)  order by EndDate desc ";
+                    "SELECT  'Intermediate' AS Type,'2' AS TypeId, [Id],[Title],[Link],[StartDate],[EndDate],[IsActive],[ImageName] FROM [dbo].[IntermediateBanners] " +
+                    " where IsDeleted=0 AND IsActive = " + isActive + 
+                    //and StartDate>=CONVERT(DATETIME, '" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + " 00:00:00', 102) and StartDate<=CONVERT(DATETIME, '" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + " 23:59:59', 102)  
+                    " order by EndDate desc ";
 }
 
        DataTable dtbannerlist = dbc.GetDataTable(query);

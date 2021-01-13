@@ -58,6 +58,13 @@
                 <a href="ManageProducts.aspx" class="btn btn-success pull-right add-padding" style="width: 80px">ADD</a>
             </div>
             <div class="row">
+                 <div class="col-md-2 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <input id="chkisactive" name="isActive" type="checkbox" value="valactive" runat="server" checked />
+                        &nbsp;
+                            <asp:Label ID="lblisactive" runat="server" Text="Active" Font-Size="18px"></asp:Label>
+                    </div>
+                </div>
                 <%--<div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="form-group">
                         <asp:Label runat="server" ID="Startdate"></asp:Label>
@@ -201,7 +208,7 @@
                                 </div>
 
                                 <div class="col-md-4 pad">
-                                    <asp:TextBox ID="txtDisplayOrder" runat="server" onkeypress="return isNumber(event)" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtDisplayOrder" runat="server" type="number" onkeypress="return isNumber(event)" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="col-md-12">

@@ -50,7 +50,14 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                          <div class="col-md-2 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <input id="chkisactive" name="isActive" type="checkbox" value="valactive" runat="server" checked />
+                            &nbsp;
+                            <asp:Label ID="lblisactive" runat="server" Text="Active" Font-Size="18px"></asp:Label>
+                        </div>
+                    </div>
+                    <%--<div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <asp:Label runat="server" ID="Startdate"></asp:Label>
                             <asp:TextBox ID="txtdt" CssClass="form-control" placeholder="Select Start Date" runat="server"></asp:TextBox>
@@ -76,11 +83,17 @@
                             </script>
                             <!-- /.input group -->
                         </div>
+                    </div>--%>
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <asp:DropDownList ID="ddlCategoryName" runat="server" OnSelectedIndexChanged="OnSelectedIndexChanged" class="form-control" AutoPostBack="true">
+                            </asp:DropDownList>
+                        </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <asp:Button ID="BtnGo" runat="server" Text="Go" Width="70Px" CssClass="btn btn-block  btn-info" OnClick="Button1_Click" Title="Go" />
                     </div>
-                    <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="col-md-3 col-sm-6 col-xs-12 pull-right">
                         <a href="AddSubCategory.aspx" class="btn btn-success pull-right add-padding" style="width: 50px; margin: 20px" id="BtnAdd">Add</a>
                     </div>
                 </div>
@@ -101,25 +114,25 @@
                 </asp:GridView>
             </div>
             <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#ContentPlaceHolder1_gvSubCategorylist').DataTable({
-                        "fixedHeader": true,
-                        "paging": true,
-                        "order": [[5, "desc"]],
-                        "lengthChange": true,
-                        "deferRender": true,
-                        "ordering": true,
-                        "scrollX": true,
-                        "info": true,
-                        "autoWidth": false,
-                        "alwaysCloneTop": false,
-                    });
+                                $(document).ready(function () {
+                                    $('#ContentPlaceHolder1_gvSubCategorylist').DataTable({
+                                        "fixedHeader": true,
+                                        "paging": true,
+                                        "order": [[5, "desc"]],
+                                        "lengthChange": true,
+                                        "deferRender": true,
+                                        "ordering": true,
+                                        "scrollX": true,
+                                        "info": true,
+                                        "autoWidth": false,
+                                        "alwaysCloneTop": false,
+                                    });
 
-                    var hiddenvalue = $("#hdnmainIsAdmin").val();
-                    if (hiddenvalue == "False") {
-                        $("#BtnAdd").hide();
-                    }
-                });
+                                    var hiddenvalue = $("#hdnmainIsAdmin").val();
+                                    if (hiddenvalue == "False") {
+                                        $("#BtnAdd").hide();
+                                    }
+                                });
             </script>
         </section>
     </div>

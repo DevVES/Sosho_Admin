@@ -122,7 +122,8 @@
                                     <asp:Label ID="lblpname" runat="server" Text="Product Name"></asp:Label><span style="color: red">*</span>
                                 </div>
                                 <div class="col-md-7 pad">
-                                    <asp:TextBox ID="txtpname" runat="server" CssClass="form-control" Width="40%" placeholder="Product Name"> </asp:TextBox>
+                                    <asp:TextBox ID="txtpname" runat="server" CssClass="form-control autosuggest" Width="40%" placeholder="Product Name"> </asp:TextBox>
+                                    <asp:HiddenField ID="hdftxtpname" runat="server" />
                                 </div>
                                 <div class="col-md-2 pad">
                                     <span id="spnpname" style="color: #d9534f; display: none;">This field is required</span>
@@ -328,7 +329,7 @@
                                 </div>
 
                                 <div class="col-md-7 pad">
-                                    <asp:TextBox ID="txtDisplayOrder" runat="server" onkeypress="return isNumber(event)" CssClass="form-control" Width="40%" placeholder="Display Order"></asp:TextBox>
+                                    <asp:TextBox ID="txtDisplayOrder" runat="server" type="number"  onkeypress="return isNumber(event)" CssClass="form-control" Width="40%" placeholder="Display Order"></asp:TextBox>
 
                                 </div>
                                 <div class="col-md-2 pad">
@@ -1288,6 +1289,23 @@
                         $('#Tabs ul li:eq(4)').hide();
                     }
 
+                    $(".autosuggest").autocomplete({
+                        source: function (request, response) {
+                            $.ajax({
+                                type: "POST",
+                                contentType: "application/json;charset=utf-8",
+                                url: "ManageProducts.aspx/GetProductName",
+                                data: "{'prefixText':'" + $("#ContentPlaceHolder1_txtpname").val()+"'}",
+                                dataType: "json",
+                                success: function (data) {
+                                    response(data.d);
+                                },
+                                error: function (result) {
+                                    alert("Error");
+                                }
+                            });
+                        }
+                    });
                 });
 
                 $("#ContentPlaceHolder1_ddlProductType").change(function () {

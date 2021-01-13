@@ -30,7 +30,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a ><b>Admin</b></a>
+    <a ><b>Login</b></a>
   </div>
   <!-- /.login-logo -->
     <form id="form1" runat="server">

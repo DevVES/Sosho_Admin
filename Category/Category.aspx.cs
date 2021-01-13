@@ -15,8 +15,8 @@ public partial class Category_Category : System.Web.UI.Page
         {
             try
             {
-                txtdt.Text = DateTime.Now.ToString("dd/MM/yyyy");
-                txtdt1.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                //txtdt.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                //txtdt1.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 DataList();
             }
             catch (Exception W) { }
@@ -24,14 +24,22 @@ public partial class Category_Category : System.Web.UI.Page
     }
     private void DataList()
     {
-        String from = txtdt.Text.ToString();
-        String to = txtdt1.Text.ToString();
+        // String from = txtdt.Text.ToString();
+        // String to = txtdt1.Text.ToString();
 
-        String[] StrPart = from.Split('/');
+        // String[] StrPart = from.Split('/');
 
-        String[] StrPart1 = to.Split('/');
+        // String[] StrPart1 = to.Split('/');
 
-        string query = "SELECT CategoryID,CategoryName,CategoryDescription,IsActive,CreatedOn FROM Category where isnull(IsDeleted,0)=0  and convert(date,CreatedOn,103)>='" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + "' and convert(date,CreatedOn,103)<='" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + "'  order by CreatedOn desc ";
+        int isActive = 0;
+        if (chkisactive.Checked)
+        {
+            isActive = 1;
+        }
+
+        string query = "SELECT CategoryID,CategoryName,CategoryDescription,IsActive,CreatedOn FROM Category where isnull(IsDeleted,0)= 0 AND ISNULL(ISActive,0) = " + isActive + 
+                        " order by Sequence";
+        //" and convert(date,CreatedOn,103)>='" + StrPart[2] + "-" + StrPart[1] + "-" + StrPart[0] + "' and convert(date,CreatedOn,103)<='" + StrPart1[2] + "-" + StrPart1[1] + "-" + StrPart1[0] + "' " 
 
         DataTable dtbannerlist = dbc.GetDataTable(query);
         if (dtbannerlist.Rows.Count > 0)

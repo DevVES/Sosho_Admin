@@ -41,7 +41,7 @@ public partial class Login : System.Web.UI.Page
                 {
                     int userId = 0;
                     int.TryParse(Request.Cookies["TUser"]["Id"], out userId);
-                    Response.Redirect("Home.aspx");
+                    Response.Redirect("Login.aspx");
                 }
                 if (Request.Cookies.AllKeys.Contains("TUser") && Session["KeepAlive"] == null)
                 {
@@ -61,7 +61,7 @@ public partial class Login : System.Web.UI.Page
     protected void Button1_Click(object sender, EventArgs e)
     {
         WebApplication1.dbConnection bdc = new WebApplication1.dbConnection();
-        String Str = "SELECT [Name],[Id],[UserName],[Password],[IsAdmin],[UserType],[VendorID],[Deleted],WorkshopId,isnull(JurisdictionID,0) as JurisdictionID,isnull(DeliveryId,0) as DeliveryId FROM [dbo].[Users] where [UserName]='" + txtId.Text.Replace("'", "''") + "' And [Password]='" + txtpass.Text.Replace("'", "''") + "' And Deleted = 0";
+        String Str = "SELECT [Name],[Id],[UserName],[Password],[IsAdmin],[UserType],[VendorID],[Deleted],WorkshopId,isnull(JurisdictionID,0) as JurisdictionID,isnull(DeliveryId,0) as DeliveryId,isnull(FranchiseeId,0) as FranchiseeId FROM [dbo].[Users] where [UserName]='" + txtId.Text.Replace("'", "''") + "' And [Password]='" + txtpass.Text.Replace("'", "''") + "' And Deleted = 0";
         DataTable st = bdc.GetDataTable(Str);
         if (st.Rows.Count > 0)
         {
@@ -78,6 +78,7 @@ public partial class Login : System.Web.UI.Page
                 aCookie["JurisdictionID"] = st.Rows[0]["JurisdictionID"].ToString();
                 aCookie["UserType"] = st.Rows[0]["UserType"].ToString();
                 aCookie["DeliveryId"] = st.Rows[0]["DeliveryId"].ToString();
+                aCookie["FranchiseeId"] = st.Rows[0]["FranchiseeId"].ToString();
                 aCookie.Expires = DateTime.Now.AddHours(24);
 
                 Response.Cookies.Add(aCookie);
